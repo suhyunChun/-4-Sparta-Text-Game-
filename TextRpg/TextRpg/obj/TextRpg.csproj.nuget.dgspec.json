@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\_Workspace\\-7-Sparta-Text-Game-\\TextRpg\\TextRpg\\TextRpg.csproj": {}
+    "C:\\_Workspace\\-4-Sparta-Text-Game-\\TextRpg\\TextRpg\\TextRpg.csproj": {}
   },
   "projects": {
-    "C:\\_Workspace\\-7-Sparta-Text-Game-\\TextRpg\\TextRpg\\TextRpg.csproj": {
+    "C:\\_Workspace\\-4-Sparta-Text-Game-\\TextRpg\\TextRpg\\TextRpg.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\_Workspace\\-7-Sparta-Text-Game-\\TextRpg\\TextRpg\\TextRpg.csproj",
+        "projectUniqueName": "C:\\_Workspace\\-4-Sparta-Text-Game-\\TextRpg\\TextRpg\\TextRpg.csproj",
         "projectName": "TextRpg",
-        "projectPath": "C:\\_Workspace\\-7-Sparta-Text-Game-\\TextRpg\\TextRpg\\TextRpg.csproj",
+        "projectPath": "C:\\_Workspace\\-4-Sparta-Text-Game-\\TextRpg\\TextRpg\\TextRpg.csproj",
         "packagesPath": "C:\\Users\\dj043\\.nuget\\packages\\",
-        "outputPath": "C:\\_Workspace\\-7-Sparta-Text-Game-\\TextRpg\\TextRpg\\obj\\",
+        "outputPath": "C:\\_Workspace\\-4-Sparta-Text-Game-\\TextRpg\\TextRpg\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\dj043\\AppData\\Roaming\\NuGet\\NuGet.Config",
