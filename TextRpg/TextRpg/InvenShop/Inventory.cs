@@ -22,7 +22,11 @@ namespace TextRpg.InvenShop
         internal void AddItem(IItem item)
         {
             invenItems.Add(item);
+<<<<<<< HEAD
             //Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
+=======
+            Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
+>>>>>>> parent of 45baabc (Delete TextRpg directory)
         }
          
         // 인벤토리 목록
