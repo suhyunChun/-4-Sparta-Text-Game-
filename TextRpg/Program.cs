@@ -183,7 +183,7 @@ namespace TextRpg
                     EquipMenu();
                     break;
                 case 2:
-                    item.Use();
+                    _item.Use(player);
                     break;
                 case 3:
                     DropItemMenu();

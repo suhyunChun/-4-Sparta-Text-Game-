@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.Player;
-sing System.Xml.Linq;
+using System.Xml.Linq;
 
 namespace TextRpg.Item
 {
     // 무기
-    public class Weapon : IItem
+    public class Weapon : Items
     {
 
 
@@ -44,9 +44,8 @@ namespace TextRpg.Item
     }
 
     // 방어구
-    public class Armor : IItem
+    public class Armor : Items
     {
-
         private int Def;
 
         public void Drop()
@@ -66,8 +65,8 @@ namespace TextRpg.Item
         }
 
         // 방어구 생성자
-        public Armor(string name, int grade, int price, int def, bool isEquiped)
-            : base(name, "방어구", grade, price, false)
+        public Armor(string name, int grade, int price, int def, bool isEquiped) //외부에서 받아오는 값 
+            : base(name, "방어구", grade, price, false) // = Name = name 
         {
             Def = def;
         }

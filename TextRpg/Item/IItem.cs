@@ -14,12 +14,12 @@ namespace TextRpg.Item
         string Kind { get; }
         int Grade { get; }
         int Price { get; }
-        
         bool IsEquiped { get; set; }
 
         // 아이템 사용
-        abstract void Use(Job player);
+       void Use(Job player);
+
         // 아이템 드랍
-        abstract void Drop();
+        void Drop();
     }
 }

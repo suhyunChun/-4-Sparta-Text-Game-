@@ -1,8 +1,9 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextRpg.Player;
 
 namespace TextRpg.Item
 {
@@ -18,15 +19,14 @@ namespace TextRpg.Item
 
         public bool IsEquiped { get; set; }
 
-        public void Drop()
-        {
-            
+        public void Drop(){
+
         }
 
-        public void Use()
-        {
-          
+        public void Use(Job player){
+
         }
+
 
         public Items(string name, string kind, int grade, int price, bool isEquiped)
         {

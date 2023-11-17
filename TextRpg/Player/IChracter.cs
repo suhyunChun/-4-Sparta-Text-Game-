@@ -19,9 +19,6 @@ namespace TextRpg.Player
         public int Level { get; }
         // 경험치
         public float Exp { get; }
-<<<<<<< HEAD
-        public static int Health { get; set; }
-=======
         // 힘 = 체력 관련 능력치
         public int Strength { get; }
         // 민첩성 = 공격력 관련 능력치
@@ -33,7 +30,6 @@ namespace TextRpg.Player
         // 마력 = 지능으로 증가
         public int Mana { get; set; }
         // 공격력 = 민첩성으로 증가
->>>>>>> 9c199b94dcc9d57b397971b492788242ae3917e5
         public float Atk { get; }
         // 추가 공격력 = 아이템에 의한 수치 변화
         public float PlusAtk { get; set; }
