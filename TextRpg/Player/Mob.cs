@@ -62,26 +62,26 @@ namespace TextRpg.Player
             Armor = 0;
             IsDead = isDead;
         }
-
-        // 공격 = 일반 공격. 공격, 치명타, 회피 등을 체크 후 피해를 줌.
-        public void Attack(int atk)
+        public int Attack(ICharacter target)
         {
-
+            Random rand = new Random();
+            var err = Atk * 0.1;
+            int dps = rand.Next((int)(Atk - err), (int)(Atk + err + 1));
+            dps -= (int)target.Def;
+            if (dps <= 1) dps = 1;
+            return dps;
         }
-        // 기술 1번 = 사용 기술. 각 직업마다의 1번 기술 및 몬스터의 1번 기술. 몬스터는 없을 시 사용 못함.
+
         public void Skill_1(string job, int atk, int stat)
         {
-
         }
-        // 기술 2번 = 사용 기술. 각 직업마다의 2번 기술 및 몬스터의 2번 기술. 플레이어의 레벨이 5를 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
+
         public void Skill_2(string job, int atk, int stat)
         {
-
         }
-        // 기술 3번 = 사용 기술. 각 직업마다의 3번 기술 및 몬스터의 3번 기술. 플레이어의 레벨이 10을 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
+
         public void Skill_3(string job, int atk, int stat)
         {
-
         }
     }
 }
