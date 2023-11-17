@@ -14,6 +14,12 @@ namespace TextRpg
         Job player;
         int originalHP;
         int deadCnt;
+
+        FontColor fontColor;
+
+        
+
+
         public Battle(Job _player)
         {
 
@@ -22,6 +28,8 @@ namespace TextRpg
             deadCnt = 0;
             originalHP = _player.Health;
             ApperMonster();
+
+            fontColor = new FontColor();
 
         }
 
@@ -58,11 +66,13 @@ namespace TextRpg
         /// </summary>
         private void ApperMonster()
         {
+
             Random rand = new Random();
             int numberOfMob = rand.Next(1, 5);
             for (int i = 1; i <= numberOfMob; i++)
             {
                 mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 10, 5, 5, false));
+
             }
         }
         private void DisplayStatus(bool isSelect)

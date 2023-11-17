@@ -5,6 +5,7 @@ using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
 
+
 namespace TextRpg
 {
     internal class Program
@@ -14,6 +15,8 @@ namespace TextRpg
         static Job player;
         static IItem _item;
         static Battle battle;
+        static FontColor fontColor;
+
         // 아이템 세팅
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
@@ -459,11 +462,15 @@ namespace TextRpg
             return false;
         }
 
+
         // 메인
         static void Main(string[] args)
         {
             inventory = new Inventory();
             shop = new Shop();
+            
+            fontColor = new FontColor();
+
 
             GameItemSetting(inventory, shop);
             PrintStartScene();
