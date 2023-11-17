@@ -11,7 +11,7 @@ namespace TextRpg
     {
         static Inventory inventory;
         static Shop shop;
-        static IChracter _player;
+        static Job player;
         static IItem _item;
         
         // 아이템 세팅
@@ -74,16 +74,16 @@ namespace TextRpg
             switch (CheckValidInput(1, 3))
             {
                 case 1:
-                    _player = new Warrior(playerName);
-                    StartMenu(_player.Occupation);
+                    player = new Warrior(playerName);
+                    StartMenu(player.Occupation);
                     break;
                 case 2:
-                    _player = new Mage(playerName);
-                    StartMenu(_player.Occupation);
+                    player = new Mage(playerName);
+                    StartMenu(player.Occupation);
                     break;
                 case 3:
-                    _player = new Archer(playerName);
-                    StartMenu(_player.Occupation);
+                    player = new Archer(playerName);
+                    StartMenu(player.Occupation);
                     break;
             }
         }
@@ -135,13 +135,13 @@ namespace TextRpg
             Console.WriteLine("상태 메뉴입니다.");
             Console.WriteLine("캐릭터의 정보를 표기하는 곳입니다.");
 
-            Console.WriteLine($"플레이어 이름: {_player.Name} ( {_player.Occupation} )");
-            Console.WriteLine("LV: {0}", _player.Level.ToString("00"));
+            Console.WriteLine($"플레이어 이름: {player.Name} ( {player.Occupation} )");
+            Console.WriteLine("LV: {0}", player.Level.ToString("00"));
             Console.WriteLine();
-            Console.WriteLine($"공격력: {_player.Atk}");
-            Console.WriteLine($"방어력: {_player.Def}");
-            Console.WriteLine($"체력: {_player.Health}");
-            Console.WriteLine($"소지골드: {_player.Gold}");
+            Console.WriteLine($"공격력: {player.Atk}");
+            Console.WriteLine($"방어력: {player.Def}");
+            Console.WriteLine($"체력: {player.Health}");
+            Console.WriteLine($"소지골드: {player.Gold}");
             Console.WriteLine(" ");
 
             Console.WriteLine("0. 뒤로가기");
@@ -150,7 +150,7 @@ namespace TextRpg
             switch(CheckValidInput(0, 0))
             {
                 case 0:
-                    StartMenu(_player.Occupation);
+                    StartMenu(player.Occupation);
                 break;
             }
 
@@ -187,7 +187,7 @@ namespace TextRpg
                     DropItemMenu();
                     break;
                 case 0:
-                    StartMenu(_player.Occupation);
+                    StartMenu(player.Occupation);
                     break;
             }
 
