@@ -22,7 +22,7 @@ namespace TextRpg.Item
         // 공격력
         private int Atk;
 
-        public static int ItemCnt = 0;
+        // public static int ItemCnt = 0;
 
         public void Drop()
         {
@@ -51,7 +51,7 @@ namespace TextRpg.Item
             IsEquiped = false;
             Atk = atk;
 
-            ItemCnt++;
+            // ItemCnt++;
         }
     }
 
@@ -66,7 +66,7 @@ namespace TextRpg.Item
 
         public bool IsEquiped { get; set; }
 
-        public static int ItemCnt = 0;
+       // public static int ItemCnt = 0;
         // 방어력
         private int Def;
 
@@ -96,7 +96,7 @@ namespace TextRpg.Item
             IsEquiped = false;
             Def = def;
 
-            ItemCnt++;
+            //ItemCnt++;
         }
     }
 }

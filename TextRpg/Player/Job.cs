@@ -16,7 +16,8 @@ namespace TextRpg.Player
     
         public float Exp { get; protected set; }
 
-        public int Health { get; set; }
+        public static int Health  { get; set;}
+
 
         public float Atk { get; }
 
@@ -38,5 +39,6 @@ namespace TextRpg.Player
             Gold = 3000;
             IsDead = isDead;
         }
+
     }
 }

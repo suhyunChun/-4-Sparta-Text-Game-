@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.InvenShop;
+using TextRpg.Player;
+
 
 namespace TextRpg.Item
 {
@@ -24,7 +26,7 @@ namespace TextRpg.Item
         public bool IsEquiped { get; set; }
 
         // 힐링 양
-        private int HealingAmount;
+        private int HealingAmount; 
 
 //        public static int ItemCnt = 0;
 
@@ -42,6 +44,12 @@ namespace TextRpg.Item
         public void Use()
         {
             IsEquiped = true;
+            //캐릭터의 health 받아옴 
+            int health = Job.Health;
+            health +=HealingAmount;
+            //새로운 hp로 다시 설정
+            Job.Health = health; 
+   
         }
 
         // 힐링 포션 생성자
