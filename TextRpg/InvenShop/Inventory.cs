@@ -9,12 +9,12 @@ using TextRpg.Player;
 
 namespace TextRpg.InvenShop
 {
-   
+
     // 인벤토리 클래스
     public class Inventory
     {
         private List<Items> invenItems;
-
+        public bool onEquipMenu;
         public int ItemCnt
         {
             get { return invenItems.Count; }
@@ -29,39 +29,65 @@ namespace TextRpg.InvenShop
         // 아이템 추가
         internal void AddItem(Items item)
         {
-            
+
             invenItems.Add(item);
             //Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
         }
-         
+
         // 인벤토리 목록
         public void DisplayInventory()
         {
             Console.WriteLine("[소지품 목록]");
             Console.WriteLine("");
 
-            if(invenItems.Count == 0)
+            if (invenItems.Count == 0)
             {
                 Console.WriteLine("[아이템 목록 없음]");
             }
             else
             {
-                foreach (var item in invenItems)
+                if (onEquipMenu == false)
                 {
-                    Console.WriteLine($"- 이름: {item.Name}, 종류: {item.Kind}, " +
-                        $"등급: {item.Grade}★, 가격: {item.Price}");
+                    foreach (var item in invenItems)
+                    {
+                        Console.WriteLine($"- 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                    }
                 }
-             }
+                else if (onEquipMenu == true)
+                {
+                    int idx = 0;
+                    foreach (var item in invenItems)
+                    {
+                        if(item.IsEquiped == true)
+                        {
+                            Console.Write("[E] ");
+                        }
+                        Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                         idx++;
+                    }
+                }
+            }
+        }
 
-         }
+        public void EquipmentStatusChange(int num)
+        {
 
+            if(invenItems[num].IsEquiped == true)
+            {
+                invenItems[num].IsEquiped = false;
+            }
+            else if(invenItems[num].IsEquiped == false)
+            {
+                invenItems[num].IsEquiped = true;
+            }
+        }
 
         //아이템 목록 index
         public void ShowInvenItem()
         {
             int idx = 0;
-
-            
             Console.WriteLine("[소지품 목록]");
             Console.WriteLine("");
             foreach (var item in invenItems)
@@ -106,7 +132,7 @@ namespace TextRpg.InvenShop
         public void RemoveItem(int index)
         {
 
-            if(index >= 0 && index <  invenItems.Count) 
+            if (index >= 0 && index < invenItems.Count)
             {
                 Items removeItem = invenItems[index];
                 Console.WriteLine($"아이템이 삭제되었습니다: {removeItem.Name}");

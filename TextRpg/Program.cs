@@ -253,7 +253,31 @@ namespace TextRpg
         //장비 관리
         private static void EquipMenu()
         {
-            
+            Console.Clear();
+            Console.WriteLine("장비 관리 메뉴입니다.");
+            Console.WriteLine("아이템을 장착 및 해제 할 수 있습니다.");
+            Console.WriteLine("원하시는 번호로 아이템을 장착 및 해제 할 수 있습니다.");
+
+            Console.WriteLine("");
+            inventory.onEquipMenu = true;
+            inventory.DisplayInventory();
+
+            Console.WriteLine("");
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+
+            int equipNum = CheckValidInput(0, inventory.ItemCnt);
+            if (equipNum == 0)
+            {
+                inventory.onEquipMenu = false;
+                InventoryMenu();
+            }
+            else
+            {
+                equipNum -= 1;
+                inventory.EquipmentStatusChange(equipNum);
+                EquipMenu();
+            }
         }
 
         // 상점 메뉴
