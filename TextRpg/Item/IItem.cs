@@ -16,8 +16,8 @@ namespace TextRpg.Item
         bool IsEquiped { get; set; }
 
         // 아이템 사용
-        void Use();
+        abstract void Use();
         // 아이템 드랍
-        void Drop();
+        abstract void Drop();
     }
 }
