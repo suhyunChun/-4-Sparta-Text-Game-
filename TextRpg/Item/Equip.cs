@@ -4,20 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.Player;
+sing System.Xml.Linq;
 
 namespace TextRpg.Item
 {
     // 무기
     public class Weapon : IItem
     {
-        public string Name { get; }
-
-        public string Kind { get; }
-        public int Grade { get; }
-
-        public int Price { get; }
-
-        public bool IsEquiped { get; set; }
 
 
         // 공격력
@@ -42,32 +35,18 @@ namespace TextRpg.Item
         }
 
         // 무기 생성자
-        public Weapon (string name, int grade, int price, int atk)
+        public Weapon(string name, int grade, int price, int atk, bool isEquiped)
+            : base(name, "무기", grade, price, false)
         {
-            Name = name;
-            Kind = "무기";
-            Grade = grade;
-            Price = price;
-            IsEquiped = false;
             Atk = atk;
-
-            // ItemCnt++;
         }
+
     }
 
     // 방어구
     public class Armor : IItem
     {
-        public string Name { get; }
-        public string Kind { get; }
-        public int Grade { get; }
 
-        public int Price { get; }
-
-        public bool IsEquiped { get; set; }
-
-       // public static int ItemCnt = 0;
-        // 방어력
         private int Def;
 
         public void Drop()
@@ -81,22 +60,16 @@ namespace TextRpg.Item
             }
         }
 
-        public void Use()
+        public void Use(Job player)
         {
              IsEquiped = !IsEquiped;
         }
 
         // 방어구 생성자
-        public Armor(string name, int grade, int price, int def)
+        public Armor(string name, int grade, int price, int def, bool isEquiped)
+            : base(name, "방어구", grade, price, false)
         {
-            Name = name;
-            Kind = "방어구";
-            Grade = grade;
-            Price = price;
-            IsEquiped = false;
             Def = def;
-
-            //ItemCnt++;
         }
     }
 }

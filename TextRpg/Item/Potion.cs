@@ -11,6 +11,7 @@ namespace TextRpg.Item
 {
 
     // 힐링 포션
+<<<<<<< HEAD
 
     public class HealingPotion : IItem
     {
@@ -30,6 +31,19 @@ namespace TextRpg.Item
         private int HealingAmount; 
 
 //        public static int ItemCnt = 0;
+=======
+    public class HealingPotion : Items
+    {
+        // 힐링 양
+        private int HealingAmount;
+
+        // 힐링 포션 생성자
+        public HealingPotion(string name, int grade, int price, int healingAmount ,bool isEquiped)
+            : base(name, "힐링포션", grade, price, false)
+        {
+            HealingAmount = healingAmount;
+        }
+>>>>>>> 9c199b94dcc9d57b397971b492788242ae3917e5
 
         public void Drop()
         {
@@ -41,6 +55,7 @@ namespace TextRpg.Item
                 Console.WriteLine("3등급 이상의 아이템은 버릴 수 없습니다!");
             }
         }
+<<<<<<< HEAD
 
         public void Use(Job player)
         {
@@ -70,5 +85,13 @@ namespace TextRpg.Item
 
         // 힐링 포션 생성자
 
+=======
+        
+        public void Use()
+        {
+
+        }
+
+>>>>>>> 9c199b94dcc9d57b397971b492788242ae3917e5
     }
 }
