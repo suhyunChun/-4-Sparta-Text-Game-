@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextRpg.Player;
 
 namespace TextRpg.Item
 {
-    public class Item : IItem
+    public abstract class Item : IItem
     {
         public string Name { get; }
         public string Kind { get; }
@@ -15,10 +16,17 @@ namespace TextRpg.Item
         public bool IsEquiped { get; set; }
 
         // 아이템 사용
-        public void Use();
+        public abstract void Use(Job player);
         // 아이템 드랍
-        public void Drop();
+        public abstract void Drop();
 
+        public Item(string name, string kind, int grade, int price ){
+            Name = name;
+            Kind = kind;
+            Grade = grade;
+            Price = price;
+            IsEquiped = false; // 초반에는 false 
+        }
 
     }
 

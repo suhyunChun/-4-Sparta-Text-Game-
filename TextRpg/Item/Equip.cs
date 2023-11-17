@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextRpg.Player;
 
 namespace TextRpg.Item
 {
@@ -35,10 +36,9 @@ namespace TextRpg.Item
             }
         }
 
-        public void Use()
+        public void Use(Job player) //장착
         {
             IsEquiped = !IsEquiped;
-            
         }
 
         // 무기 생성자

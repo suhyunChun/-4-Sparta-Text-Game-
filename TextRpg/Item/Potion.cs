@@ -11,9 +11,9 @@ namespace TextRpg.Item
 {
 
     // 힐링 포션
+
     public class HealingPotion : IItem
     {
-
         public string Name { get; }
 
         // 종류
@@ -24,6 +24,7 @@ namespace TextRpg.Item
         public int Price { get; }
 
         public bool IsEquiped { get; set; }
+
 
         // 힐링 양
         private int HealingAmount; 
@@ -41,18 +42,18 @@ namespace TextRpg.Item
             }
         }
 
-        public void Use()
+        public void Use(Job player)
         {
+
             IsEquiped = true;
             //캐릭터의 health 받아옴 
-            int health = Job.Health;
+            int health =player.Health;
             health +=HealingAmount;
             //새로운 hp로 다시 설정
-            Job.Health = health; 
+            player.Health = health; 
    
         }
 
-        // 힐링 포션 생성자
         public HealingPotion(string name, int grade, int price, int healingAmount)
         {
             Name = name;
@@ -62,7 +63,12 @@ namespace TextRpg.Item
             IsEquiped = false;
             HealingAmount = healingAmount;
 
+
             //ItemCnt++;
         }
+
+
+        // 힐링 포션 생성자
+
     }
 }

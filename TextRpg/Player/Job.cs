@@ -16,7 +16,7 @@ namespace TextRpg.Player
     
         public float Exp { get; protected set; }
 
-        public static int Health  { get; set;}
+        public int Health  { get; set;}
 
 
         public float Atk { get; }
