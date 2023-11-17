@@ -12,6 +12,10 @@ namespace TextRpg.Player
 
         public string Occupation { get; }
 
+        public int Level { get; protected set; }
+    
+        public float Exp { get; protected set; }
+
         public int Health { get; set; }
 
         public float Atk { get; }
@@ -22,14 +26,16 @@ namespace TextRpg.Player
 
         public bool IsDead { get; protected set; }
 
-        public Job(string name, string occupation, int health, int atk, int def, bool isDead)
+        public Job(string name, string occupation, int level, int health, float atk, float def, bool isDead)
         {
             Name = name;
             Occupation = occupation;
+            Level = level;
+            Exp = 0;
             Health = health;
             Atk = atk;
             Def = def;
-            Gold = 1500;
+            Gold = 3000;
             IsDead = isDead;
         }
     }

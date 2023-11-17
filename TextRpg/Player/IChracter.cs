@@ -12,6 +12,10 @@ namespace TextRpg.Player
         public string Name { get; }
         // 직업
         public string Occupation { get; }
+
+        public int Level { get; }
+
+        public float Exp { get; }
         public int Health { get; set; }
         public float Atk { get; }
         public float Def { get; }

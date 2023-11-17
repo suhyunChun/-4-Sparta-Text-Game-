@@ -10,6 +10,7 @@ namespace TextRpg.Item
     internal interface IItem
     {
         string Name { get; }
+        string Kind { get; }
         int Grade { get; }
         int Price { get; }
         bool IsEquiped { get; set; }

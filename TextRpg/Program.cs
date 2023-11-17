@@ -1,4 +1,7 @@
-﻿using TextRpg.InvenShop;
+﻿using System;
+using System.ComponentModel;
+using System.Reflection;
+using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
 
@@ -9,6 +12,7 @@ namespace TextRpg
         static Inventory inventory;
         static Shop shop;
         static IChracter _player;
+        static IItem _item;
         
         // 아이템 세팅
         private static void GameItemSetting(Inventory inventory, Shop shop)
@@ -129,6 +133,27 @@ namespace TextRpg
         {
             Console.Clear();
             Console.WriteLine("상태 메뉴입니다.");
+            Console.WriteLine("캐릭터의 정보를 표기하는 곳입니다.");
+
+            Console.WriteLine($"플레이어 이름: {_player.Name} ( {_player.Occupation} )");
+            Console.WriteLine("LV: {0}", _player.Level.ToString("00"));
+            Console.WriteLine();
+            Console.WriteLine($"공격력: {_player.Atk}");
+            Console.WriteLine($"방어력: {_player.Def}");
+            Console.WriteLine($"체력: {_player.Health}");
+            Console.WriteLine($"소지골드: {_player.Gold}");
+            Console.WriteLine(" ");
+
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+            
+            switch(CheckValidInput(0, 0))
+            {
+                case 0:
+                    StartMenu(_player.Occupation);
+                break;
+            }
+
         }
 
         // 인벤토리 메뉴
@@ -136,6 +161,94 @@ namespace TextRpg
         {
             Console.Clear();
             Console.WriteLine("인벤토리 메뉴입니다.");
+            Console.WriteLine("아이템을 관리할 수 있습니다.");
+
+            Console.WriteLine("");
+            inventory.DisplayInventory();
+
+            Console.WriteLine("");
+            Console.WriteLine("1. 장비 관리하기");
+            Console.WriteLine("2. 아이템 사용하기");
+            Console.WriteLine("3. 아이템 버리기");
+            Console.WriteLine("");
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+
+
+            switch (CheckValidInput(0, 3))
+            {
+                case 1:
+                    EquipMenu();
+                    break;
+                case 2:
+                    _item.Use();
+                    break;
+                case 3:
+                    DropItemMenu();
+                    break;
+                case 0:
+                    StartMenu(_player.Occupation);
+                    break;
+            }
+
+        }
+
+        //아이템 버리기 메뉴
+        private static void DropItemMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("인벤토리 - 아이템버리기");
+            Console.WriteLine("어떤 아이템을 버리시겠습니까?");
+            Console.WriteLine(" ");
+            Console.WriteLine($"아이템개수: {inventory.ItemCnt}");
+
+            Console.WriteLine("");
+            inventory.DropItem();
+            Console.WriteLine("");
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+
+            int keyInput = CheckValidInput(0, inventory.ItemCnt);
+            switch(keyInput)
+            {
+                case 0:
+                    InventoryMenu();
+                    break;
+                default:
+                    IsRemoveItem(keyInput - 1);
+                    break;
+            }
+        }
+
+        //아이템 버리기 경고
+        private static void IsRemoveItem(int itemIndex)
+        {
+            Console.Clear();
+            Console.WriteLine("정말 아이템을 삭제하시겠습니까?");
+            Console.WriteLine("");
+            inventory.CurrentRemoveItem(itemIndex);
+            Console.WriteLine("");
+
+            Console.WriteLine("1. 네");
+            Console.WriteLine("2. 아니오");
+            Console.WriteLine("");
+
+            switch (CheckValidInput(1, 2))
+            {
+                case 1:
+                    inventory.RemoveItem(itemIndex);
+                    DropItemMenu();
+                    break;
+                case 2:
+                    DropItemMenu();
+                    break;
+            }
+        }
+
+        //장비 관리
+        private static void EquipMenu()
+        {
+            
         }
 
         // 상점 메뉴
