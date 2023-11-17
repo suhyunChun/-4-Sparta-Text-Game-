@@ -17,14 +17,14 @@ namespace TextRpg
         // 아이템 세팅
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
-            inventory.AddItem(new Weapon("낡은 검", 1, 100, 10));
-            inventory.AddItem(new Armor("낡은 방패", 1, 100, 10));
-            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10));
+            inventory.AddItem(new Weapon("낡은 검", 1, 100, 10, true));
+            inventory.AddItem(new Armor("낡은 방패", 1, 100, 10, true));
+            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, true));
 
-            shop.AddShopItem(new Weapon("황금 검", 2, 300, 20));
-            shop.AddShopItem(new Armor("황금 방패", 2, 300, 15));
-            shop.AddShopItem(new HealingPotion("고급 회복 물약", 2, 200, 20));
-
+            shop.AddShopItem(new Weapon("황금 검", 2, 300, 20, true));
+            shop.AddShopItem(new Armor("황금 방패", 2, 300, 15, true));
+            shop.AddShopItem(new HealingPotion("고급 회복 물약", 2, 200, 20, true));
+            shop.AddShopItem(new HealingPotion("고오급 회복 물약", 2, 1000000, 20, true));
         }
         // 시작 씬
         private static void PrintStartScene()
@@ -183,7 +183,7 @@ namespace TextRpg
                     EquipMenu();
                     break;
                 case 2:
-                    _item.Use();
+                    item.Use();
                     break;
                 case 3:
                     DropItemMenu();
@@ -205,7 +205,7 @@ namespace TextRpg
             Console.WriteLine($"아이템개수: {inventory.ItemCnt}");
 
             Console.WriteLine("");
-            inventory.DropItem();
+            inventory.ShowInvenItem();
             Console.WriteLine("");
             Console.WriteLine("0. 뒤로가기");
             Console.WriteLine("");
@@ -258,6 +258,156 @@ namespace TextRpg
         {
             Console.Clear();
             Console.WriteLine("상점 메뉴입니다.");
+            Console.WriteLine("상점에 있는 아이템을 사고 팔 수 있습니다.");
+            Console.WriteLine("");
+
+            shop.DisplayShop();
+            Console.WriteLine("");
+            Console.WriteLine("1. 아이템 사기");
+            Console.WriteLine("2. 아이템 팔기");
+            Console.WriteLine("");
+            Console.WriteLine("0. 뒤로가기");
+
+            switch (CheckValidInput(0, 2))
+            {
+                case 1:
+                    BuyShopMenu();
+                    break;
+                case 2:
+                    SellShopMenu();
+                    break;
+                case 0:
+                    StartMenu(player.Occupation);
+                    break;
+            }
+
+        }
+        
+        // 아이템 사기 메뉴
+        private static void BuyShopMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("상점 - 아이템 사기");
+            Console.WriteLine("구매하고 싶은 아이템을 선택해주세요");
+            Console.WriteLine($"상점의 아이템 개수: {shop.ShopItemCnt}");
+            Console.WriteLine("");
+
+            shop.BuyShopItem();
+            Console.WriteLine("");
+
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+
+            int keyInput = CheckValidInput(0, shop.ShopItemCnt);
+
+            switch(keyInput)
+            {
+                case 0:
+                    ShopMenu();
+                    break;
+                default:
+                    if (player.Gold == 0 || player.Gold < shop.ShopItemPrice(keyInput - 1)) 
+                    {
+                        Console.WriteLine("소지금이 부족합니다!");
+                        Console.WriteLine($"현재 소지금액: {player.Gold}");
+                        Console.WriteLine("아무키나 입력하시면 상점으로 이동합니다.");
+                        Console.ReadLine();
+                        ShopMenu();
+                    }
+                    else
+                    {
+                        shop.BuyItemAddInventory(player, inventory, keyInput - 1);
+                        IsMoreBuyItem();
+                    }
+                    break;
+            }
+        }
+
+        // 아이템을 더 구매할지 여부
+        private static void IsMoreBuyItem()
+        {
+            Console.Clear();
+            Console.WriteLine("아이템을 더 구매하시겠습니까?");
+            Console.WriteLine("");
+
+            Console.WriteLine($"현재 소지금액: {player.Gold}");
+            Console.WriteLine("");
+
+            Console.WriteLine("1. 더 구매한다.");
+            Console.WriteLine("2. 시작메뉴로 돌아간다.");
+            Console.WriteLine("");
+
+            switch(CheckValidInput(1, 2))
+            {
+                case 1:
+                    BuyShopMenu();
+                    break;
+                case 2:
+                    StartMenu(player.Occupation);
+                    break;
+            }
+
+        }
+
+        // 아이템 팔기 메뉴
+        private static void SellShopMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("상점 - 아이템 팔기.");
+            Console.WriteLine("판매하고 싶은 아이템을 선택해주세요");
+            Console.WriteLine($"인벤토리 아이템 개수: {inventory.ItemCnt}");
+            Console.WriteLine("");
+
+            inventory.ShowInvenItem();
+            Console.WriteLine("");
+
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+
+            int keyInput = CheckValidInput(0, inventory.ItemCnt);
+
+            switch (keyInput)
+            {
+                case 0:
+                    ShopMenu();
+                    break;
+                default:
+                    if (IsRealSellItem())
+                    {
+                        inventory.SellItem(player, keyInput - 1);
+                        ShopMenu();
+                    }
+                    else
+                    {
+                        Console.WriteLine("판매되지 않았습니다.");
+                        SellShopMenu();
+                    }
+                    break;
+                }
+        }
+
+        // 정말 판매할지 안할지 선택
+        private static bool IsRealSellItem()
+        {
+            Console.Clear();
+            Console.WriteLine("정말 판매하시겠습니까?");
+            Console.WriteLine($"선택된 아이템: ");
+            Console.WriteLine("");
+
+            Console.WriteLine("1. 판매한다.");
+            Console.WriteLine("2. 판매하지 않는다.");
+
+            switch(CheckValidInput(1, 2))
+            {
+                case 1:
+                    return true;
+                    break;
+                case 2:
+                    return false;
+                    break;
+            }
+
+            return false;
         }
 
         // 핸들러
@@ -278,7 +428,7 @@ namespace TextRpg
 
         private static bool CheckIfValid(int keyInput, int min, int max)
         {
-            if(min <= keyInput && max >= keyInput) 
+            if (min <= keyInput && max >= keyInput)
             {
                 return true;
             }

@@ -10,7 +10,7 @@ namespace TextRpg.Player
     public class Archer : Job
     {
         // 체력 150, 공격력 12, 방어력 5
-        public Archer(string name) : base(name, "궁수", 1, 150, 12, 5, false)
+        public Archer(string name) : base(name, "궁수", 1, 150, 12, 5, 3000, false)
         {
             if (Health <= 0)
             {
