@@ -21,8 +21,6 @@ namespace TextRpg.Player
                 Level++;
                 Exp += 50;
             }
-
         }
-
     }
 }
