@@ -13,7 +13,7 @@ namespace TextRpg
         static Shop shop;
         static Job player;
         static IItem _item;
-        
+        static Battle battle;
         // 아이템 세팅
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
@@ -89,7 +89,7 @@ namespace TextRpg
         }
 
         // 시작 메뉴
-        private static void StartMenu(string occupation)
+        public static void StartMenu(string occupation)
         {
             Console.Clear();
             Console.WriteLine("{0} 을(를) 선택하셨습니다.", occupation);
@@ -115,7 +115,9 @@ namespace TextRpg
                     ShopMenu();
                     break;
                 case 4:
-                    StageSelected();
+                    battle = new Battle(player);
+                    battle.BattleScene();
+                    //StageSelected();
                     break;
             }
 
@@ -259,7 +261,7 @@ namespace TextRpg
         }
 
         // 핸들러
-        private static int CheckValidInput(int min, int max)
+        public static int CheckValidInput(int min, int max)
         {
             int keyInput;
             bool result;

@@ -46,7 +46,7 @@ namespace TextRpg.Player
         // 소지 아이템 = 플레이어가 소지중인 아이템들. 몬스터는 드롭 아이템 목록으로 사용.
         public int[] Item { get; set; }
         // 죽음 여부 = 해치웠나?
-        public bool IsDead { get; protected set; }
+        public bool IsDead { get; set; }
 
         public Mob(string name, string occupation, int level, int health, float atk, float def, bool isDead)
         {
