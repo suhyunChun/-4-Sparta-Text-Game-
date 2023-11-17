@@ -207,7 +207,15 @@ namespace TextRpg
             {
                 //승리
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Victory");
+                Console.WriteLine("oooooo     oooo  o8o                .                                  \n" +
+                                  " `888.     .8'   `\"'              .o8                                  \n" +
+                                  "  `888.   .8'   oooo   .ooooo.  .o888oo  .ooooo.  oooo d8b oooo    ooo \n" +
+                                  "   `888. .8'    `888  d88' `\"Y8   888   d88' `88b `888\"\"8P  `88.  .8'  \n" +
+                                  "    `888.8'      888  888         888   888   888  888       `88..8'   \n"+
+                                  "     `888'       888  888   .o8   888 . 888   888  888        `888'    \n"+
+                                  "      `8'       o888o `Y8bod8P'   \"888\" `Y8bod8P' d888b        .8'     \n"+
+                                  "                                                           .o..P'      \n"+
+                                  "                                                           `Y8P'       \n");
                 Console.ResetColor();
                 Console.WriteLine("");
                 Console.WriteLine($"던전에서 몬스터 {deadCnt}마리를 잡았습니다.");
@@ -220,7 +228,13 @@ namespace TextRpg
             {
                 //패배
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You Lose");
+                Console.WriteLine("oooooo   oooo                            ooooo                                     \n" +
+                                  " `888.   .8'                             `888'                                     \n" +
+                                  "  `888. .8'    .ooooo.  oooo  oooo        888          .ooooo.   .oooo.o  .ooooo.  \n" +
+                                  "   `888.8'    d88' `88b `888  `888        888         d88' `88b d88(  \"8 d88' `88b \n" +
+                                  "    `888'     888   888  888   888        888         888   888 `\"Y88b.  888ooo888 \n" +
+                                  "     888      888   888  888   888        888       o 888   888 o.  )88b 888    .o \n" +
+                                  "    o888o     `Y8bod8P'  `V88V\"V8P'      o888ooooood8 `Y8bod8P' 8\"\"888P' `Y8bod8P' \n");
                 Console.ResetColor();
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
