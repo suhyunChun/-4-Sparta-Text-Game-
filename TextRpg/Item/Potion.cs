@@ -26,7 +26,7 @@ namespace TextRpg.Item
         // 힐링 양
         private int HealingAmount;
 
-        public static int ItemCnt = 0;
+//        public static int ItemCnt = 0;
 
         public void Drop()
         {
@@ -41,7 +41,7 @@ namespace TextRpg.Item
 
         public void Use()
         {
-            
+            IsEquiped = true;
         }
 
         // 힐링 포션 생성자
@@ -54,7 +54,7 @@ namespace TextRpg.Item
             IsEquiped = false;
             HealingAmount = healingAmount;
 
-            ItemCnt++;
+            //ItemCnt++;
         }
     }
 }

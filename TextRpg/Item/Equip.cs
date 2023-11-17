@@ -26,12 +26,19 @@ namespace TextRpg.Item
 
         public void Drop()
         {
-            
+            if(Grade >= 2)
+            {
+                Console.WriteLine($"아이템 {Name}을(를) 버렸습니다!");
+            }else
+            {
+                Console.WriteLine("3등급 이상의 아이템은 버릴 수 없습니다!");
+            }
         }
 
         public void Use()
         {
-   
+            IsEquiped = !IsEquiped;
+            
         }
 
         // 무기 생성자
@@ -65,12 +72,18 @@ namespace TextRpg.Item
 
         public void Drop()
         {
-            
+            if(Grade >= 2)
+            {
+                Console.WriteLine($"아이템 {Name}을(를) 버렸습니다!");
+            }else
+            {
+                Console.WriteLine("3등급 이상의 아이템은 버릴 수 없습니다!");
+            }
         }
 
         public void Use()
         {
-            
+             IsEquiped = !IsEquiped;
         }
 
         // 방어구 생성자
