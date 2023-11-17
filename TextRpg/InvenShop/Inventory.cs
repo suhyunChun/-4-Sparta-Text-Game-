@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using TextRpg.Player;
 
 namespace TextRpg.InvenShop
 {
@@ -12,7 +13,7 @@ namespace TextRpg.InvenShop
     // 인벤토리 클래스
     public class Inventory
     {
-        private List<IItem> invenItems;
+        private List<Items> invenItems;
 
         public int ItemCnt
         {
@@ -22,11 +23,11 @@ namespace TextRpg.InvenShop
         // 인벤토리
         public Inventory()
         {
-            invenItems = new List<IItem>();
+            invenItems = new List<Items>();
         }
 
         // 아이템 추가
-        internal void AddItem(IItem item)
+        internal void AddItem(Items item)
         {
             
             invenItems.Add(item);
@@ -54,8 +55,9 @@ namespace TextRpg.InvenShop
 
          }
 
-        //드랍할 아이템 목록
-        public void DropItem()
+
+        //아이템 목록 index
+        public void ShowInvenItem()
         {
             int idx = 0;
 
@@ -68,6 +70,28 @@ namespace TextRpg.InvenShop
                     $"등급: {item.Grade}★, 가격: {item.Price}");
 
                 idx++;
+            }
+        }
+
+        // 아이템 판매하기
+        public void SellItem(Job player, int index)
+        {
+            if (index >= 0 && index < invenItems.Count)
+            {
+                Items sellInvenItem = invenItems[index];
+
+                int totalGold = player.Gold + sellInvenItem.Price;
+
+                player.Gold += sellInvenItem.Price;
+
+                Console.Clear();
+                Console.WriteLine($"아이템이 판매되었습니다: {sellInvenItem.Name}");
+                Console.WriteLine($"전체 금액: {totalGold}");
+                Console.WriteLine($"현재 소지금액: {player.Gold}");
+                Console.WriteLine("");
+                Console.WriteLine("아무키나 입력하시면 상점으로 이동합니다.");
+                invenItems.RemoveAt(index);
+                Console.ReadLine();
             }
         }
 
@@ -84,12 +108,11 @@ namespace TextRpg.InvenShop
 
             if(index >= 0 && index <  invenItems.Count) 
             {
-                IItem removeItem = invenItems[index];
+                Items removeItem = invenItems[index];
                 Console.WriteLine($"아이템이 삭제되었습니다: {removeItem.Name}");
                 Console.WriteLine("아무키나 입력하시면 인벤토리로 이동합니다.");
                 invenItems.RemoveAt(index);
                 Console.ReadLine();
-
             }
         }
 

@@ -47,7 +47,7 @@ namespace TextRpg.Player
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set;  }
 
-        public Job(string name, string occupation, int level, int health, float atk, float def, bool isDead)
+        public Job(string name, string occupation, int level, int health, float atk, float def, int gold, bool isDead)
         {
             Name = name;
             Occupation = occupation;
@@ -56,7 +56,7 @@ namespace TextRpg.Player
             Health = health;
             Atk = atk;
             Def = def;
-            Gold = 3000;
+            Gold = gold;
             IsDead = isDead;
         }
 

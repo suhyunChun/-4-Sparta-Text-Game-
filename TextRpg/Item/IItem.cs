@@ -13,6 +13,7 @@ namespace TextRpg.Item
         string Kind { get; }
         int Grade { get; }
         int Price { get; }
+        
         bool IsEquiped { get; set; }
 
         // 아이템 사용
