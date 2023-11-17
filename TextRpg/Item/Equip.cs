@@ -11,14 +11,18 @@ namespace TextRpg.Item
     {
         public string Name { get; }
 
+        public string Kind { get; }
         public int Grade { get; }
 
         public int Price { get; }
 
         public bool IsEquiped { get; set; }
 
+
         // 공격력
         private int Atk;
+
+        public static int ItemCnt = 0;
 
         public void Drop()
         {
@@ -34,10 +38,13 @@ namespace TextRpg.Item
         public Weapon (string name, int grade, int price, int atk)
         {
             Name = name;
+            Kind = "무기";
             Grade = grade;
             Price = price;
             IsEquiped = false;
             Atk = atk;
+
+            ItemCnt++;
         }
     }
 
@@ -45,12 +52,14 @@ namespace TextRpg.Item
     public class Armor : IItem
     {
         public string Name { get; }
+        public string Kind { get; }
         public int Grade { get; }
 
         public int Price { get; }
 
         public bool IsEquiped { get; set; }
 
+        public static int ItemCnt = 0;
         // 방어력
         private int Def;
 
@@ -68,10 +77,13 @@ namespace TextRpg.Item
         public Armor(string name, int grade, int price, int def)
         {
             Name = name;
+            Kind = "방어구";
             Grade = grade;
             Price = price;
             IsEquiped = false;
             Def = def;
+
+            ItemCnt++;
         }
     }
 }
