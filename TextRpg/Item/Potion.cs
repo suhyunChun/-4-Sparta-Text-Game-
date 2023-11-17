@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.InvenShop;
+using TextRpg.Player;
+
 
 namespace TextRpg.Item
 {
@@ -32,10 +34,17 @@ namespace TextRpg.Item
             }
         }
         
-        public void Use()
-        {
+           public void Use(Job player){
 
+                IsEquiped = true;
+                //캐릭터의 health 받아옴 
+                int health =player.Health;
+                health +=HealingAmount;
+                //새로운 hp로 다시 설정
+                player.Health = health; 
+   
         }
+
 
     }
 }
