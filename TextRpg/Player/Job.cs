@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -37,7 +37,9 @@ namespace TextRpg.Player
         // 추가 방어력 = 아이템에 의한 수치 변화
         public float PlusDef { get; set; }
         // 골드 = 상점에 사용할 돈 및 몬스터가 뱉을 돈
-        public int Gold { get; set; }
+
+        public int Gold { get; set;}
+
         // 무구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
         public int Weapon { get; set; }
         // 방어구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
