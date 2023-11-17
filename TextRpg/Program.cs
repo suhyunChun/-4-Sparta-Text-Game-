@@ -198,6 +198,9 @@ namespace TextRpg
 
         }
 
+        //아이템 사용하기 메뉴 
+
+ 
         //아이템 버리기 메뉴
         private static void DropItemMenu()
         {
