@@ -234,7 +234,7 @@ namespace TextRpg
             int input = Program.CheckValidInput(0, 0);
             if (input == 0)
             {
-                Program.StartMenu("");
+                Program.StartMenu(player.Occupation);
             }
         }
         private void UsingItem()
