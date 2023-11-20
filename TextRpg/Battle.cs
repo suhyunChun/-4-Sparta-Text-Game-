@@ -62,6 +62,18 @@ namespace TextRpg
             }
         }
 
+        public int CirticalAttack(int damage, ref bool isCritical){
+            int critical = new Random().Next(1, 100);
+            if(critical <= 15){ // 크리티컬일때
+                isCritical = true;
+                double newCharacterSkill = damage*1.6;
+                damage = (int)Math.Round(newCharacterSkill);
+            } else{
+                isCritical = false;
+            }
+           
+            return damage;
+        }
         // 스킬 공격 또는 아이템 사용 선택
         private void SelectSkillOrAtk()
         {
@@ -167,10 +179,15 @@ namespace TextRpg
             TryUseSkillWithManaCheck(skill_1Mana);
             
             // 캐릭터의 스킬 
+            bool isCritical = false;
+
             int characterSkill = player.Skill_1(player.Occupation, player.Atk, skill_1Mana);
+            characterSkill = CirticalAttack(characterSkill,ref isCritical);
+
+
            
             //몬스터에게 데미지 가하기
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]");
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]  {(isCritical? "- 치명타 공격!!" : "")}");
             Console.WriteLine("");
             Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             mobs[idx].IsDead = mobs[idx].Health - characterSkill <= 0 ? true : false;
@@ -276,9 +293,11 @@ namespace TextRpg
         {
             SceneTitle(false);
 
+            int dodge = new Random().Next(1,100);
             //데미지 계산
+            bool isCritical = false;
             int Damage = player.Attack(mobs[idx]);
-
+            Damage = CirticalAttack(Damage, ref isCritical);
             //몬스터에게 데미지 가하기
             Console.WriteLine($"{player.Name} 의 공격!");
             Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}]");
@@ -292,7 +311,25 @@ namespace TextRpg
             Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
             Console.WriteLine("");
             mobs[idx].Health -= Damage;
+            if(dodge > 11){
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
+                Console.WriteLine("");
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
 
+                mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
+                if (mobs[idx].IsDead)
+                {
+                    deadCnt++;
+                    Console.WriteLine(mobs[idx].PlusExp);
+                    player.Exp += mobs[idx].PlusExp;
+                    Console.WriteLine($"현재 경험치: {player.Exp}");
+                }
+                Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+                Console.WriteLine("");
+                mobs[idx].Health -= Damage;
+            }else{
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+            }
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
             int input = Program.CheckValidInput(0, 0);
