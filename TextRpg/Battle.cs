@@ -21,6 +21,9 @@ namespace TextRpg
         int originalHP;
         int deadCnt;
         FontColor fontColor;
+        ConsoleKeyInfo c;
+
+        delegate void OriginFunction(int cursor);
 
         public Battle(Job _player, Inventory _inventory)
         {
@@ -40,64 +43,124 @@ namespace TextRpg
         /// <summary>
         /// 전투 시작하면 보게 되는 화면
         /// </summary>
-        public void BattleScene()
+        public void BattleScene(int cursor)
         {
             SceneTitle(false);
             // 몬스터와 플레이어의 정보 나열
-            DisplayStatus(false);
+            DisplayStatus(false,1);
             Console.WriteLine("");
 
             // 1.공격 2.도망 선택
-            Console.WriteLine("1. 공격하기");
-            Console.WriteLine("2. 도망가기");
-            int input = Program.CheckValidInput(1, 2);
-            switch (input)
+            if (cursor == 1)
+                HighlightText("1. 공격하기");
+            else
+                Console.WriteLine("1. 공격하기");
+            if (cursor == 2)
+                HighlightText("2. 도망가기");
+            else
+                Console.WriteLine("2. 도망가기");
+            /*            
+                        do
+                        {
+                            c = Console.ReadKey();
+                            switch (c.Key)
+                            {
+                                case ConsoleKey.UpArrow:
+                                    cursor--;
+                                    if (cursor < 1)
+                                        cursor = 2;
+                                    BattleScene(cursor);
+                                    break;
+                                case ConsoleKey.DownArrow:
+                                    cursor++;
+                                    if (cursor > 2)
+                                        cursor = 1;
+                                    BattleScene(cursor);
+                                    break;
+                            }
+
+                        } while (c.Key != ConsoleKey.Enter);*/
+
+            //int input = Program.CheckValidInput(1, 2);
+
+            //위 내용을 SetCursor로 함수화 시킴
+            SetCursor(1, 2, cursor, BattleScene);
+
+            switch (cursor)
             {
                 case 1:
-                    SelectSkillOrAtk();
+                    SelectSkillOrAtk(1);
                     break;
                 case 2:
-                    Program.StartMenu("쫄보");
+                    Program.StartMenu("쫄보",1);
                     break;
             }
         }
 
+        public int CirticalAttack(int damage, ref bool isCritical){
+            int critical = new Random().Next(1, 100);
+            if(critical <= 15){ // 크리티컬일때
+                isCritical = true;
+                double newCharacterSkill = damage*1.6;
+                damage = (int)Math.Round(newCharacterSkill);
+            } else{
+                isCritical = false;
+            }
+           
+            return damage;
+        }
         // 스킬 공격 또는 아이템 사용 선택
-        private void SelectSkillOrAtk()
+        private void SelectSkillOrAtk(int cursor)
         {
             SceneTitle(false);
             // 몬스터와 플레이어의 정보 나열
-            DisplayStatus(false);
+            DisplayStatus(false,1);
             Console.WriteLine("");
 
             // 1.공격 2.스킬 3.아이템사용 선택
-            Console.WriteLine("1. 일반 공격하기");
-            Console.WriteLine("2. 스킬 사용하기");
-            Console.WriteLine("3. 아이템 사용하기");
+            if (cursor == 1)
+                HighlightText("1. 일반 공격하기");
+            else
+                Console.WriteLine("1. 일반 공격하기");
+            if (cursor == 2)
+                HighlightText("2. 스킬 사용하기");
+            else
+                Console.WriteLine("2. 스킬 사용하기");
+            if (cursor == 3)
+                HighlightText("3. 아이템 사용하기");
+            else
+                Console.WriteLine("3. 아이템 사용하기");
             Console.WriteLine("");
+            if (cursor == 0)
+                HighlightText("0. 취소");
+            else
+                Console.WriteLine("0. 취소");
+            //int input = Program.CheckValidInput(1, 3);
+            SetCursor(0, 3, cursor, SelectSkillOrAtk);
 
-            int input = Program.CheckValidInput(1, 3);
-
-            switch(input)
+            switch (cursor)
             {
+                case 0:
+                    BattleScene(1);
+                    break;
                 case 1:
-                    SelectMonster(false);
+                    SelectMonster(false,1);
                     break;
                 case 2:
-                    SelectSkillAtkMonster(false);
+                    SelectSkillAtkMonster(false,1);
                     break;
                 case 3:
-                    UsingItem();
+                    UsingItem(1);
                     break;
             }
 
         }
 
         // 스킬로 어떤 몬스터를 가격할 지 선택
-        private void SelectSkillAtkMonster(bool reSelect)
+        private void SelectSkillAtkMonster(bool reSelect,int cursor)
         {
             SceneTitle(false);
-            DisplayStatus(true);
+            DisplayStatus(true,cursor);
             Console.WriteLine("");
             if (reSelect)
             {
@@ -105,30 +168,56 @@ namespace TextRpg
                 Console.WriteLine("그는 이미 갔습니다.");
                 Console.ResetColor();
             }
-            Console.WriteLine("0. 취소");
+            if (cursor == 0)
+                HighlightText("0. 취소");
+            else
+                Console.WriteLine("0. 취소");
+
             Console.WriteLine("");
             Console.WriteLine("대상을 선택해주세요.");
-            int input = Program.CheckValidInput(0, mobs.Count);
-            switch (input)
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < 0)
+                            cursor = mobs.Count;
+                        SelectSkillAtkMonster(false, cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > mobs.Count)
+                            cursor = 0;
+                        SelectSkillAtkMonster(false, cursor);
+                        break;
+                }
+
+            } while (c.Key != ConsoleKey.Enter);
+            //int input = Program.CheckValidInput(0, mobs.Count);
+            //SetCursor(0, mobs.Count, cursor, SelectSkillAtkMonster);
+
+            switch (cursor)
             {
                 //취소
                 case 0:
-                    BattleScene();
+                    SelectSkillOrAtk(1);
                     break;
                 //몬스터 고름
                 case 1:
                 case 2:
                 case 3:
                 case 4:
-                    if (mobs[input - 1].IsDead)
-                    SelectMonster(true);
-                    PlayerSkillResult(input - 1);
+                    if (mobs[cursor - 1].IsDead)
+                    SelectMonster(true,1);
+                    PlayerSkillResult(cursor - 1);
                     break;
             }
         }
 
         // 마나 여부 체크
-        private void TryUseSkillWithManaCheck(int skillMana)
+        private void TryUseSkillWithManaCheck(int skillMana,int cursor)
         {
             // 플레이어의 현재 마나가 스킬보다 작을 때
             if (player.Mana < skillMana)
@@ -137,17 +226,44 @@ namespace TextRpg
                 player.LackMana();
                 Console.WriteLine("마나 포션을 사용하시겠습니까?");
                 Console.WriteLine("");
-                Console.WriteLine("1. 사용하기");
-                Console.WriteLine("2. 던전에서 나가기");
+
+                if (cursor == 1)
+                    HighlightText("1. 사용하기");
+                else
+                    Console.WriteLine("1. 사용하기");
+                if (cursor == 2)
+                    HighlightText("2. 던전에서 나가기");
+                else
+                    Console.WriteLine("2. 던전에서 나가기");
                 Console.WriteLine("");
 
-                switch (Program.CheckValidInput(1, 2))
+                do
+                {
+                    c = Console.ReadKey();
+                    switch (c.Key)
+                    {
+                        case ConsoleKey.UpArrow:
+                            cursor--;
+                            if (cursor < 1)
+                                cursor = 2;
+                            TryUseSkillWithManaCheck(skillMana, cursor);
+                            break;
+                        case ConsoleKey.DownArrow:
+                            cursor++;
+                            if (cursor > 2)
+                                cursor = 1;
+                            TryUseSkillWithManaCheck(skillMana, cursor);
+                            break;
+                    }
+                } while (c.Key != ConsoleKey.Enter);
+
+                switch (cursor)
                 {
                     case 1:
-                        IsMpPotionUsed();
+                        IsMpPotionUsed(1);
                         break;
                     case 2:
-                        Program.StartMenu(player.Occupation);
+                        Program.StartMenu(player.Occupation,1);
                         break;
                 }
 
@@ -164,36 +280,33 @@ namespace TextRpg
             int skill_1Mana = 5;
 
             // 사용 마나 여부 체크
-            TryUseSkillWithManaCheck(skill_1Mana);
+            TryUseSkillWithManaCheck(skill_1Mana,1);
             
             // 캐릭터의 스킬 
+            bool isCritical = false;
+
             int characterSkill = player.Skill_1(mobs[idx]);
+            characterSkill = CirticalAttack(characterSkill,ref isCritical);
+
+
            
             //몬스터에게 데미지 가하기
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]");
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]  {(isCritical? "- 치명타 공격!!" : "")}");
             Console.WriteLine("");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             mobs[idx].IsDead = mobs[idx].Health - characterSkill <= 0 ? true : false;
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
+            Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - characterSkill)}");
+            Console.WriteLine();
             if (mobs[idx].IsDead)
             {
                 deadCnt++;
-                player.Exp += mobs[idx].PlusExp;
-                while (player.Level * 5 <= player.Exp)
-                {
-                    player.Level++;
-                    player.Strength += 2;
-                    player.Agility++;
-                    player.Intelligence++;
-                    player.Health = player.MaxHealth;
-                    player.Mana = player.MaxMana;
-                    player.Exp -= player.Level * 5;
-                }
-                Console.WriteLine($"현재 레벨: {player.Level}, 현재 경험치: {player.Exp}");
+                player.Exp += mobs[idx].Exp;
+                LevelController();
+                Console.WriteLine($"현재 경험치: {player.Exp}");
+                Console.WriteLine();
             }
-                Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - characterSkill)}");
-            Console.WriteLine("");
             mobs[idx].Health -= characterSkill;
-
+            Console.WriteLine();
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
             int input = Program.CheckValidInput(0, 0);
@@ -219,11 +332,11 @@ namespace TextRpg
             int numberOfMob = rand.Next(1, 5);
             for (int i = 1; i <= numberOfMob; i++)
             {
-                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 10, 5, 5, false));
+                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 5, 10, 5, 5, false));
 
             }
         }
-        private void DisplayStatus(bool isSelect)
+        private void DisplayStatus(bool isSelect,int cursor)
         {
             for (int i = 0; i < mobs.Count; i++)
             {
@@ -233,8 +346,11 @@ namespace TextRpg
                     Console.ForegroundColor = ConsoleColor.Red;
                 }
                 if (isSelect)
-                    Console.Write($"{i+1} ");
-                Console.WriteLine($"Lv.{mobs[i].Level} {mobs[i].Name} {(mobs[i].IsDead ? "Dead" : $"HP{mobs[i].Health}")}");
+                    Console.Write($"{i + 1} ");
+                if (isSelect && cursor == i + 1)
+                    HighlightText($"Lv.{mobs[i].Level} {mobs[i].Name} {(mobs[i].IsDead ? "Dead" : $"HP{mobs[i].Health}")}");
+                else
+                    Console.WriteLine($"Lv.{mobs[i].Level} {mobs[i].Name} {(mobs[i].IsDead ? "Dead" : $"HP{mobs[i].Health}")}");
 
                 Console.ResetColor();
             }
@@ -249,10 +365,10 @@ namespace TextRpg
         /// <summary>
         /// 공격 선택 시 공격할 몬스터 선택
         /// </summary>
-        private void SelectMonster(bool reSelect)
+        private void SelectMonster(bool reSelect,int cursor)
         {
             SceneTitle(false);
-            DisplayStatus(true);
+            DisplayStatus(true,cursor);
             Console.WriteLine("");
             if (reSelect)
             {
@@ -260,24 +376,48 @@ namespace TextRpg
                 Console.WriteLine("그는 이미 갔습니다.");
                 Console.ResetColor();
             }
-            Console.WriteLine("0. 취소");
+
+            if (cursor == 0)
+                HighlightText("0. 취소");
+            else
+                Console.WriteLine("0. 취소");
+
             Console.WriteLine("");
             Console.WriteLine("대상을 선택해주세요.");
-            int input = Program.CheckValidInput(0, mobs.Count);
-            switch (input)
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < 0)
+                            cursor = mobs.Count;
+                        SelectMonster(false, cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > mobs.Count)
+                            cursor = 0;
+                        SelectMonster(false, cursor);
+                        break;
+                }
+            } while (c.Key != ConsoleKey.Enter);
+            //int input = Program.CheckValidInput(0, mobs.Count);
+            switch (cursor)
             {
                 //취소
                 case 0:
-                    BattleScene();
+                    SelectSkillOrAtk(1);
                     break;
                 //몬스터 고름
                 case 1:
                 case 2:
                 case 3:
                 case 4:
-                    if (mobs[input - 1].IsDead)
-                        SelectMonster(true);
-                    PlayerAttackResult(input - 1);
+                    if (mobs[cursor - 1].IsDead)
+                        SelectMonster(true,1);
+                    PlayerAttackResult(cursor - 1);
                     break;
             }
 
@@ -290,35 +430,43 @@ namespace TextRpg
         {
             SceneTitle(false);
 
+            int dodge = new Random().Next(1,100);
             //데미지 계산
+            bool isCritical = false;
             int Damage = player.Attack(mobs[idx]);
-
+            Damage = CirticalAttack(Damage, ref isCritical);
             //몬스터에게 데미지 가하기
-            Console.WriteLine($"{player.Name} 의 공격!");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}]");
-            Console.WriteLine("");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
-            mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
-            if (mobs[idx].IsDead)
-            {
-                deadCnt++;
-                player.Exp += mobs[idx].PlusExp;
-                while (player.Level * 5 <= player.Exp)
-                {
-                    player.Level++;
-                    player.Strength += 2;
-                    player.Agility++;
-                    player.Intelligence++;
-                    player.Health = player.MaxHealth;
-                    player.Mana = player.MaxMana;
-                    player.Exp -= player.Level * 5;
-                }
-                Console.WriteLine($"현재 레벨: {player.Level}, 현재 경험치: {player.Exp}");
-            }
-            Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
-            Console.WriteLine("");
-            mobs[idx].Health -= Damage;
+            //Console.WriteLine($"{player.Name} 의 공격!");
+            //Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}]");
+            //Console.WriteLine("");
+            //Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
+            //mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
+            //if (mobs[idx].IsDead)
+            //{
+            //    deadCnt++;
+            //}
+            //Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+            //Console.WriteLine("");
+            //mobs[idx].Health -= Damage;
+            if(dodge > 11){
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
+                Console.WriteLine("");
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
 
+                mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
+                if (mobs[idx].IsDead)
+                {
+                    deadCnt++;
+                    Console.WriteLine(mobs[idx].Exp);
+                    player.Exp += mobs[idx].Exp;
+                    Console.WriteLine($"현재 경험치: {player.Exp}");
+                }
+                Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+                Console.WriteLine("");
+                mobs[idx].Health -= Damage;
+            }else{
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+            }
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
             int input = Program.CheckValidInput(0, 0);
@@ -367,7 +515,7 @@ namespace TextRpg
                 if (player.IsDead)
                     BattleResult(false);
                 else
-                    BattleScene();
+                    BattleScene(1);
             }
         }
 
@@ -405,30 +553,42 @@ namespace TextRpg
             int input = Program.CheckValidInput(0, 0);
             if (input == 0)
             {
-                Program.StartMenu("");
+                Program.StartMenu(player.Occupation,1);
             }
         }
 
         // 아이템 사용하기
-        private void UsingItem()
+        private void UsingItem(int cursor)
         {
             Console.Clear();
             Console.WriteLine("아이템 사용하기 입니다.");
             Console.WriteLine("사용할 아이템의 종류를 선택해주세요.");
-            Console.WriteLine("1. 힐링 포션");
-            Console.WriteLine("2. 마나 포션");
-            Console.WriteLine("");
-            Console.WriteLine("0. 취소하기");
+            if (cursor == 1)
+                HighlightText("1. 힐링 포션");
+            else
+                Console.WriteLine("1. 힐링 포션");
 
-            switch(Program.CheckValidInput(0, 2))
+            if (cursor == 2)
+                HighlightText("2. 마나 포션");
+            else
+                Console.WriteLine("2. 마나 포션");
+            Console.WriteLine("");
+            if (cursor == 0)
+                HighlightText("0. 취소");
+            else
+                Console.WriteLine("0. 취소");
+
+            SetCursor(0, 2, cursor, UsingItem);
+
+            switch (cursor)
             {
                 case 0:
-                    SelectSkillOrAtk();
+                    SelectSkillOrAtk(1);
                     break;
                 case 1:
                     if (player.Health != player.MaxHealth)
                     {
-                        IsHpPotionUsed();
+                        IsHpPotionUsed(1);
                     }
                     else
                     {
@@ -438,7 +598,7 @@ namespace TextRpg
                 case 2:
                     if (player.Mana != player.MaxMana)
                     {
-                        IsMpPotionUsed();
+                        IsMpPotionUsed(1);
                     }
                     else
                     {
@@ -455,7 +615,7 @@ namespace TextRpg
             Console.WriteLine("체력이 이미 만땅입니다.");
             Console.WriteLine("아무키나 누르면 전투로 돌아갑니다.");
             Console.ReadLine();
-            SelectSkillOrAtk();
+            SelectSkillOrAtk(1);
         }
 
         // 플레이어의 마나가 가득 찼을 때 출력 및 이동
@@ -467,7 +627,7 @@ namespace TextRpg
         }
 
         // hp포션 사용 여부
-        public void IsHpPotionUsed()
+        public void IsHpPotionUsed(int cursor)
         {
             int count = 0;
 
@@ -510,19 +670,31 @@ namespace TextRpg
                 // 포션 사용
                 Console.WriteLine("힐링 포션을 사용하시겠습니까?");
                 Console.WriteLine($"현재 체력: {player.Health}");
-                Console.WriteLine("1. 네 (아이템을 사용합니다.)");
-                Console.WriteLine("2. 아니오 (전투로 돌아갑니다.)");
+
+                if (cursor == 1)
+                    HighlightText("1. 네 (아이템을 사용합니다.)");
+                else
+                    Console.WriteLine("1. 네 (아이템을 사용합니다.)");
+                if (cursor == 2)
+                    HighlightText("2. 아니오 (전투로 돌아갑니다.)");
+                else
+                    Console.WriteLine("2. 아니오 (전투로 돌아갑니다.)");
                 Console.WriteLine("");
 
-                switch(Program.CheckValidInput(1, 2))
+                SetCursor(1, 2, cursor, IsHpPotionUsed);
+
+                switch (cursor)
                 {
                     case 1:
                         // 포션 사용
+                        int beforeHp = player.Health;
                         inventory.UseHpPotion();
-                        IsHpPotionUsed();
+                        fontColor.WriteColorFont($"물약을 사용하였습니다. HP : {beforeHp} -> {player.Health}", FontColor.Color.Blue);
+                        Thread.Sleep(1500);
+                        IsHpPotionUsed(1);
                         break;
                     case 2:
-                        SelectSkillOrAtk();
+                        SelectSkillOrAtk(1);
                         break;
                 }
 
@@ -535,11 +707,11 @@ namespace TextRpg
             Console.WriteLine("전투화면으로 돌아갑니다.");
             Console.WriteLine("아무 키나 입력해주세요.");
             Console.ReadLine();
-            SelectSkillOrAtk();
+            SelectSkillOrAtk(1);
         }
 
         // 마나 포션 사용 여부
-        private void IsMpPotionUsed()
+        private void IsMpPotionUsed(int cursor)
         {
             int count = 0;
 
@@ -559,7 +731,7 @@ namespace TextRpg
                 Console.WriteLine("전투화면으로 돌아갑니다.");
                 Console.WriteLine("아무 키나 입력해주세요.");
                 Console.ReadLine();
-                SelectSkillOrAtk();
+                SelectSkillOrAtk(1);
 
             }
             else if (player.Mana > player.MaxMana)
@@ -577,18 +749,29 @@ namespace TextRpg
             else
             {
                 Console.WriteLine("마나 포션을 사용하시겠습니까?");
-                Console.WriteLine("1. 네 (아이템을 사용합니다.)");
-                Console.WriteLine("2. 아니오 (전투로 돌아갑니다.)");
-                Console.WriteLine("");
+                Console.WriteLine($"현재 마나: {player.Mana}");
 
-                switch (Program.CheckValidInput(1, 2))
+                if (cursor == 1)
+                    HighlightText("1. 네 (아이템을 사용합니다.)");
+                else
+                    Console.WriteLine("1. 네 (아이템을 사용합니다.)");
+                if (cursor == 2)
+                    HighlightText("2. 아니오 (전투로 돌아갑니다.)");
+                else
+                    Console.WriteLine("2. 아니오 (전투로 돌아갑니다.)");
+                Console.WriteLine("");
+                SetCursor(1, 2, cursor, IsMpPotionUsed);
+                switch (cursor)
                 {
                     case 1:
+                        int beforeMp = player.Mana;
                         inventory.UseMpPotion();
-                        IsMpPotionUsed();
+                        fontColor.WriteColorFont($"물약을 사용하였습니다. Mana : {beforeMp} -> {player.Mana}", FontColor.Color.Blue);
+                        Thread.Sleep(1500);
+                        IsMpPotionUsed(1);
                         break;
                     case 2:
-                        SelectSkillOrAtk();
+                        SelectSkillOrAtk(1);
                         break;
                 }
 
@@ -607,6 +790,59 @@ namespace TextRpg
             Console.ResetColor();
             Console.WriteLine("");
         }
+        void HighlightText(string str)
+        {
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine(str);
+            Console.ResetColor();
+        }
+
+        /// <summary>
+        /// min에서부터 max까지인 함수에서 커서 컨트롤
+        /// </summary>
+        void SetCursor(int min,int max,int cursor, OriginFunction funcName)
+        {
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < min)
+                            cursor = max;
+                        funcName(cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > max)
+                            cursor = min;
+                        funcName(cursor);
+                        break;
+                }
+
+            } while (c.Key != ConsoleKey.Enter);
+        }
+
+        // 플레이어 레벨업 판단
+        private void LevelController()
+        {
+            // 레벨업  
+            if (player.Exp >= player.MaxExp)
+            {
+                player.Exp = player.Exp - player.MaxExp;
+                player.Level++;
+                player.MaxExp *= 1.5f;
+
+                Console.WriteLine("레벨업을 했습니다!");
+                Console.WriteLine($"Lv {player.Level - 1} -> Lv {player.Level}");
+
+                // 레벨에 따라 캐릭터 능력치 변경 (?)
+                d
+            }
+        }
+
     }
 
 }

@@ -38,6 +38,7 @@ namespace TextRpg.Player
             // 재정의하는 내용
             Console.WriteLine("전사의 스킬 발동!");
             Console.WriteLine("알파 스트라이크!");
+            Console.WriteLine("");
 
             return vitSkillResult;
         }

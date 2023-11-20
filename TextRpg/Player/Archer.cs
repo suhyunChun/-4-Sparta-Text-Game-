@@ -17,12 +17,7 @@ namespace TextRpg.Player
             {
                 IsDead = true;
             }
-            if (Exp >= MaxExp)
-            {
-                Exp += 50;
-                Level++;
-
-            }
+ 
         }
 
     }

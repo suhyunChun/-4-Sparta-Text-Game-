@@ -21,7 +21,7 @@ namespace TextRpg.Player
         public float Exp { get; set; }
         // 힘 = 체력 관련 능력치
 
-        public float PlusExp { get; set; }
+        //public float PlusExp { get; set; } Exp만 있어도 될듯??? // 나재민
 
         public int Strength { get; }
         // 민첩성 = 공격력 관련 능력치
@@ -51,19 +51,19 @@ namespace TextRpg.Player
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
-        public Mob(string name, string occupation, int level, int health, float atk, float def, bool isDead)
+        public Mob(string name, string occupation, int level, float exp, int health, float atk, float def, bool isDead)
         {
             Name = name;
             Occupation = occupation;
             Level = level;
-            Exp = 50;
+            Exp = exp;
             Health = health;
             Atk = atk;
             Def = def;
             Gold = 3000;
             IsDead = isDead;
 
-            PlusExp += Exp;
+            //PlusExp += Exp;
         }
         public int Attack(ICharacter target)
         {
