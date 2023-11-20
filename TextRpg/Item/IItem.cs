@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextRpg.Player;
 
 namespace TextRpg.Item
 {
@@ -17,7 +18,7 @@ namespace TextRpg.Item
         bool IsEquiped { get; set; }
 
         // 아이템 사용
-        void Use();
+        void Use(Job player);
         // 아이템 드랍
         void Drop();
     }

@@ -20,6 +20,9 @@ namespace TextRpg.Player
         // 경험치
         public float Exp { get; protected set; }
         // 힘 = 체력 관련 능력치
+
+        public float PlusExp { get; set; }
+
         public int Strength { get; }
         // 민첩성 = 공격력 관련 능력치
         public int Agility { get; }
@@ -53,7 +56,7 @@ namespace TextRpg.Player
             Name = name;
             Occupation = occupation;
             Level = level;
-            Exp = 0;
+            Exp = 50;
             Health = health;
             Atk = atk;
             Def = def;
@@ -61,6 +64,8 @@ namespace TextRpg.Player
             Weapon = 0;
             Armor = 0;
             IsDead = isDead;
+
+            PlusExp += Exp;
         }
 
         // 공격 = 일반 공격. 공격, 치명타, 회피 등을 체크 후 피해를 줌.
