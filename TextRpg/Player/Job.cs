@@ -1,9 +1,10 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using TextRpg.Player;
 
 namespace TextRpg.Player
 {
@@ -47,7 +48,7 @@ namespace TextRpg.Player
         // 추가 방어력 = 아이템에 의한 수치 변화
         public float PlusDef { get; set; }
         // 골드 = 상점에 사용할 돈 및 몬스터가 뱉을 돈
-        public int Gold { get; set; }
+        public int Gold { get; set;}
         // 무구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
         public int Weapon { get; set; }
         // 방어구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
@@ -74,11 +75,14 @@ namespace TextRpg.Player
             Mana = maxMana;
 
         }
-
-        // 공격 = 일반 공격. 공격, 치명타, 회피 등을 체크 후 피해를 줌.
-        public void Attack(int atk)
+        public int Attack(ICharacter target)
         {
-
+            Random rand = new Random();
+            var err = Atk * 0.1;
+            int dps = rand.Next((int)(Atk - err), (int)(Atk + err + 1));
+            dps -= (int)target.Def;
+            if (dps <= 1) dps = 1;
+            return dps;
         }
         // 기술 1번 = 사용 기술. 각 직업마다의 1번 기술 및 몬스터의 1번 기술. 몬스터는 없을 시 사용 못함.
         public virtual int Skill_1(string job, float atk, int mana)

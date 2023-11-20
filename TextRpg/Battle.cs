@@ -31,6 +31,8 @@ namespace TextRpg
             originalHP = _player.Health;
             ApperMonster();
 
+            fontColor = new FontColor();
+
         }
         
         /// <summary>
@@ -196,11 +198,13 @@ namespace TextRpg
         /// </summary>
         private void ApperMonster()
         {
+
             Random rand = new Random();
             int numberOfMob = rand.Next(1, 5);
             for (int i = 1; i <= numberOfMob; i++)
             {
                 mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 10, 5, 5, false));
+
             }
         }
         private void DisplayStatus(bool isSelect)
@@ -271,9 +275,7 @@ namespace TextRpg
             SceneTitle(false);
 
             //데미지 계산
-            Random rand = new Random();
-            int err = (int)Math.Ceiling(player.Atk * 10 / 100);
-            int Damage = rand.Next((int)player.Atk - err, (int)player.Atk + err + 1);
+            int Damage = player.Attack(mobs[idx]);
 
             //몬스터에게 데미지 가하기
             Console.WriteLine($"{player.Name} 의 공격!");

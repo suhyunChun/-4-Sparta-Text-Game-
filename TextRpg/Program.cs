@@ -5,6 +5,7 @@ using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
 
+
 namespace TextRpg
 {
     internal class Program
@@ -15,6 +16,7 @@ namespace TextRpg
         public static Job player;
         static Items items;
         static Battle battle;
+        static FontColor fontColor;
 
         // 아이템 세팅
         // 테스팅을 위해 포션추가
@@ -35,9 +37,33 @@ namespace TextRpg
         // 시작 씬
         private static void PrintStartScene()
         {
-            Console.WriteLine(" ____                                     \r\n|  _ \\ _   _ _ __   __ _  ___  ___  _ __  \r\n| | | | | | | '_ \\ / _` |/ _ \\/ _ \\| '_ \\ \r\n| |_| | |_| | | | | (_| |  __/ (_) | | | |\r\n|____/ \\__,_|_| |_|\\__, |\\___|\\___/|_| |_|\r\n                   |___/                  ");
+            Console.Write("oooooooooo.                                                                      \n" +
+                              "`888'   `Y8b                                                                     \n" +
+                              " 888      888 oooo  oooo  ooo. .oo.    .oooooooo  .ooooo.   .ooooo.  ooo. .oo.   \n" +
+                              " 888      888 `888  `888  `888P\"Y88b  888' `88b  d88' `88b d88' `88b `888P\"Y88b  \n" +
+                              " 888      888  888   888   888   888  888   888  888ooo888 888   888  888   888  \n" +
+                              " 888     d88'  888   888   888   888  `88bod8P'  888    .o 888   888  888   888  \n" +
+                              "o888bood8P'    `V88V\"V8P' o888o o888o `8oooooo.  `Y8bod8P' `Y8bod8P' o888o o888o \n"+
+                              "                                      d\"     YD                                  \n"+
+                              "                                      \"Y88888P'                                  \n");
+            Console.Write("                                         .o88o.                                  \n" +
+                              "                                         888 `\"                                  \n" +
+                              "                               .ooooo.  o888oo                                   \n" +
+                              "                              d88' `88b  888                                     \n");
+            fontColor.WriteColorFont("                              888   888  888                                     \n", FontColor.Color.DarkRed);
+            fontColor.WriteColorFont("                              888   888  888                                     \n", FontColor.Color.DarkYellow);
+            fontColor.WriteColorFont("                              `Y8bod8P' o888o                                    \n", FontColor.Color.DarkGreen);
+            fontColor.WriteColorFont("           .oooooo..o                                   .                        \n", FontColor.Color.DarkBlue);
+            fontColor.WriteColorFont("          d8P'    `Y8                                 .o8                        \n", FontColor.Color.Cyan);
+            fontColor.WriteColorFont("          Y88bo.      oo.ooooo.   .oooo.   oooo d8b .o888oo  .oooo.              \n", FontColor.Color.Magenta);
+            fontColor.WriteColorFont("           `\"Y8888o.   888' `88b `P  )88b  `888\"\"8P   888   `P  )88b          \n", FontColor.Color.DarkRed);
+            fontColor.WriteColorFont("               `\"Y88b  888   888  .oP\"888   888       888    .oP\"888          \n", FontColor.Color.DarkYellow);
+            fontColor.WriteColorFont("          oo     .d8P  888   888 d8(  888   888       888 . d8(  888             \n", FontColor.Color.DarkGreen);
+            fontColor.WriteColorFont("          8\"\"88888P'   888bod8P' `Y888\"\"8o d888b      \"888\" `Y888\"\"8o    \n", FontColor.Color.DarkBlue);
+            fontColor.WriteColorFont("                       888                                                       \n", FontColor.Color.Cyan);
+            fontColor.WriteColorFont("                      o888o                                                      \n", FontColor.Color.Magenta);
 
-            Console.WriteLine("============= Press Any Key =============");
+            Console.WriteLine("================================= Press Any Key =================================");
             Console.ReadKey();
         }
 
@@ -266,7 +292,31 @@ namespace TextRpg
         //장비 관리
         private static void EquipMenu()
         {
-            
+            Console.Clear();
+            Console.WriteLine("장비 관리 메뉴입니다.");
+            Console.WriteLine("아이템을 장착 및 해제 할 수 있습니다.");
+            Console.WriteLine("원하시는 번호로 아이템을 장착 및 해제 할 수 있습니다.");
+
+            Console.WriteLine("");
+            inventory.onEquipMenu = true;
+            inventory.DisplayInventory();
+
+            Console.WriteLine("");
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+
+            int equipNum = CheckValidInput(0, inventory.ItemCnt);
+            if (equipNum == 0)
+            {
+                inventory.onEquipMenu = false;
+                InventoryMenu();
+            }
+            else
+            {
+                equipNum -= 1;
+                inventory.EquipmentStatusChange(equipNum);
+                EquipMenu();
+            }
         }
 
         // 상점 메뉴
@@ -451,10 +501,14 @@ namespace TextRpg
             return false;
         }
 
+
         // 메인
         static void Main(string[] args)
         {
             shop = new Shop();
+            
+            fontColor = new FontColor();
+
 
             PrintStartScene();
             PlayerInputName();
