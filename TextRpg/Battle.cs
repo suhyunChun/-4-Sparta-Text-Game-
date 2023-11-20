@@ -23,7 +23,7 @@ namespace TextRpg
         FontColor fontColor;
         ConsoleKeyInfo c;
 
-        delegate void Action(int cursor);
+        delegate void OriginFunction(int cursor);
 
         public Battle(Job _player, Inventory _inventory)
         {
@@ -795,7 +795,7 @@ namespace TextRpg
         /// <summary>
         /// min에서부터 max까지인 함수에서 커서 컨트롤
         /// </summary>
-        void SetCursor(int min,int max,int cursor,Action Funcntion)
+        void SetCursor(int min,int max,int cursor, OriginFunction funcName)
         {
             do
             {
@@ -806,13 +806,13 @@ namespace TextRpg
                         cursor--;
                         if (cursor < min)
                             cursor = max;
-                        Funcntion(cursor);
+                        funcName(cursor);
                         break;
                     case ConsoleKey.DownArrow:
                         cursor++;
                         if (cursor > max)
                             cursor = min;
-                        Funcntion(cursor);
+                        funcName(cursor);
                         break;
                 }
 
