@@ -300,6 +300,17 @@ namespace TextRpg
             Damage = CirticalAttack(Damage, ref isCritical);
             //몬스터에게 데미지 가하기
             Console.WriteLine($"{player.Name} 의 공격!");
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}]");
+            Console.WriteLine("");
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
+            mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
+            if (mobs[idx].IsDead)
+            {
+                deadCnt++;
+            }
+            Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+            Console.WriteLine("");
+            mobs[idx].Health -= Damage;
             if(dodge > 11){
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
                 Console.WriteLine("");
