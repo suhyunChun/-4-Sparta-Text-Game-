@@ -156,7 +156,7 @@ namespace TextRpg
                     break;
                 case 4:
                     battle = new Battle(player, inventory);
-                    battle.BattleScene();
+                    battle.BattleScene(1);
                     //StageSelected();
                     break;
             }
