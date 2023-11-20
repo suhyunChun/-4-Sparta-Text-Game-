@@ -23,7 +23,7 @@ namespace TextRpg
         FontColor fontColor;
         ConsoleKeyInfo c;
 
-        delegate void Action(int cursor);
+        delegate void OriginFunction(int cursor);
 
         public Battle(Job _player, Inventory _inventory)
         {
@@ -92,7 +92,7 @@ namespace TextRpg
                     SelectSkillOrAtk(1);
                     break;
                 case 2:
-                    Program.StartMenu("쫄보");
+                    Program.StartMenu("쫄보",1);
                     break;
             }
         }
@@ -263,7 +263,7 @@ namespace TextRpg
                         IsMpPotionUsed(1);
                         break;
                     case 2:
-                        Program.StartMenu(player.Occupation);
+                        Program.StartMenu(player.Occupation,1);
                         break;
                 }
 
@@ -436,22 +436,18 @@ namespace TextRpg
             int Damage = player.Attack(mobs[idx]);
             Damage = CirticalAttack(Damage, ref isCritical);
             //몬스터에게 데미지 가하기
-            Console.WriteLine($"{player.Name} 의 공격!");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}]");
-            Console.WriteLine("");
-            mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
-            Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
-            Console.WriteLine();
-            if (mobs[idx].IsDead)
-            {
-                deadCnt++;
-                player.Exp += mobs[idx].Exp;
-                LevelController();
-                Console.WriteLine($"현재 경험치: {player.Exp}");
-                Console.WriteLine();
-            }
-            mobs[idx].Health -= Damage;
+            //Console.WriteLine($"{player.Name} 의 공격!");
+            //Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}]");
+            //Console.WriteLine("");
+            //Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
+            //mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
+            //if (mobs[idx].IsDead)
+            //{
+            //    deadCnt++;
+            //}
+            //Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+            //Console.WriteLine("");
+            //mobs[idx].Health -= Damage;
             if(dodge > 11){
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
                 Console.WriteLine("");
@@ -557,7 +553,7 @@ namespace TextRpg
             int input = Program.CheckValidInput(0, 0);
             if (input == 0)
             {
-                Program.StartMenu("");
+                Program.StartMenu(player.Occupation,1);
             }
         }
 
@@ -805,7 +801,7 @@ namespace TextRpg
         /// <summary>
         /// min에서부터 max까지인 함수에서 커서 컨트롤
         /// </summary>
-        void SetCursor(int min,int max,int cursor,Action Funcntion)
+        void SetCursor(int min,int max,int cursor, OriginFunction funcName)
         {
             do
             {
@@ -816,13 +812,13 @@ namespace TextRpg
                         cursor--;
                         if (cursor < min)
                             cursor = max;
-                        Funcntion(cursor);
+                        funcName(cursor);
                         break;
                     case ConsoleKey.DownArrow:
                         cursor++;
                         if (cursor > max)
                             cursor = min;
-                        Funcntion(cursor);
+                        funcName(cursor);
                         break;
                 }
 
