@@ -95,7 +95,8 @@ namespace TextRpg
         private static void SelectedJobMenu(string playerName)
         {
             Console.Clear();
-            Console.WriteLine($"{playerName} 님 반갑습니다!");
+            fontColor.WriteColorFont($"{playerName}", FontColor.Color.DarkYellow);
+            Console.WriteLine(" 님 반갑습니다!");
             Console.WriteLine("먼저 직업을 선택해주세요.");
             Console.WriteLine("");
             Console.WriteLine("1. 전사");
@@ -132,7 +133,8 @@ namespace TextRpg
         public static void StartMenu(string occupation)
         {
             Console.Clear();
-            Console.WriteLine("{0} 을(를) 선택하셨습니다.", occupation);
+            fontColor.WriteColorFont($"{occupation}", FontColor.Color.DarkYellow);
+            Console.WriteLine("을(를) 선택하셨습니다.");
             Console.WriteLine("던전에 입장하시기 전 정비할 수 있습니다.");
             Console.WriteLine("선택지 중 하나를 선택해 주세요");
             Console.WriteLine("");
@@ -140,8 +142,8 @@ namespace TextRpg
             Console.WriteLine("2. 인벤토리");
             Console.WriteLine("3. 상점");
             Console.WriteLine("");
-            Console.WriteLine("4. 던전입장");
-            Console.WriteLine("");
+            fontColor.WriteColorFont("4. 던전입장", FontColor.Color.DarkRed);
+            Console.WriteLine("\n");
 
             switch (CheckValidInput(1, 4))
             {
@@ -168,6 +170,30 @@ namespace TextRpg
         {
             Console.Clear();
             Console.WriteLine("스테이지 선택 메뉴입니다.");
+            Console.WriteLine("");
+
+            Console.WriteLine("스테이지를 선택해 주세요");
+            Console.WriteLine("");
+
+            Console.WriteLine("1. Stage 1");
+            Console.WriteLine("2. Stage 2");
+            Console.WriteLine("3. Stage 3");
+            Console.WriteLine("");
+
+            switch(CheckValidInput(0, 3))
+            {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 0:
+                    StartMenu(player.Occupation);
+                    break;
+            }
+
+
         }
 
         //상태 메뉴

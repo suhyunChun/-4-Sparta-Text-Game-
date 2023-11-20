@@ -288,8 +288,6 @@ namespace TextRpg
             if (mobs[idx].IsDead)
             {
                 deadCnt++;
-                player.Exp += mob.PlusExp;
-                Console.WriteLine($"현재 경험치: {player.Exp}");
             }
             Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
             Console.WriteLine("");
