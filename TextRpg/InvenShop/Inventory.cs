@@ -20,6 +20,7 @@ namespace TextRpg.InvenShop
         public List<Items> invenItems;
         public bool onEquipMenu;
         public int arraySortNum = 0;
+        
         public int ItemCnt
         {
             get { return invenItems.Count; }
@@ -88,7 +89,6 @@ namespace TextRpg.InvenShop
                     {
                         if (item.IsEquiped == true)
                         {
-                            Console.Write("[E] ");
                         }
                         Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                             $"등급: {item.Grade}★, 가격: {item.Price}");
