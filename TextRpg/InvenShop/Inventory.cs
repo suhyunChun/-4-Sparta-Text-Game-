@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using TextRpg.Player;
+using System.Collections;
 
 namespace TextRpg.InvenShop
 {
@@ -14,7 +15,9 @@ namespace TextRpg.InvenShop
     public class Inventory
     {
         private List<Items> invenItems;
+        Items emptyItem;
         public bool onEquipMenu;
+        public int arraySortNum = 0;
         public int ItemCnt
         {
             get { return invenItems.Count; }
@@ -29,7 +32,6 @@ namespace TextRpg.InvenShop
         // 아이템 추가
         internal void AddItem(Items item)
         {
-
             invenItems.Add(item);
             //Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
         }
@@ -37,7 +39,25 @@ namespace TextRpg.InvenShop
         // 인벤토리 목록
         public void DisplayInventory()
         {
-            Console.WriteLine("[소지품 목록]");
+            Console.Write("[소지품 목록]");
+            switch (arraySortNum)
+            {
+                case 0:
+                    Console.WriteLine("");
+                    break;
+                case 1:
+                    Console.WriteLine(" - 등급 순");
+                    break;
+                case 2:
+                    Console.WriteLine(" - 등급 역순");
+                    break;
+                case 3:
+                    Console.WriteLine(" - 가격 순");
+                    break;
+                case 4:
+                    Console.WriteLine(" - 가격 역순");
+                    break;
+            }
             Console.WriteLine("");
 
             if (invenItems.Count == 0)
@@ -46,7 +66,7 @@ namespace TextRpg.InvenShop
             }
             else
             {
-                if (onEquipMenu == false)
+                if (onEquipMenu == false)//인벤토리창
                 {
                     foreach (var item in invenItems)
                     {
@@ -54,36 +74,103 @@ namespace TextRpg.InvenShop
                             $"등급: {item.Grade}★, 가격: {item.Price}");
                     }
                 }
-                else if (onEquipMenu == true)
+                else if (onEquipMenu == true)//장비관리창
                 {
                     int idx = 0;
                     foreach (var item in invenItems)
                     {
-                        if(item.IsEquiped == true)
+                        if (item.IsEquiped == true)
                         {
                             Console.Write("[E] ");
                         }
                         Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                             $"등급: {item.Grade}★, 가격: {item.Price}");
-                         idx++;
+                        idx++;
                     }
                 }
             }
         }
-
+        //장착상태 적용
         public void EquipmentStatusChange(int num)
         {
 
-            if(invenItems[num].IsEquiped == true)
+            if (invenItems[num].IsEquiped == true)
             {
                 invenItems[num].IsEquiped = false;
             }
-            else if(invenItems[num].IsEquiped == false)
+            else if (invenItems[num].IsEquiped == false)
             {
                 invenItems[num].IsEquiped = true;
             }
         }
-
+        //아이템 분류
+        public void InventoryArraySort()
+        {
+            arraySortNum++;
+            if (arraySortNum == 5)
+            {
+                arraySortNum = 1;
+            }
+            switch (arraySortNum)
+            {
+                case 1://아이템 등급 순서대로 오름정렬
+                    for (int i = 0; i < ItemCnt - 1; i++)
+                    {
+                        for (int j = i + 1; j < ItemCnt; j++)
+                        {
+                            if (invenItems[i].Grade > invenItems[j].Grade)
+                            {
+                                emptyItem = invenItems[i];
+                                invenItems[i] = invenItems[j];
+                                invenItems[j] = emptyItem;
+                            }
+                        }
+                    }
+                    break;
+                case 2://아이템 등급 순서대로 내림정렬
+                    for (int i = 0; i < ItemCnt - 1; i++)
+                    {
+                        for (int j = i + 1; j < ItemCnt; j++)
+                        {
+                            if (invenItems[i].Grade < invenItems[j].Grade)
+                            {
+                                emptyItem = invenItems[i];
+                                invenItems[i] = invenItems[j];
+                                invenItems[j] = emptyItem;
+                            }
+                        }
+                    }
+                    break;
+                case 3://아이템 가격 순서대로 오름정렬
+                    for (int i = 0; i < ItemCnt - 1; i++)
+                    {
+                        for (int j = i + 1; j < ItemCnt; j++)
+                        {
+                            if (invenItems[i].Price > invenItems[j].Price)
+                            {
+                                emptyItem = invenItems[i];
+                                invenItems[i] = invenItems[j];
+                                invenItems[j] = emptyItem;
+                            }
+                        }
+                    }
+                    break;
+                case 4://아이템 가격 순서대로 내림정렬
+                    for (int i = 0; i < ItemCnt - 1; i++)
+                    {
+                        for (int j = i + 1; j < ItemCnt; j++)
+                        {
+                            if (invenItems[i].Price < invenItems[j].Price)
+                            {
+                                emptyItem = invenItems[i];
+                                invenItems[i] = invenItems[j];
+                                invenItems[j] = emptyItem;
+                            }
+                        }
+                    }
+                    break;
+            }
+        }
         //아이템 목록 index
         public void ShowInvenItem()
         {
