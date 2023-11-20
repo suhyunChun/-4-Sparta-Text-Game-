@@ -77,16 +77,19 @@ namespace TextRpg.Player
             return dps;
         }
 
-        public void Skill_1(string job, int atk, int stat)
+        public int Skill_1(string job, float atk, int mana)
         {
+            return 0;
         }
 
-        public void Skill_2(string job, int atk, int stat)
+        public int Skill_2(string job, float atk, int mana)
         {
+            return 0;
         }
 
-        public void Skill_3(string job, int atk, int stat)
+        public int Skill_3(string job, float atk, int mana)
         {
+            return 0;
         }
     }
 }

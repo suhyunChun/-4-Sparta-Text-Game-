@@ -20,6 +20,8 @@ namespace TextRpg
         Inventory inventory;
         int originalHP;
         int deadCnt;
+        FontColor fontColor;
+
         public Battle(Job _player, Inventory _inventory)
         {
 

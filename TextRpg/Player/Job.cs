@@ -97,13 +97,13 @@ namespace TextRpg.Player
 
         }
         // 기술 2번 = 사용 기술. 각 직업마다의 2번 기술 및 몬스터의 2번 기술. 플레이어의 레벨이 5를 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public virtual int Skill_2(string job, int atk, int stat)
+        public virtual int Skill_2(string job, float atk, int mana)
         {
             return 0;
 
         }
         // 기술 3번 = 사용 기술. 각 직업마다의 3번 기술 및 몬스터의 3번 기술. 플레이어의 레벨이 10을 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public virtual int Skill_3(string job, int atk, int stat)
+        public virtual int Skill_3(string job, float atk, int mana)
         {
             return 0;
         }
