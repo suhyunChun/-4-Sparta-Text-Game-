@@ -60,7 +60,7 @@ namespace TextRpg
             fontColor.WriteColorFont("                      o888o                                                      \n", FontColor.Color.Magenta);
 
             Console.WriteLine("================================= Press Any Key =================================");
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         // 플레이어 이름 입력 메뉴
@@ -144,7 +144,7 @@ namespace TextRpg
                     break;
                 case 4:
                     battle = new Battle(player);
-                    battle.BattleScene();
+                    battle.BattleScene(1);
                     //StageSelected();
                     break;
             }

@@ -12,17 +12,16 @@ namespace TextRpg
         //몬스터 List
         List<Mob> mobs;
         Job player;
+        //던전 입장시 HP
         int originalHP;
+        //죽은 몬스터 수
         int deadCnt;
 
         FontColor fontColor;
-
-        
-
+        ConsoleKeyInfo c;
 
         public Battle(Job _player)
         {
-
             mobs = new List<Mob>();
             player = _player;
             deadCnt = 0;
@@ -30,27 +29,57 @@ namespace TextRpg
             ApperMonster();
 
             fontColor = new FontColor();
-
         }
 
         /// <summary>
         /// 전투 시작하면 보게 되는 화면
         /// </summary>
-        public void BattleScene()
+        public void BattleScene(int cursor)
         {
             SceneTitle(false);
             // 몬스터와 플레이어의 정보 나열
-            DisplayStatus(false);
+            DisplayStatus(false,1);
             Console.WriteLine("");
             // 1.공격 2.도망 3.아이템사용 선택
-            Console.WriteLine("1. 공격하기");
-            Console.WriteLine("2. 도망가기");
-            Console.WriteLine("3. 아이템 사용하기");
-            int input = Program.CheckValidInput(1, 3);
-            switch (input)
+            if (cursor == 1)
+                HighlightText("1. 공격하기");
+            else
+                Console.WriteLine("1. 공격하기");
+            if (cursor == 2)
+                HighlightText("2. 도망가기");
+            else
+                Console.WriteLine("2. 도망가기");
+            if( cursor ==3)
+                HighlightText("3. 아이템 사용하기");
+            else
+                Console.WriteLine("3. 아이템 사용하기");
+
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < 1)
+                            cursor = 3;
+                        BattleScene(cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > 3)
+                            cursor = 1;
+                        BattleScene(cursor);
+                        break;
+                }
+
+            } while (c.Key != ConsoleKey.Enter);
+
+            //int input = Program.CheckValidInput(1, 3);
+            switch (cursor)
             {
                 case 1:
-                    SelectMonster(false);
+                    SelectMonster(false,1);
                     break;
                 case 2:
                     Program.StartMenu("쫄보");
@@ -72,10 +101,9 @@ namespace TextRpg
             for (int i = 1; i <= numberOfMob; i++)
             {
                 mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 10, 5, 5, false));
-
             }
         }
-        private void DisplayStatus(bool isSelect)
+        private void DisplayStatus(bool isSelect,int cursor)
         {
             for (int i = 0; i < mobs.Count; i++)
             {
@@ -86,7 +114,10 @@ namespace TextRpg
                 }
                 if (isSelect)
                     Console.Write($"{i+1} ");
-                Console.WriteLine($"Lv.{mobs[i].Level} {mobs[i].Name} {(mobs[i].IsDead ? "Dead" : $"HP{mobs[i].Health}")}");
+                if (isSelect && cursor == i + 1)
+                    HighlightText($"Lv.{mobs[i].Level} {mobs[i].Name} {(mobs[i].IsDead ? "Dead" : $"HP{mobs[i].Health}")}");
+                else
+                    Console.WriteLine($"Lv.{mobs[i].Level} {mobs[i].Name} {(mobs[i].IsDead ? "Dead" : $"HP{mobs[i].Health}")}");
 
                 Console.ResetColor();
             }
@@ -100,10 +131,10 @@ namespace TextRpg
         /// <summary>
         /// 공격 선택 시 공격할 몬스터 선택
         /// </summary>
-        private void SelectMonster(bool reSelect)
+        private void SelectMonster(bool reSelect,int cursor)
         {
             SceneTitle(false);
-            DisplayStatus(true);
+            DisplayStatus(true,cursor);
             Console.WriteLine("");
             if (reSelect)
             {
@@ -111,24 +142,47 @@ namespace TextRpg
                 Console.WriteLine("그는 이미 갔습니다.");
                 Console.ResetColor();
             }
-            Console.WriteLine("0. 취소");
+            if (cursor == 0)
+                HighlightText("0, 취소");
+            else
+                Console.WriteLine("0. 취소");
             Console.WriteLine("");
             Console.WriteLine("대상을 선택해주세요.");
-            int input = Program.CheckValidInput(0, mobs.Count);
-            switch (input)
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < 0)
+                            cursor = mobs.Count;
+                        SelectMonster(false,cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > mobs.Count)
+                            cursor = 0;
+                        SelectMonster(false,cursor);
+                        break;
+                }
+
+            } while (c.Key != ConsoleKey.Enter);
+            //int input = Program.CheckValidInput(0, mobs.Count);
+            switch (cursor)
             {
                 //취소
                 case 0:
-                    BattleScene();
+                    BattleScene(1);
                     break;
                 //몬스터 고름
                 case 1:
                 case 2:
                 case 3:
                 case 4:
-                    if (mobs[input - 1].IsDead)
-                        SelectMonster(true);
-                    PlayerAttackResult(input - 1);
+                    if (mobs[cursor - 1].IsDead)
+                        SelectMonster(true,1);
+                    PlayerAttackResult(cursor - 1);
                     break;
             }
 
@@ -156,17 +210,14 @@ namespace TextRpg
             Console.WriteLine("");
             mobs[idx].Health -= Damage;
 
-            Console.WriteLine("0. 다음");
-            Console.WriteLine("");
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                // 몬스터가 전부 죽었다면 Victory
-                if (mobs.Count == deadCnt)
-                    BattleResult(true);
-                else
-                    MonsterAttackResult();
-            }
+            Console.WriteLine("Press Any Key...");
+            Console.ReadKey();
+
+            // 몬스터가 전부 죽었다면 Victory
+            if (mobs.Count == deadCnt)
+                BattleResult(true);
+            else
+                MonsterAttackResult();
 
         }
 
@@ -195,17 +246,13 @@ namespace TextRpg
                 player.Health -= (int)mobs[i].Atk;
             }
 
-            Console.WriteLine("0. 다음");
-            Console.WriteLine("");
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                // 플레이어가 죽었다면 Lose
-                if (player.IsDead)
-                    BattleResult(false);
-                else
-                    BattleScene();
-            }
+            Console.WriteLine("Press Any Key...");
+            Console.ReadKey();
+            // 플레이어가 죽었다면 Lose
+            if (player.IsDead)
+                BattleResult(false);
+            else
+                BattleScene(1);
         }
 
         private void BattleResult(bool isVictory)
@@ -214,17 +261,15 @@ namespace TextRpg
             if (isVictory)
             {
                 //승리
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("oooooo     oooo  o8o                .                                  \n" +
-                                  " `888.     .8'   `\"'              .o8                                  \n" +
-                                  "  `888.   .8'   oooo   .ooooo.  .o888oo  .ooooo.  oooo d8b oooo    ooo \n" +
-                                  "   `888. .8'    `888  d88' `\"Y8   888   d88' `88b `888\"\"8P  `88.  .8'  \n" +
-                                  "    `888.8'      888  888         888   888   888  888       `88..8'   \n"+
-                                  "     `888'       888  888   .o8   888 . 888   888  888        `888'    \n"+
-                                  "      `8'       o888o `Y8bod8P'   \"888\" `Y8bod8P' d888b        .8'     \n"+
-                                  "                                                           .o..P'      \n"+
-                                  "                                                           `Y8P'       \n");
-                Console.ResetColor();
+                fontColor.WriteColorFont("oooooo     oooo  o8o                .                                   \n" +
+                                         " `888.     .8'   `\"'              .o8                                  \n" +
+                                         "  `888.   .8'   oooo   .ooooo.  .o888oo  .ooooo.  oooo d8b oooo    ooo  \n" +
+                                         "   `888. .8'    `888  d88' `\"Y8   888   d88' `88b `888\"\"8P  `88.  .8'\n" +
+                                         "    `888.8'      888  888         888   888   888  888       `88..8'    \n" +
+                                         "     `888'       888  888   .o8   888 . 888   888  888        `888'     \n" +
+                                         "      `8'       o888o `Y8bod8P'   \"888\" `Y8bod8P' d888b        .8'    \n" +
+                                         "                                                           .o..P'       \n" +
+                                         "                                                           `Y8P'        \n",FontColor.Color.Green);
                 Console.WriteLine("");
                 Console.WriteLine($"던전에서 몬스터 {deadCnt}마리를 잡았습니다.");
                 Console.WriteLine("");
@@ -235,29 +280,23 @@ namespace TextRpg
             else
             {
                 //패배
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("oooooo   oooo                            ooooo                                     \n" +
-                                  " `888.   .8'                             `888'                                     \n" +
-                                  "  `888. .8'    .ooooo.  oooo  oooo        888          .ooooo.   .oooo.o  .ooooo.  \n" +
-                                  "   `888.8'    d88' `88b `888  `888        888         d88' `88b d88(  \"8 d88' `88b \n" +
-                                  "    `888'     888   888  888   888        888         888   888 `\"Y88b.  888ooo888 \n" +
-                                  "     888      888   888  888   888        888       o 888   888 o.  )88b 888    .o \n" +
-                                  "    o888o     `Y8bod8P'  `V88V\"V8P'      o888ooooood8 `Y8bod8P' 8\"\"888P' `Y8bod8P' \n");
-                Console.ResetColor();
+                fontColor.WriteColorFont("oooooo   oooo                            ooooo                                        \n" +
+                                         " `888.   .8'                             `888'                                        \n" +
+                                         "  `888. .8'    .ooooo.  oooo  oooo        888          .ooooo.   .oooo.o  .ooooo.     \n" +
+                                         "   `888.8'    d88' `88b `888  `888        888         d88' `88b d88(  \"8 d88' `88b   \n" +
+                                         "    `888'     888   888  888   888        888         888   888 `\"Y88b.  888ooo888   \n" +
+                                         "     888      888   888  888   888        888       o 888   888 o.  )88b 888    .o    \n" +
+                                         "    o888o     `Y8bod8P'  `V88V\"V8P'      o888ooooood8 `Y8bod8P' 8\"\"888P' `Y8bod8P' \n", FontColor.Color.Red);
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
                 Console.WriteLine($"HP {originalHP} -> {player.Health}");
                 Console.WriteLine("");
             }
 
-            Console.WriteLine("0. 다음");
-            Console.WriteLine("");
+            Console.WriteLine("Press Any Key...");
+            Console.ReadKey();
 
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                Program.StartMenu(player.Occupation);
-            }
+            Program.StartMenu(player.Occupation);
         }
         private void UsingItem()
         {
@@ -273,6 +312,13 @@ namespace TextRpg
                 Console.WriteLine("Battle!!");
             Console.ResetColor();
             Console.WriteLine("");
+        }
+        void HighlightText(string str)
+        {
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine(str);
+            Console.ResetColor();
         }
     }
 
