@@ -20,6 +20,9 @@ namespace TextRpg.Player
         // 경험치
         public float Exp { get; protected set; }
         // 힘 = 체력 관련 능력치
+
+        public float PlusExp { get; set; }
+
         public int Strength { get; }
         // 민첩성 = 공격력 관련 능력치
         public int Agility { get; }
@@ -53,7 +56,7 @@ namespace TextRpg.Player
             Name = name;
             Occupation = occupation;
             Level = level;
-            Exp = 0;
+            Exp = 50;
             Health = health;
             Atk = atk;
             Def = def;
@@ -61,6 +64,8 @@ namespace TextRpg.Player
             Weapon = 0;
             Armor = 0;
             IsDead = isDead;
+
+            PlusExp += Exp;
         }
         public int Attack(ICharacter target)
         {
@@ -72,16 +77,19 @@ namespace TextRpg.Player
             return dps;
         }
 
-        public void Skill_1(string job, int atk, int stat)
+        public int Skill_1(string job, float atk, int mana)
         {
+            return 0;
         }
 
-        public void Skill_2(string job, int atk, int stat)
+        public int Skill_2(string job, float atk, int mana)
         {
+            return 0;
         }
 
-        public void Skill_3(string job, int atk, int stat)
+        public int Skill_3(string job, float atk, int mana)
         {
+            return 0;
         }
     }
 }

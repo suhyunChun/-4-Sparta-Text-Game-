@@ -12,17 +12,22 @@ namespace TextRpg
     {
         static Inventory inventory;
         static Shop shop;
-        static Job player;
-        static IItem _item;
+        // public이 붙음, player생성 시 다양한 곳에서 땡겨오기 위해
+        public static Job player;
+        static Items items;
         static Battle battle;
         static FontColor fontColor;
 
         // 아이템 세팅
+        // 테스팅을 위해 포션추가
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
             inventory.AddItem(new Weapon("낡은 검", 1, 100, 10, true));
             inventory.AddItem(new Armor("낡은 방패", 1, 100, 10, true));
             inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, true));
+            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, true));
+            inventory.AddItem(new ManaPotion("마나 회복 물약", 1, 100, 10, true));
+            inventory.AddItem(new ManaPotion("마나 회복 물약", 1, 100, 10, true));
 
             shop.AddShopItem(new Weapon("황금 검", 2, 300, 20, true));
             shop.AddShopItem(new Armor("황금 방패", 2, 300, 15, true));
@@ -48,7 +53,6 @@ namespace TextRpg
             fontColor.WriteColorFont("                              888   888  888                                     \n", FontColor.Color.DarkRed);
             fontColor.WriteColorFont("                              888   888  888                                     \n", FontColor.Color.DarkYellow);
             fontColor.WriteColorFont("                              `Y8bod8P' o888o                                    \n", FontColor.Color.DarkGreen);
-
             fontColor.WriteColorFont("           .oooooo..o                                   .                        \n", FontColor.Color.DarkBlue);
             fontColor.WriteColorFont("          d8P'    `Y8                                 .o8                        \n", FontColor.Color.Cyan);
             fontColor.WriteColorFont("          Y88bo.      oo.ooooo.   .oooo.   oooo d8b .o888oo  .oooo.              \n", FontColor.Color.Magenta);
@@ -60,7 +64,7 @@ namespace TextRpg
             fontColor.WriteColorFont("                      o888o                                                      \n", FontColor.Color.Magenta);
 
             Console.WriteLine("================================= Press Any Key =================================");
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         // 플레이어 이름 입력 메뉴
@@ -99,18 +103,26 @@ namespace TextRpg
             Console.WriteLine("3. 궁수");
             Console.WriteLine(" ");
 
+            // 캐릭터를 선택한 후 inventory, shop 생성, 사실상 게임 시작부분이기 때문에 이때 생성하여 인벤토리에
+            // player를 전달하기 위함
             switch (CheckValidInput(1, 3))
             {
                 case 1:
                     player = new Warrior(playerName);
+                    inventory = new Inventory(player);
+                    GameItemSetting(inventory, shop);
                     StartMenu(player.Occupation);
                     break;
                 case 2:
                     player = new Mage(playerName);
+                    inventory = new Inventory(player);
+                    GameItemSetting(inventory, shop);
                     StartMenu(player.Occupation);
                     break;
                 case 3:
                     player = new Archer(playerName);
+                    inventory = new Inventory(player);
+                    GameItemSetting(inventory, shop);
                     StartMenu(player.Occupation);
                     break;
             }
@@ -143,7 +155,7 @@ namespace TextRpg
                     ShopMenu();
                     break;
                 case 4:
-                    battle = new Battle(player);
+                    battle = new Battle(player, inventory);
                     battle.BattleScene();
                     //StageSelected();
                     break;
@@ -167,10 +179,12 @@ namespace TextRpg
 
             Console.WriteLine($"플레이어 이름: {player.Name} ( {player.Occupation} )");
             Console.WriteLine("LV: {0}", player.Level.ToString("00"));
+            Console.WriteLine($"현재 경험치 {player.Exp} / {player.MaxExp}");
             Console.WriteLine();
             Console.WriteLine($"공격력: {player.Atk}");
             Console.WriteLine($"방어력: {player.Def}");
-            Console.WriteLine($"체력: {player.Health}");
+            Console.WriteLine($"체력: {player.Health} / {player.MaxHealth}");
+            Console.WriteLine($"마나: {player.Mana} / {player.MaxMana}");
             Console.WriteLine($"소지골드: {player.Gold}");
             Console.WriteLine(" ");
 
@@ -211,7 +225,7 @@ namespace TextRpg
                     EquipMenu();
                     break;
                 case 2:
-                    _item.Use(player);
+                    //item.Use();
                     break;
                 case 3:
                     DropItemMenu();
@@ -494,13 +508,11 @@ namespace TextRpg
         // 메인
         static void Main(string[] args)
         {
-            inventory = new Inventory();
             shop = new Shop();
             
             fontColor = new FontColor();
 
 
-            GameItemSetting(inventory, shop);
             PrintStartScene();
             PlayerInputName();
 

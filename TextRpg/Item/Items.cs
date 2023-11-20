@@ -15,15 +15,16 @@ namespace TextRpg.Item
 
         public int Grade { get; }
 
-        public int Price { get;  }
+        public int Price { get; }
 
         public bool IsEquiped { get; set; }
 
         public void Drop(){
 
         }
-
-        public void Use(Job player){
+        //아이템사용시 플레이어에 어떠한 변화를 주기 때문에 player를 받아옴
+        public virtual void Use(Job player)
+        {
 
         }
 
