@@ -277,7 +277,7 @@ namespace TextRpg
             Console.Clear();
 
             // 스킬 사용시 드는 마나
-            int skill_1Mana = 50;
+            int skill_1Mana = 5;
 
             // 사용 마나 여부 체크
             TryUseSkillWithManaCheck(skill_1Mana,1);
@@ -285,7 +285,7 @@ namespace TextRpg
             // 캐릭터의 스킬 
             bool isCritical = false;
 
-            int characterSkill = player.Skill_1(player.Occupation, player.Atk, skill_1Mana);
+            int characterSkill = player.Skill_1(mobs[idx]);
             characterSkill = CirticalAttack(characterSkill,ref isCritical);
 
 
@@ -293,14 +293,20 @@ namespace TextRpg
             //몬스터에게 데미지 가하기
             Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]  {(isCritical? "- 치명타 공격!!" : "")}");
             Console.WriteLine("");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             mobs[idx].IsDead = mobs[idx].Health - characterSkill <= 0 ? true : false;
-            if (mobs[idx].IsDead)
-                deadCnt++;
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - characterSkill)}");
-            Console.WriteLine("");
+            Console.WriteLine();
+            if (mobs[idx].IsDead)
+            {
+                deadCnt++;
+                player.Exp += mobs[idx].Exp;
+                LevelController();
+                Console.WriteLine($"현재 경험치: {player.Exp}");
+                Console.WriteLine();
+            }
             mobs[idx].Health -= characterSkill;
-
+            Console.WriteLine();
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
             int input = Program.CheckValidInput(0, 0);
@@ -326,7 +332,7 @@ namespace TextRpg
             int numberOfMob = rand.Next(1, 5);
             for (int i = 1; i <= numberOfMob; i++)
             {
-                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 10, 5, 5, false));
+                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 5, 10, 5, 5, false));
 
             }
         }
@@ -451,8 +457,8 @@ namespace TextRpg
                 if (mobs[idx].IsDead)
                 {
                     deadCnt++;
-                    Console.WriteLine(mobs[idx].PlusExp);
-                    player.Exp += mobs[idx].PlusExp;
+                    Console.WriteLine(mobs[idx].Exp);
+                    player.Exp += mobs[idx].Exp;
                     Console.WriteLine($"현재 경험치: {player.Exp}");
                 }
                 Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
@@ -519,9 +525,15 @@ namespace TextRpg
             if (isVictory)
             {
                 //승리
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Victory");
-                Console.ResetColor();
+                fontColor.WriteColorFont("oooooo     oooo  o8o                .                                   \n" +
+                                         " `888.     .8'   `\"'              .o8                                  \n" +
+                                         "  `888.   .8'   oooo   .ooooo.  .o888oo  .ooooo.  oooo d8b oooo    ooo  \n" +
+                                         "   `888. .8'    `888  d88' `\"Y8   888   d88' `88b `888\"\"8P  `88.  .8'\n" +
+                                         "    `888.8'      888  888         888   888   888  888       `88..8'    \n" +
+                                         "     `888'       888  888   .o8   888 . 888   888  888        `888'     \n" +
+                                         "      `8'       o888o `Y8bod8P'   \"888\" `Y8bod8P' d888b        .8'    \n" +
+                                         "                                                           .o..P'       \n" +
+                                         "                                                           `Y8P'        \n", FontColor.Color.Green);
                 Console.WriteLine("");
                 Console.WriteLine($"던전에서 몬스터 {deadCnt}마리를 잡았습니다.");
                 Console.WriteLine("");
@@ -532,9 +544,13 @@ namespace TextRpg
             else
             {
                 //패배
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("You Lose");
-                Console.ResetColor();
+                fontColor.WriteColorFont("oooooo   oooo                            ooooo                                        \n" +
+                                         " `888.   .8'                             `888'                                        \n" +
+                                         "  `888. .8'    .ooooo.  oooo  oooo        888          .ooooo.   .oooo.o  .ooooo.     \n" +
+                                         "   `888.8'    d88' `88b `888  `888        888         d88' `88b d88(  \"8 d88' `88b   \n" +
+                                         "    `888'     888   888  888   888        888         888   888 `\"Y88b.  888ooo888   \n" +
+                                         "     888      888   888  888   888        888       o 888   888 o.  )88b 888    .o    \n" +
+                                         "    o888o     `Y8bod8P'  `V88V\"V8P'      o888ooooood8 `Y8bod8P' 8\"\"888P' `Y8bod8P' \n", FontColor.Color.Red);
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
                 Console.WriteLine($"HP {originalHP} -> {player.Health}");
@@ -818,6 +834,51 @@ namespace TextRpg
 
             } while (c.Key != ConsoleKey.Enter);
         }
+
+        // 플레이어 레벨업 판단
+        private void LevelController()
+        {
+            // 레벨업  
+            if (player.Exp >= player.MaxExp)
+            {
+                player.Exp = player.Exp - player.MaxExp;
+                player.Level++;
+                player.MaxExp *= 1.5f;
+                player.Health = player.MaxHealth;
+                player.Mana = player.MaxMana;
+
+                Console.WriteLine("레벨업을 했습니다!");
+                Console.WriteLine($"Lv {player.Level - 1} -> Lv {player.Level}");
+
+                // 레벨에 따라 캐릭터 능력치 변경 (?)
+                
+                if (player.Occupation == "전사")
+                {
+                    player.Strength += 2;
+                    player.Agility++;
+                    player.Intelligence++;
+                } else if (player.Occupation == "궁수")
+                {
+                    player.Strength++;
+                    player.Agility += 2;
+                    player.Intelligence++;
+                }
+                else if(player.Occupation == "마법사")
+                {
+                    player.Strength++;
+                    player.Agility++;
+                    player.Intelligence += 2;
+                } else
+                {
+                    player.Strength++;
+                    player.Agility++;
+                    player.Intelligence++;
+                }
+
+
+            }
+        }
+
     }
 
 }
