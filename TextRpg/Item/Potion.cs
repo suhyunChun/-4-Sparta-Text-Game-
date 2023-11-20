@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using TextRpg.InvenShop;
 using TextRpg.Player;
 
-
 namespace TextRpg.Item
 {
 
@@ -34,17 +33,39 @@ namespace TextRpg.Item
             }
         }
         
-           public void Use(Job player){
-
-                IsEquiped = true;
-                //캐릭터의 health 받아옴 
-                int health =player.Health;
-                health +=HealingAmount;
-                //새로운 hp로 다시 설정
-                player.Health = health; 
-   
+        // 힐링 포션에서 아이템을 사용하면 나타나는 로직
+        public override void Use(Job player)
+        {
+            if(player != null) 
+            {
+                player.Health += HealingAmount;
+            
+            }
         }
 
 
     }
+
+    // 마나 포션
+    public class ManaPotion : Items
+    {
+        private int ManaAmount;
+
+        public ManaPotion(string name, int grade, int price, int manaAmount, bool isEquiped)
+        : base(name, "마나포션", grade, price, false)
+        {
+            ManaAmount = manaAmount;
+        }
+
+        public override void Use(Job player)
+        {
+            if (player != null)
+            {
+                player.Mana += ManaAmount;
+
+            }
+        }
+
+    }
+
 }

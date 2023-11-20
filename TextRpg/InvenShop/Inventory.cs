@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Reflection;
 using TextRpg.Player;
 using System.Collections;
+using System.Numerics;
 
 namespace TextRpg.InvenShop
 {
@@ -14,8 +15,9 @@ namespace TextRpg.InvenShop
     // 인벤토리 클래스
     public class Inventory
     {
-        private List<Items> invenItems;
         Items emptyItem;
+        public Job player;
+        public List<Items> invenItems;
         public bool onEquipMenu;
         public int arraySortNum = 0;
         public int ItemCnt
@@ -24,9 +26,10 @@ namespace TextRpg.InvenShop
         }
 
         // 인벤토리
-        public Inventory()
+        public Inventory(Job _player)
         {
             invenItems = new List<Items>();
+            player = _player;
         }
 
         // 아이템 추가
@@ -34,7 +37,11 @@ namespace TextRpg.InvenShop
         {
             invenItems.Add(item);
             //Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
+        
         }
+
+        // 힐링포션 개수
+
 
         // 인벤토리 목록
         public void DisplayInventory()
@@ -194,7 +201,6 @@ namespace TextRpg.InvenShop
                 Items sellInvenItem = invenItems[index];
 
                 int totalGold = player.Gold + sellInvenItem.Price;
-
                 player.Gold += sellInvenItem.Price;
 
                 Console.Clear();
@@ -226,6 +232,44 @@ namespace TextRpg.InvenShop
                 Console.WriteLine("아무키나 입력하시면 인벤토리로 이동합니다.");
                 invenItems.RemoveAt(index);
                 Console.ReadLine();
+            }
+        }
+
+        // 아이템 사용
+        public void UseHpPotion()
+        {
+            // OfType -> LINQ의 지정된 형식으로 형변환이 가능한 요소만을 선택하여 .ToList list에 담은걸 hpPotions에 넣는다.
+            var hpPotions = invenItems.OfType<HealingPotion>().ToList();
+            
+            foreach (var hpPotion in hpPotions)
+            {
+                if (hpPotion is HealingPotion)
+                {
+                    // hpPotion을 사용하고 remove해줌
+                    // 하나만 사용해야 하기 때문에 사용시 바로 break로 반복문 탈출
+                    hpPotion.Use(player);
+
+                    invenItems.Remove(hpPotion);
+
+                    break;
+                }
+            }
+        }
+
+        public void UseMpPotion()
+        {
+            var mpPotions = invenItems.OfType<ManaPotion>().ToList();
+
+            foreach (var mpPotion in mpPotions)
+            {
+                if (mpPotion is ManaPotion)
+                {
+                    mpPotion.Use(player);
+
+                    invenItems.Remove(mpPotion);
+
+                    break;
+                }
             }
         }
 
