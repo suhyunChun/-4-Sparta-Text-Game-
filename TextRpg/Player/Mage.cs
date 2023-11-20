@@ -9,16 +9,11 @@ namespace TextRpg.Player
     public class Mage : Job
     {
         // 체력 100, 공격력 15, 방어력 5 
-        public Mage(string name) : base(name, "마법사", 1, 100, 12, 7, 3000, false, 200)
+        public Mage(string id, string name, List<int> items) : base(id, name, "마법사", 1, 0, 2, 2, 4, 0, 0, 3000, 0, 0, items, false)
         {
             if (Health <= 0)
             {
                 IsDead = true;
-            }
-            if (Exp >= 100)
-            {
-                Level++;
-                Exp += 50;
             }
         }
     }
