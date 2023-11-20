@@ -17,8 +17,7 @@ namespace TextRpg.Item
         bool IsEquiped { get; set; }
 
         // 아이템 사용
-       void Use(Job player);
-
+        void Use(Job player);
         // 아이템 드랍
         void Drop();
     }
