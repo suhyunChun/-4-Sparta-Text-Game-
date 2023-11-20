@@ -495,7 +495,7 @@ namespace TextRpg
             shop = new Shop();
             
             fontColor = new FontColor();
-            Console.CursorVisible = false;
+            //Console.CursorVisible=false;
 
             GameItemSetting(inventory, shop);
             PrintStartScene();
