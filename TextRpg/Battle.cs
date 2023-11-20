@@ -293,14 +293,20 @@ namespace TextRpg
             //몬스터에게 데미지 가하기
             Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]  {(isCritical? "- 치명타 공격!!" : "")}");
             Console.WriteLine("");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             mobs[idx].IsDead = mobs[idx].Health - characterSkill <= 0 ? true : false;
-            if (mobs[idx].IsDead)
-                deadCnt++;
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - characterSkill)}");
-            Console.WriteLine("");
+            Console.WriteLine();
+            if (mobs[idx].IsDead)
+            {
+                deadCnt++;
+                player.Exp += mobs[idx].Exp;
+                LevelController();
+                Console.WriteLine($"현재 경험치: {player.Exp}");
+                Console.WriteLine();
+            }
             mobs[idx].Health -= characterSkill;
-
+            Console.WriteLine();
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
             int input = Program.CheckValidInput(0, 0);
@@ -326,7 +332,7 @@ namespace TextRpg
             int numberOfMob = rand.Next(1, 5);
             for (int i = 1; i <= numberOfMob; i++)
             {
-                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 10, 5, 5, false));
+                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 5, 10, 5, 5, false));
 
             }
         }
@@ -433,14 +439,18 @@ namespace TextRpg
             Console.WriteLine($"{player.Name} 의 공격!");
             Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}]");
             Console.WriteLine("");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
+            Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+            Console.WriteLine();
             if (mobs[idx].IsDead)
             {
                 deadCnt++;
+                player.Exp += mobs[idx].Exp;
+                LevelController();
+                Console.WriteLine($"현재 경험치: {player.Exp}");
+                Console.WriteLine();
             }
-            Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
-            Console.WriteLine("");
             mobs[idx].Health -= Damage;
             if(dodge > 11){
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
@@ -818,6 +828,25 @@ namespace TextRpg
 
             } while (c.Key != ConsoleKey.Enter);
         }
+
+        // 플레이어 레벨업 판단
+        private void LevelController()
+        {
+            // 레벨업  
+            if (player.Exp >= player.MaxExp)
+            {
+                player.Exp = player.Exp - player.MaxExp;
+                player.Level++;
+                player.MaxExp *= 1.5f;
+
+                Console.WriteLine("레벨업을 했습니다!");
+                Console.WriteLine($"Lv {player.Level - 1} -> Lv {player.Level}");
+
+                // 레벨에 따라 캐릭터 능력치 변경 (?)
+
+            }
+        }
+
     }
 
 }
