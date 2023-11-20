@@ -92,7 +92,7 @@ namespace TextRpg
                     SelectSkillOrAtk(1);
                     break;
                 case 2:
-                    Program.StartMenu("쫄보");
+                    Program.StartMenu("쫄보",1);
                     break;
             }
         }
@@ -263,7 +263,7 @@ namespace TextRpg
                         IsMpPotionUsed(1);
                         break;
                     case 2:
-                        Program.StartMenu(player.Occupation);
+                        Program.StartMenu(player.Occupation,1);
                         break;
                 }
 
@@ -547,7 +547,7 @@ namespace TextRpg
             int input = Program.CheckValidInput(0, 0);
             if (input == 0)
             {
-                Program.StartMenu("");
+                Program.StartMenu(player.Occupation,1);
             }
         }
 
