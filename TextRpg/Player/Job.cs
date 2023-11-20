@@ -115,9 +115,11 @@ namespace TextRpg.Player
         // 기술 2번 = 사용 기술. 각 직업마다의 2번 기술 및 몬스터의 2번 기술. 플레이어의 레벨이 5를 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
         public virtual int Skill_2(ICharacter target)
         {
-            if(Level >= 5)
+            int dps = 0;
+            int mana = 10;
+            if (Level >= 5)
             {
-                if(Occupation == "전사")
+                if (Occupation == "전사")
                 {
 
                 }
@@ -130,11 +132,13 @@ namespace TextRpg.Player
 
                 }
             }
-            return 0;
+            return dps;
         }
         // 기술 3번 = 사용 기술. 각 직업마다의 3번 기술 및 몬스터의 3번 기술. 플레이어의 레벨이 10을 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
         public virtual int Skill_3(ICharacter target)
         {
+            int dps = 0;
+            int mana = 20;
             if (Level >= 10)
             {
                 if (Occupation == "전사")
@@ -150,7 +154,7 @@ namespace TextRpg.Player
 
                 }
             }
-            return 0;
+            return dps;
         }
         public void LackMana()
         {

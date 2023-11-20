@@ -834,12 +834,38 @@ namespace TextRpg
                 player.Exp = player.Exp - player.MaxExp;
                 player.Level++;
                 player.MaxExp *= 1.5f;
+                player.Health = player.MaxHealth;
+                player.Mana = player.MaxMana;
 
                 Console.WriteLine("레벨업을 했습니다!");
                 Console.WriteLine($"Lv {player.Level - 1} -> Lv {player.Level}");
 
                 // 레벨에 따라 캐릭터 능력치 변경 (?)
-                d
+                
+                if (player.Occupation == "전사")
+                {
+                    player.Strength += 2;
+                    player.Agility++;
+                    player.Intelligence++;
+                } else if (player.Occupation == "궁수")
+                {
+                    player.Strength++;
+                    player.Agility += 2;
+                    player.Intelligence++;
+                }
+                else if(player.Occupation == "마법사")
+                {
+                    player.Strength++;
+                    player.Agility++;
+                    player.Intelligence += 2;
+                } else
+                {
+                    player.Strength++;
+                    player.Agility++;
+                    player.Intelligence++;
+                }
+
+
             }
         }
 
