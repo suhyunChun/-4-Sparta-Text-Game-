@@ -20,7 +20,7 @@ namespace TextRpg.InvenShop
         public List<Items> invenItems;
         public bool onEquipMenu;
         public int arraySortNum = 0;
-        
+
         public int ItemCnt
         {
             get { return invenItems.Count; }
@@ -38,7 +38,7 @@ namespace TextRpg.InvenShop
         {
             invenItems.Add(item);
             //Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
-        
+
         }
 
         // 힐링포션 개수
@@ -87,7 +87,7 @@ namespace TextRpg.InvenShop
                     int idx = 0;
                     foreach (var item in invenItems)
                     {
-                        if (item.IsEquiped == true)
+                        if (item is Weapon && item.IsEquiped == true)
                         {
                         }
                         Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
@@ -239,7 +239,7 @@ namespace TextRpg.InvenShop
         {
             // OfType -> LINQ의 지정된 형식으로 형변환이 가능한 요소만을 선택하여 .ToList list에 담은걸 hpPotions에 넣는다.
             var hpPotions = invenItems.OfType<HealingPotion>().ToList();
-            
+
             foreach (var hpPotion in hpPotions)
             {
                 if (hpPotion is HealingPotion)
