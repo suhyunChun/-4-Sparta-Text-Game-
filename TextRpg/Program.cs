@@ -633,6 +633,7 @@ namespace TextRpg
             shop = new Shop();
 
             fontColor = new FontColor();
+            Console.SetWindowSize(82, 30);
 
 
             PrintStartScene();
