@@ -75,6 +75,7 @@ namespace TextRpg.Player
             Armor = armor;
             Item = items;
             IsDead = isDead;
+            MaxExp = 10;
 
         }
         public int Attack(ICharacter target)
