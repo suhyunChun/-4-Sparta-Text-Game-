@@ -103,24 +103,26 @@ namespace TextRpg
             Console.WriteLine("3. 궁수");
             Console.WriteLine(" ");
 
+            // 임시 불러오기용 인벤토리
+            List<int> items = new List<int>() { 11110101, 11412103 };
             // 캐릭터를 선택한 후 inventory, shop 생성, 사실상 게임 시작부분이기 때문에 이때 생성하여 인벤토리에
             // player를 전달하기 위함
             switch (CheckValidInput(1, 3))
             {
                 case 1:
-                    player = new Warrior(playerName);
+                    player = new Warrior("1", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
                     StartMenu(player.Occupation);
                     break;
                 case 2:
-                    player = new Mage(playerName);
+                    player = new Mage("2", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
                     StartMenu(player.Occupation);
                     break;
                 case 3:
-                    player = new Archer(playerName);
+                    player = new Archer("3", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
                     StartMenu(player.Occupation);

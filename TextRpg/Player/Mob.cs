@@ -47,7 +47,7 @@ namespace TextRpg.Player
         // 방어구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
         public int Armor => 0;
         // 소지 아이템 = 플레이어가 소지중인 아이템들. 몬스터는 드롭 아이템 목록으로 사용.
-        public int[] Item { get; set; }
+        public List<int> Item { get; set; }
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
@@ -75,17 +75,17 @@ namespace TextRpg.Player
             return dps;
         }
 
-        public int Skill_1(string job, float atk, int mana)
+        public virtual int Skill_1(ICharacter target)
         {
             return 0;
         }
 
-        public int Skill_2(string job, float atk, int mana)
+        public virtual int Skill_2(ICharacter target)
         {
             return 0;
         }
 
-        public int Skill_3(string job, float atk, int mana)
+        public virtual int Skill_3(ICharacter target)
         {
             return 0;
         }

@@ -44,16 +44,16 @@ namespace TextRpg.Player
         // 방어구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
         public int Armor { get; }
         // 소지 아이템 = 플레이어가 소지중인 아이템들. 몬스터는 드롭 아이템 목록으로 사용.
-        public int[] Item { get; set; }
+        public List<int> Item { get; set; }
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; }
         // 공격 = 일반 공격. 공격, 치명타, 회피 등을 체크 후 피해를 줌.
         public int Attack(ICharacter target);
         // 기술 1번 = 사용 기술. 각 직업마다의 1번 기술 및 몬스터의 1번 기술. 몬스터는 없을 시 사용 못함.
-        public int Skill_1(ICharacter player, ICharacter target);
+        public int Skill_1(ICharacter target);
         // 기술 2번 = 사용 기술. 각 직업마다의 2번 기술 및 몬스터의 2번 기술. 플레이어의 레벨이 5를 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public int Skill_2(ICharacter player, ICharacter target);
+        public int Skill_2(ICharacter target);
         // 기술 3번 = 사용 기술. 각 직업마다의 3번 기술 및 몬스터의 3번 기술. 플레이어의 레벨이 10을 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public int Skill_3(ICharacter player, ICharacter target);
+        public int Skill_3(ICharacter target);
     }
 }

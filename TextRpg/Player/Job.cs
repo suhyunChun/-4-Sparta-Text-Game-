@@ -17,18 +17,18 @@ namespace TextRpg.Player
         // 직업
         public string Occupation { get; }
         // 레벨 = 전체적인 능력치 및 방어력 증가
-        public int Level { get; protected set; }
+        public int Level { get; set; }
 
         public int MaxExp { get; protected set; }
 
         // 경험치
         public float Exp { get; set; }
         // 힘 = 체력 관련 능력치
-        public int Strength { get; }
+        public int Strength { get; set; }
         // 민첩성 = 공격력 관련 능력치
-        public int Agility { get; }
+        public int Agility { get; set; }
         // 지능 = 마력과 기술 피해 관련 능력치
-        public int Intelligence { get; }
+        public int Intelligence { get; set; }
         // 체력 / 전체체력 을 위한 전체 체력
         public int MaxHealth => 100 + Strength * 20;
         // 체력 = 힘으로 증가
@@ -52,11 +52,11 @@ namespace TextRpg.Player
         // 방어구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
         public int Armor { get; set; }
         // 소지 아이템 = 플레이어가 소지중인 아이템들. 몬스터는 드롭 아이템 목록으로 사용.
-        public int[] Item { get; set; }
+        public List<int> Item { get; set; }
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
-        public Job(string id, string name, string occupation, int level, int exp, int Str, int Agi, int Int, float itematk, float itemdef, int gold, int weapon, int armor, int[] items, bool isDead)
+        public Job(string id, string name, string occupation, int level, int exp, int Str, int Agi, int Int, float itematk, float itemdef, int gold, int weapon, int armor, List<int> items, bool isDead)
         {
             Id = id;
             Name = name;
@@ -68,13 +68,13 @@ namespace TextRpg.Player
             Intelligence = Int;
             PlusAtk = itematk;
             PlusDef = itemdef;
+            Health = MaxHealth;
+            Mana = MaxMana;
             Gold = gold;
             Weapon = weapon;
             Armor = armor;
             Item = items;
             IsDead = isDead;
-            MaxMana = maxMana;
-            Mana = maxMana;
 
         }
         public int Attack(ICharacter target)
@@ -87,91 +87,74 @@ namespace TextRpg.Player
             return dps;
         }
         // 기술 1번 = 사용 기술. 각 직업마다의 1번 기술 및 몬스터의 1번 기술. 몬스터는 없을 시 사용 못함.
-        public virtual int Skill_1(string job, float atk, int mana)
+        public virtual int Skill_1(ICharacter target)
         {
-            
-
-            return skillDamage;
-        public void Skill_1(ICharacter player, ICharacter target)
-        {
-                int skillDamage = 0;
-            if (player.Occupation == "전사")
+            int dps = 0;
+            int mana = 5;
+            if (Occupation == "전사")
             {
-                    // 랜덤값
-                    Random rand = new Random();
-                    // 스킬 데미지
-                    int err = (int)Math.Ceiling(atk * 10 / 100);
-                    skillDamage = rand.Next((int)atk + err + 2, (int)atk + err + 4);
-                }
-            else if (player.Occupation == "마법사")
+                // 랜덤값
+                Random rand = new Random();
+                // 스킬 데미지
+                var err = Atk * 0.1;
+                dps = rand.Next((int)(Atk + err + 2), (int)(Atk + err + 4));
+                dps -= (int)target.Def;
+                if (dps <= 1) dps = 1;
+                Mana -= mana;
+            }
+            else if (Occupation == "마법사")
             {
 
             }
-            else if (player.Occupation == "궁수")
+            else if (Occupation == "궁수")
             {
 
             }
-
-                return skillDamage;
+            return dps;
         }
         // 기술 2번 = 사용 기술. 각 직업마다의 2번 기술 및 몬스터의 2번 기술. 플레이어의 레벨이 5를 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public int Skill_2(ICharacter player, ICharacter target)
+        public virtual int Skill_2(ICharacter target)
         {
-            if(player.Level >= 5)
+            if(Level >= 5)
             {
-                if(player.Occupation == "전사")
+                if(Occupation == "전사")
                 {
 
                 }
-                else if(player.Occupation == "마법사")
+                else if(Occupation == "마법사")
                 {
 
                 }
-                else if(player.Occupation == "궁수")
+                else if(Occupation == "궁수")
                 {
 
                 }
             }
+            return 0;
         }
         // 기술 3번 = 사용 기술. 각 직업마다의 3번 기술 및 몬스터의 3번 기술. 플레이어의 레벨이 10을 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public virtual int Skill_3(string job, float atk, int mana)
+        public virtual int Skill_3(ICharacter target)
         {
+            if (Level >= 10)
+            {
+                if (Occupation == "전사")
+                {
+
+                }
+                else if (Occupation == "마법사")
+                {
+
+                }
+                else if (Occupation == "궁수")
+                {
+
+                }
+            }
             return 0;
         }
         public void LackMana()
         {
              Console.WriteLine("마나가 부족합니다.");
         }
-        public virtual int Skill_3(ICharacter player, ICharacter target)
-        {
-            if (player.Level >= 10)
-            {
-                if (player.Occupation == "전사")
-                {
-
-                }
-                else if (player.Occupation == "마법사")
-                {
-
-                }
-                else if (player.Occupation == "궁수")
-                {
-
-                }
-                return 0;
-        }
-        public void LackMana()
-        {
-             Console.WriteLine("마나가 부족합니다.");
-        }
-                }
-                else if (player.Occupation == "궁수")
-                {
-
-                }
-            }
-        }
-    }
-}
     }
 }

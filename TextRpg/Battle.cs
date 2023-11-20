@@ -161,13 +161,13 @@ namespace TextRpg
             Console.Clear();
 
             // 스킬 사용시 드는 마나
-            int skill_1Mana = 50;
+            int skill_1Mana = 5;
 
             // 사용 마나 여부 체크
             TryUseSkillWithManaCheck(skill_1Mana);
             
             // 캐릭터의 스킬 
-            int characterSkill = player.Skill_1(player.Occupation, player.Atk, skill_1Mana);
+            int characterSkill = player.Skill_1(mobs[idx]);
            
             //몬스터에게 데미지 가하기
             Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]");
@@ -175,8 +175,22 @@ namespace TextRpg
             Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             mobs[idx].IsDead = mobs[idx].Health - characterSkill <= 0 ? true : false;
             if (mobs[idx].IsDead)
+            {
                 deadCnt++;
-            Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - characterSkill)}");
+                player.Exp += mobs[idx].PlusExp;
+                while (player.Level * 5 <= player.Exp)
+                {
+                    player.Level++;
+                    player.Strength += 2;
+                    player.Agility++;
+                    player.Intelligence++;
+                    player.Health = player.MaxHealth;
+                    player.Mana = player.MaxMana;
+                    player.Exp -= player.Level * 5;
+                }
+                Console.WriteLine($"현재 레벨: {player.Level}, 현재 경험치: {player.Exp}");
+            }
+                Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - characterSkill)}");
             Console.WriteLine("");
             mobs[idx].Health -= characterSkill;
 
@@ -288,8 +302,18 @@ namespace TextRpg
             if (mobs[idx].IsDead)
             {
                 deadCnt++;
-                player.Exp += mob.PlusExp;
-                Console.WriteLine($"현재 경험치: {player.Exp}");
+                player.Exp += mobs[idx].PlusExp;
+                while (player.Level * 5 <= player.Exp)
+                {
+                    player.Level++;
+                    player.Strength += 2;
+                    player.Agility++;
+                    player.Intelligence++;
+                    player.Health = player.MaxHealth;
+                    player.Mana = player.MaxMana;
+                    player.Exp -= player.Level * 5;
+                }
+                Console.WriteLine($"현재 레벨: {player.Level}, 현재 경험치: {player.Exp}");
             }
             Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
             Console.WriteLine("");
