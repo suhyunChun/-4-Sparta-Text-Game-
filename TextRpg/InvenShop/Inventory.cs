@@ -87,8 +87,9 @@ namespace TextRpg.InvenShop
                     int idx = 0;
                     foreach (var item in invenItems)
                     {
-                        if (item is Weapon && item.IsEquiped == true)
+                        if (item.IsEquiped == true)
                         {
+                            Console.Write("[E] ");
                         }
                         Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                             $"등급: {item.Grade}★, 가격: {item.Price}");
