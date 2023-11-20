@@ -304,12 +304,13 @@ namespace TextRpg
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
-                Console.WriteLine(mobs[idx]);
+
                 mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
                 if (mobs[idx].IsDead)
                 {
                     deadCnt++;
-                    player.Exp += mob.PlusExp;
+                    Console.WriteLine(mobs[idx].PlusExp);
+                    player.Exp += mobs[idx].PlusExp;
                     Console.WriteLine($"현재 경험치: {player.Exp}");
                 }
                 Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
