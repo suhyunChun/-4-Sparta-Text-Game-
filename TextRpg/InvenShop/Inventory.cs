@@ -89,6 +89,10 @@ namespace TextRpg.InvenShop
                         if (item.IsEquiped == true)
                         {
                             Console.Write("[E] ");
+                            if(item.Kind == "방어구")
+                            {
+                                Console.WriteLine(item.Kind);
+                            }
                         }
                         Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                             $"등급: {item.Grade}★, 가격: {item.Price}");
@@ -100,7 +104,6 @@ namespace TextRpg.InvenShop
         //장착상태 적용
         public void EquipmentStatusChange(int num)
         {
-
             if (invenItems[num].IsEquiped == true)
             {
                 invenItems[num].IsEquiped = false;
