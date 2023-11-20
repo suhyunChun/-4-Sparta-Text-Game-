@@ -16,16 +16,6 @@ namespace TextRpg.Player
                 IsDead = true;
             }
 
-            if (Exp >= 100)
-            {
-                Level++;
-                MaxExp += 50;
-                MaxHealth += 50;
-                MaxMana += 30;
-                Health = MaxHealth;
-                Mana = MaxMana;
-                Exp = 0;
-            }
         }
 
         public override int Skill_1(string job, float atk, int mana)

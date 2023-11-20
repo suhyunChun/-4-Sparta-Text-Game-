@@ -18,8 +18,12 @@ namespace TextRpg
         static Battle battle;
         static FontColor fontColor;
 
+        delegate void func1(string str, int cursor);
+        delegate void func2(int cursor);
+        static ConsoleKeyInfo c;
         // 아이템 세팅
         // 테스팅을 위해 포션추가
+
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
             inventory.AddItem(new Weapon("낡은 검", 3, 1000, 10, true));
@@ -88,49 +92,113 @@ namespace TextRpg
 
             } while (string.IsNullOrWhiteSpace(playerName));
 
-            SelectedJobMenu(playerName);
+            SelectedJobMenu(playerName, 1);
         }
 
         // 직업선택 메뉴
-        private static void SelectedJobMenu(string playerName)
+        private static void SelectedJobMenu(string playerName, int cursor)
         {
             Console.Clear();
             fontColor.WriteColorFont($"{playerName}", FontColor.Color.DarkYellow);
             Console.WriteLine(" 님 반갑습니다!");
             Console.WriteLine("먼저 직업을 선택해주세요.");
             Console.WriteLine("");
-            Console.WriteLine("1. 전사");
-            Console.WriteLine("2. 마법사");
-            Console.WriteLine("3. 궁수");
+
+            if (cursor == 1)
+                HighlightText("1. 전사");
+            else
+                Console.WriteLine("1. 전사");
+            if (cursor == 2)
+                HighlightText("2. 마법사");
+            else
+                Console.WriteLine("2. 마법사");
+            if (cursor == 3)
+                HighlightText("3. 궁수");
+            else
+                Console.WriteLine("3. 궁수");
             Console.WriteLine(" ");
 
             // 캐릭터를 선택한 후 inventory, shop 생성, 사실상 게임 시작부분이기 때문에 이때 생성하여 인벤토리에
             // player를 전달하기 위함
-            switch (CheckValidInput(1, 3))
+            SetCursor(1, 3, cursor, playerName, SelectedJobMenu);
+            switch (cursor)
             {
                 case 1:
                     player = new Warrior(playerName);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation);
+                    StartMenu(player.Occupation,1);
                     break;
                 case 2:
                     player = new Mage(playerName);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation);
+                    StartMenu(player.Occupation,1);
                     break;
                 case 3:
                     player = new Archer(playerName);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation);
+                    StartMenu(player.Occupation,1);
                     break;
             }
         }
 
+        private static void SetCursor(int min, int max, int cursor, string str, func1 Funcntion)
+        {
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < min)
+                            cursor = max;
+                        Funcntion(str, cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > max)
+                            cursor = min;
+                        Funcntion(str, cursor);
+                        break;
+                }
+
+            } while (c.Key != ConsoleKey.Enter);
+        }
+        private static void SetCursor(int min, int max, int cursor, string str, func2 Funcntion)
+        {
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < min)
+                            cursor = max;
+                        Funcntion(cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > max)
+                            cursor = min;
+                        Funcntion(cursor);
+                        break;
+                }
+
+            } while (c.Key != ConsoleKey.Enter);
+        }
+        private static void HighlightText(string str)
+        {
+            Console.BackgroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
+            Console.WriteLine(str);
+            Console.ResetColor();
+        }
         // 시작 메뉴
-        public static void StartMenu(string occupation)
+        public static void StartMenu(string occupation,int cursor)
         {
             Console.Clear();
             fontColor.WriteColorFont($"{occupation}", FontColor.Color.DarkYellow);
@@ -138,14 +206,37 @@ namespace TextRpg
             Console.WriteLine("던전에 입장하시기 전 정비할 수 있습니다.");
             Console.WriteLine("선택지 중 하나를 선택해 주세요");
             Console.WriteLine("");
-            Console.WriteLine("1. 상태 보기");
-            Console.WriteLine("2. 인벤토리");
-            Console.WriteLine("3. 상점");
-            Console.WriteLine("");
-            fontColor.WriteColorFont("4. 던전입장", FontColor.Color.DarkRed);
-            Console.WriteLine("\n");
 
-            switch (CheckValidInput(1, 4))
+            if (cursor == 1)
+                HighlightText("1. 상태 보기");
+            else
+                Console.WriteLine("1. 상태 보기");
+            if (cursor == 2)
+                HighlightText("2. 인벤토리");
+            else
+                Console.WriteLine("2. 인벤토리");
+            if (cursor == 3)
+                HighlightText("3. 상점");
+            else
+                Console.WriteLine("3. 상점");
+            Console.WriteLine("");
+
+            if (cursor == 4)
+            {
+                Console.BackgroundColor = ConsoleColor.White;
+                fontColor.WriteColorFont("4. 던전입장", FontColor.Color.DarkRed);
+                Console.WriteLine("\n");
+            }
+            else
+            {
+                fontColor.WriteColorFont("4. 던전입장", FontColor.Color.DarkRed);
+                Console.WriteLine("\n");
+
+            }
+
+            SetCursor(1, 4, cursor, occupation, StartMenu);
+
+            switch (cursor)
             {
                 case 1:
                     StatusMenu();
@@ -180,7 +271,7 @@ namespace TextRpg
             Console.WriteLine("3. Stage 3");
             Console.WriteLine("");
 
-            switch(CheckValidInput(0, 3))
+            switch (CheckValidInput(0, 3))
             {
                 case 1:
                     break;
@@ -189,7 +280,7 @@ namespace TextRpg
                 case 3:
                     break;
                 case 0:
-                    StartMenu(player.Occupation);
+                    StartMenu(player.Occupation,1);
                     break;
             }
 
@@ -220,7 +311,7 @@ namespace TextRpg
             switch (CheckValidInput(0, 0))
             {
                 case 0:
-                    StartMenu(player.Occupation);
+                    StartMenu(player.Occupation,1);
                     break;
             }
 
@@ -262,7 +353,7 @@ namespace TextRpg
                     InventoryMenu();
                     break;
                 case 0:
-                    StartMenu(player.Occupation);
+                    StartMenu(player.Occupation,1);
                     break;
             }
 
@@ -270,7 +361,7 @@ namespace TextRpg
 
         //아이템 사용하기 메뉴 
 
- 
+
         //아이템 버리기 메뉴
         private static void DropItemMenu()
         {
@@ -377,7 +468,7 @@ namespace TextRpg
                     SellShopMenu();
                     break;
                 case 0:
-                    StartMenu(player.Occupation);
+                    StartMenu(player.Occupation,1);
                     break;
             }
 
@@ -443,7 +534,7 @@ namespace TextRpg
                     BuyShopMenu();
                     break;
                 case 2:
-                    StartMenu(player.Occupation);
+                    StartMenu(player.Occupation,1);
                     break;
             }
 
