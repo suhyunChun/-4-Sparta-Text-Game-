@@ -143,6 +143,7 @@ namespace TextRpg
             Console.WriteLine("3. 상점");
             Console.WriteLine("");
             fontColor.WriteColorFont("4. 던전입장", FontColor.Color.DarkRed);
+            Console.WriteLine("( 현재 진행 : 1층 )");
             Console.WriteLine("\n");
 
             switch (CheckValidInput(1, 4))
@@ -165,36 +166,6 @@ namespace TextRpg
 
         }
 
-        // 던전입장
-        private static void StageSelected()
-        {
-            Console.Clear();
-            Console.WriteLine("스테이지 선택 메뉴입니다.");
-            Console.WriteLine("");
-
-            Console.WriteLine("스테이지를 선택해 주세요");
-            Console.WriteLine("");
-
-            Console.WriteLine("1. Stage 1");
-            Console.WriteLine("2. Stage 2");
-            Console.WriteLine("3. Stage 3");
-            Console.WriteLine("");
-
-            switch(CheckValidInput(0, 3))
-            {
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 0:
-                    StartMenu(player.Occupation);
-                    break;
-            }
-
-
-        }
 
         //상태 메뉴
         private static void StatusMenu()
