@@ -277,7 +277,7 @@ namespace TextRpg
             Console.Clear();
 
             // 스킬 사용시 드는 마나
-            int skill_1Mana = 50;
+            int skill_1Mana = 5;
 
             // 사용 마나 여부 체크
             TryUseSkillWithManaCheck(skill_1Mana,1);
@@ -285,7 +285,7 @@ namespace TextRpg
             // 캐릭터의 스킬 
             bool isCritical = false;
 
-            int characterSkill = player.Skill_1(player.Occupation, player.Atk, skill_1Mana);
+            int characterSkill = player.Skill_1(mobs[idx]);
             characterSkill = CirticalAttack(characterSkill,ref isCritical);
 
 
@@ -834,11 +834,37 @@ namespace TextRpg
                 player.Exp = player.Exp - player.MaxExp;
                 player.Level++;
                 player.MaxExp *= 1.5f;
+                player.Health = player.MaxHealth;
+                player.Mana = player.MaxMana;
 
                 Console.WriteLine("레벨업을 했습니다!");
                 Console.WriteLine($"Lv {player.Level - 1} -> Lv {player.Level}");
 
                 // 레벨에 따라 캐릭터 능력치 변경 (?)
+                
+                if (player.Occupation == "전사")
+                {
+                    player.Strength += 2;
+                    player.Agility++;
+                    player.Intelligence++;
+                } else if (player.Occupation == "궁수")
+                {
+                    player.Strength++;
+                    player.Agility += 2;
+                    player.Intelligence++;
+                }
+                else if(player.Occupation == "마법사")
+                {
+                    player.Strength++;
+                    player.Agility++;
+                    player.Intelligence += 2;
+                } else
+                {
+                    player.Strength++;
+                    player.Agility++;
+                    player.Intelligence++;
+                }
+
 
             }
         }

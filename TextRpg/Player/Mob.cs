@@ -10,15 +10,15 @@ namespace TextRpg.Player
     public class Mob : ICharacter
     {
         // 캐릭터 번호
-        public int Id { get; }
+        public string Id => "monster";
         // 캐릭터 이름
         public string Name { get; }
         // 직업
         public string Occupation { get; }
         // 레벨 = 전체적인 능력치 및 방어력 증가
-        public int Level { get; protected set; }
+        public int Level { get; set; }
         // 경험치
-        public float Exp { get; protected set; }
+        public float Exp { get; set; }
         // 힘 = 체력 관련 능력치
 
         //public float PlusExp { get; set; } Exp만 있어도 될듯??? // 나재민
@@ -35,19 +35,19 @@ namespace TextRpg.Player
         // 공격력 = 민첩성으로 증가
         public float Atk { get; }
         // 추가 공격력 = 아이템에 의한 수치 변화
-        public float PlusAtk { get; set; }
+        public float PlusAtk => 0;
         // 방어력 = 레벨로 증가
         public float Def { get; }
         // 추가 방어력 = 아이템에 의한 수치 변화
-        public float PlusDef { get; set; }
+        public float PlusDef => 0;
         // 골드 = 상점에 사용할 돈 및 몬스터가 뱉을 돈
         public int Gold { get; }
         // 무구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
-        public int Weapon { get; set; }
+        public int Weapon => 0;
         // 방어구 슬롯 = 플레이어가 장착하고 있을 장비 칸. 몬스터는 공백.
-        public int Armor { get; set; }
+        public int Armor => 0;
         // 소지 아이템 = 플레이어가 소지중인 아이템들. 몬스터는 드롭 아이템 목록으로 사용.
-        public int[] Item { get; set; }
+        public List<int> Item { get; set; }
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
@@ -61,8 +61,6 @@ namespace TextRpg.Player
             Atk = atk;
             Def = def;
             Gold = 3000;
-            Weapon = 0;
-            Armor = 0;
             IsDead = isDead;
 
             //PlusExp += Exp;
@@ -77,17 +75,17 @@ namespace TextRpg.Player
             return dps;
         }
 
-        public int Skill_1(string job, float atk, int mana)
+        public virtual int Skill_1(ICharacter target)
         {
             return 0;
         }
 
-        public int Skill_2(string job, float atk, int mana)
+        public virtual int Skill_2(ICharacter target)
         {
             return 0;
         }
 
-        public int Skill_3(string job, float atk, int mana)
+        public virtual int Skill_3(ICharacter target)
         {
             return 0;
         }
