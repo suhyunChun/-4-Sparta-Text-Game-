@@ -29,7 +29,7 @@ namespace TextRpg.Player
         // 체력 = 힘으로 증가
         public int Health => 100 + Strength * 20;
         // 마력 = 지능으로 증가
-        public int Mana=> 10 + Intelligence * 2;
+        public int Mana => 10 + Intelligence * 2;
         // 공격력 = 민첩성으로 증가
         public float Atk => 10 + Agility * 2;
         // 추가 공격력 = 아이템에 의한 수치 변화
