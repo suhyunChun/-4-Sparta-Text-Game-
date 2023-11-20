@@ -26,7 +26,7 @@ namespace TextRpg
 
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
-            inventory.AddItem(new Weapon("낡은 검", 1, 100, 10, true));
+            inventory.AddItem(new Weapon("낡은 검", 3, 1000, 10, true));
             inventory.AddItem(new Armor("낡은 방패", 1, 100, 10, true));
             inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, true));
             inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, true));
@@ -323,7 +323,6 @@ namespace TextRpg
             Console.Clear();
             Console.WriteLine("인벤토리 메뉴입니다.");
             Console.WriteLine("아이템을 관리할 수 있습니다.");
-
             Console.WriteLine("");
             inventory.DisplayInventory();
 
@@ -331,12 +330,14 @@ namespace TextRpg
             Console.WriteLine("1. 장비 관리하기");
             Console.WriteLine("2. 아이템 사용하기");
             Console.WriteLine("3. 아이템 버리기");
+            Console.WriteLine("4. 아이템 정렬");
+            Console.WriteLine("");
             Console.WriteLine("");
             Console.WriteLine("0. 뒤로가기");
             Console.WriteLine("");
 
 
-            switch (CheckValidInput(0, 3))
+            switch (CheckValidInput(0, 4))
             {
                 case 1:
                     EquipMenu();
@@ -346,6 +347,10 @@ namespace TextRpg
                     break;
                 case 3:
                     DropItemMenu();
+                    break;
+                case 4:
+                    inventory.InventoryArraySort();
+                    InventoryMenu();
                     break;
                 case 0:
                     StartMenu(player.Occupation,1);
