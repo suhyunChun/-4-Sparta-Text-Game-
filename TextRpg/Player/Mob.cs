@@ -29,8 +29,10 @@ namespace TextRpg.Player
         // 지능 = 마력과 기술 피해 관련 능력치
         public int Intelligence { get; }
         // 체력 = 힘으로 증가
+        public int MaxHealth { get; }
         public int Health { get; set; }
         // 마력 = 지능으로 증가
+        public int MaxMana { get; }
         public int Mana { get; set; }
         // 공격력 = 민첩성으로 증가
         public float Atk { get; }
@@ -51,16 +53,20 @@ namespace TextRpg.Player
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
-        public Mob(string name, string occupation, int level, float exp, int health, float atk, float def, bool isDead)
+        public Mob(string name, string occupation, int level, float exp, int health, int mana, float atk, float def, int gold, bool isDead)
         {
             Name = name;
             Occupation = occupation;
             Level = level;
             Exp = exp;
-            Health = health;
+            MaxHealth = health;
+            Health = MaxHealth;
+            MaxMana = mana;
+            Mana = MaxMana;
             Atk = atk;
             Def = def;
             Gold = 3000;
+            // Item = items;
             IsDead = isDead;
 
             //PlusExp += Exp;
@@ -68,9 +74,11 @@ namespace TextRpg.Player
         public int Attack(ICharacter target)
         {
             Random rand = new Random();
-            var err = Atk * 0.1;
-            int dps = rand.Next((int)(Atk - err), (int)(Atk + err + 1));
-            dps -= (int)target.Def;
+            var atk = Atk + PlusAtk;
+            var def = target.Def + target.PlusDef;
+            var err = atk * 0.1;
+            int dps = rand.Next((int)(atk - err), (int)(atk + err + 1));
+            dps -= (int)def;
             if (dps <= 1) dps = 1;
             return dps;
         }

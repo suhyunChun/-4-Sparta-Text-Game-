@@ -332,7 +332,7 @@ namespace TextRpg
             int numberOfMob = rand.Next(1, 5);
             for (int i = 1; i <= numberOfMob; i++)
             {
-                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 5, 10, 5, 5, false));
+                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 5, 10, 5, 5, 5, 300, false));
 
             }
         }
