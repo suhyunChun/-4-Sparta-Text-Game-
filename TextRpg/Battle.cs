@@ -293,28 +293,31 @@ namespace TextRpg
         {
             SceneTitle(false);
 
+            int dodge = new Random().Next(1,100);
             //데미지 계산
             bool isCritical = false;
             int Damage = player.Attack(mobs[idx]);
-
             Damage = CirticalAttack(Damage, ref isCritical);
-
             //몬스터에게 데미지 가하기
             Console.WriteLine($"{player.Name} 의 공격!");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
-            Console.WriteLine("");
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
-            mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
-            if (mobs[idx].IsDead)
-            {
-                deadCnt++;
-                player.Exp += mob.PlusExp;
-                Console.WriteLine($"현재 경험치: {player.Exp}");
+            if(dodge > 11){
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
+                Console.WriteLine("");
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
+                Console.WriteLine(mobs[idx]);
+                mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
+                if (mobs[idx].IsDead)
+                {
+                    deadCnt++;
+                    player.Exp += mob.PlusExp;
+                    Console.WriteLine($"현재 경험치: {player.Exp}");
+                }
+                Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+                Console.WriteLine("");
+                mobs[idx].Health -= Damage;
+            }else{
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
             }
-            Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
-            Console.WriteLine("");
-            mobs[idx].Health -= Damage;
-
             Console.WriteLine("0. 다음");
             Console.WriteLine("");
             int input = Program.CheckValidInput(0, 0);
