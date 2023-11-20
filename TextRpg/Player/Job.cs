@@ -17,9 +17,9 @@ namespace TextRpg.Player
         // 직업
         public string Occupation { get; }
         // 레벨 = 전체적인 능력치 및 방어력 증가
-        public int Level { get; protected set; }
+        public int Level { get; set; }
 
-        public int MaxExp { get; protected set; }
+        public float MaxExp { get; set; }
 
         // 경험치
         public float Exp { get; set; }
@@ -63,7 +63,7 @@ namespace TextRpg.Player
             Name = name;
             Occupation = occupation;
             Level = level;
-            MaxExp = 100;
+            MaxExp = 10;
             Exp = 0;
             MaxHealth = maxhealth;
             Health = maxhealth;
