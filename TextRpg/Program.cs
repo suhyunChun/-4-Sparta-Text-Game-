@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using TextRpg.InvenShop;
 using TextRpg.Item;
@@ -135,19 +136,19 @@ namespace TextRpg
                     player = new Warrior("1", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
                 case 2:
                     player = new Mage("2", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
                 case 3:
                     player = new Archer("3", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
         }
@@ -228,7 +229,7 @@ namespace TextRpg
             Console.ResetColor();
         }
         // 시작 메뉴
-        public static void StartMenu(string occupation,int cursor)
+        public static void StartMenu(string occupation, int cursor)
         {
             Console.Clear();
             fontColor.WriteColorFont($"{occupation}", FontColor.Color.DarkYellow);
@@ -298,7 +299,7 @@ namespace TextRpg
             int bonusDef = 0;
 
             // 무기 합 계산
-            foreach(var weapon in weapons)
+            foreach (var weapon in weapons)
             {
                 bonusAtk = weapon.BonusStatus(inventory);
                 break;
@@ -315,7 +316,7 @@ namespace TextRpg
             Console.Clear();
             Console.WriteLine("상태 메뉴입니다.");
             Console.WriteLine("캐릭터의 정보를 표기하는 곳입니다.");
-          
+
             Console.WriteLine($"플레이어 이름: {player.Name} ( {player.Occupation} )");
             Console.WriteLine("LV: {0}", player.Level.ToString("00"));
             Console.WriteLine($"현재 경험치 {player.Exp} / {player.MaxExp}");
@@ -330,7 +331,7 @@ namespace TextRpg
             Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
             Console.ReadKey();
-            StartMenu(player.Occupation,1);
+            StartMenu(player.Occupation, 1);
 
         }
 
@@ -375,7 +376,7 @@ namespace TextRpg
                     EquipMenu(1);
                     break;
                 case 2:
-                    InventoryItemUseMenu();
+                    InventoryItemUseMenu(1);
                     break;
                 case 3:
                     DropItemMenu(1);
@@ -385,38 +386,95 @@ namespace TextRpg
                     InventoryMenu(1);
                     break;
                 case 0:
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
 
         }
 
         //아이템 사용하기 메뉴 
-        private static void InventoryItemUseMenu()
+        private static void InventoryItemUseMenu(int cursor)
         {
             Console.Clear();
             Console.WriteLine("인벤토리 - 아이템사용하기");
             Console.WriteLine("어떤 아이템을 사용하시겠습니까?");
             Console.WriteLine("");
-            inventory.ShowInvenItem();
+            inventory.ShowInvenItem(cursor, 2);
 
             Console.WriteLine("");
-            Console.WriteLine("어떤 아이템을 사용하시겠습니까?");
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine("0. 뒤로가기");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
             Console.WriteLine("");
 
-            int keyInput = CheckValidInput(0, inventory.ItemCnt);
-            switch (keyInput)
+            SetCursor(0,inventory.potionItems.Count, cursor, InventoryItemUseMenu);
+            switch (cursor)
             {
                 case 0:
-                    InventoryMenu();
+                    InventoryMenu(cursor);
                     break;
                 default:
-                    IsRemoveItem(keyInput - 1);
+                    ItemUsed(cursor - 1);
                     break;
             }
+        }
+        //아이템 사용시 확인메뉴
+        private static void ItemUsed(int indexItem)
+        {
+            Console.Clear();
+            Console.WriteLine("");
+            if (inventory.potionItems != null)
+            {
+                if (inventory.potionItems[indexItem].Kind == "힐링포션")//힐링포션부분
+                {
+                    if (player.Health >= player.MaxHealth)
+                    {
+                        player.Health = player.MaxHealth;
+                        Console.WriteLine("체력이 가득 찼습니다.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("힐링포션을 사용했습니다.");
+                        int beforeHp = player.Health;
+                        inventory.potionItems[indexItem].Use(player);
+                        if (player.Health >= player.MaxHealth)
+                            player.Health = player.MaxHealth;
+                        fontColor.WriteColorFont($"물약을 사용하였습니다. HP : {beforeHp} -> {player.Health}", FontColor.Color.Blue);
+                        Console.WriteLine("");
+                        inventory.invenItems.Remove(inventory.potionItems[indexItem]);
+                        inventory.potionItems.RemoveAt(indexItem);
+                    }
+                }
+                else if (inventory.potionItems[indexItem].Kind == "마나포션")//마나포션부분
+                {
+                    if (player.Mana >= player.MaxMana)
+                    {
+                        player.Mana = player.MaxMana;
+                        Console.WriteLine("마나가 가득 찼습니다.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("마나포션을 사용했습니다.");
+                        int beforeMP = player.Mana;
+                        inventory.potionItems[indexItem].Use(player);
+                        if (player.Mana >= player.MaxMana)
+                            player.Mana = player.MaxMana;
+                        fontColor.WriteColorFont($"물약을 사용하였습니다. HP : {beforeMP} -> {player.Mana}", FontColor.Color.Blue);
+                        Console.WriteLine("");
+                        inventory.invenItems.Remove(inventory.potionItems[indexItem]);
+                        inventory.potionItems.RemoveAt(indexItem);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("포션이 없습니다!");
+            }
+            Console.WriteLine("");
+            Console.WriteLine(" Press Any Key . . .");
+            Console.ReadKey();
+            InventoryItemUseMenu(1);
         }
         //아이템 버리기 메뉴
         private static void DropItemMenu(int cursor)
@@ -428,7 +486,7 @@ namespace TextRpg
             Console.WriteLine($"아이템개수: {inventory.ItemCnt}");
 
             Console.WriteLine("");
-            inventory.ShowInvenItem(cursor);
+            inventory.ShowInvenItem(cursor, 0);
             Console.WriteLine("");
             if (cursor == 0)
                 HighlightText("0. 뒤로가기");
@@ -444,13 +502,13 @@ namespace TextRpg
                     InventoryMenu(1);
                     break;
                 default:
-                    IsRemoveItem(cursor - 1,1);
+                    IsRemoveItem(cursor - 1, 1);
                     break;
             }
         }
 
         //아이템 버리기 경고
-        private static void IsRemoveItem(int itemIndex,int cursor)
+        private static void IsRemoveItem(int itemIndex, int cursor)
         {
             Console.Clear();
             Console.WriteLine("정말 아이템을 삭제하시겠습니까?");
@@ -548,7 +606,7 @@ namespace TextRpg
                     SellShopMenu(1);
                     break;
                 case 0:
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
 
@@ -623,7 +681,7 @@ namespace TextRpg
                     BuyShopMenu(1);
                     break;
                 case 2:
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
 
@@ -638,7 +696,7 @@ namespace TextRpg
             Console.WriteLine($"인벤토리 아이템 개수: {inventory.ItemCnt}");
             Console.WriteLine("");
 
-            inventory.ShowInvenItem(cursor);
+            inventory.ShowInvenItem(cursor, 0);
             Console.WriteLine("");
 
             if (cursor == 0)
@@ -719,20 +777,20 @@ namespace TextRpg
         }
 
         // 핸들러
-/*        public static int CheckValidInput(int min, int max)
-        {
-            int keyInput;
-            bool result;
+        /*        public static int CheckValidInput(int min, int max)
+                {
+                    int keyInput;
+                    bool result;
 
-            do
-            {
-                Console.WriteLine("번호를 입력해주세요.");
-                result = int.TryParse(Console.ReadLine(), out keyInput);
-            } while (result = false || CheckIfValid(keyInput, min, max) == false);
+                    do
+                    {
+                        Console.WriteLine("번호를 입력해주세요.");
+                        result = int.TryParse(Console.ReadLine(), out keyInput);
+                    } while (result = false || CheckIfValid(keyInput, min, max) == false);
 
-            return keyInput;
+                    return keyInput;
 
-        }*/
+                }*/
 
         private static bool CheckIfValid(int keyInput, int min, int max)
         {

@@ -19,6 +19,8 @@ namespace TextRpg.InvenShop
         FontColor fontColor;
         public Job player;
         public List<Items> invenItems;
+        public List<Items> potionItems;
+        public List<Items> equipmentItems;
         public bool onEquipMenu;
         public int arraySortNum = 0;
 
@@ -31,6 +33,8 @@ namespace TextRpg.InvenShop
         public Inventory(Job _player)
         {
             invenItems = new List<Items>();
+            potionItems = new List<Items>();
+            equipmentItems = new List<Items>();
             player = _player;
             fontColor = new FontColor();
         }
@@ -39,8 +43,15 @@ namespace TextRpg.InvenShop
         internal void AddItem(Items item)
         {
             invenItems.Add(item);
+            if(item is HealingPotion||item is ManaPotion)
+            {
+                potionItems.Add(item);
+            }
+            else if (item is Weapon || item is Armor)
+            {
+                equipmentItems.Add(item);
+            }
             //Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
-
         }
 
         // 힐링포션 개수
@@ -227,7 +238,7 @@ namespace TextRpg.InvenShop
             }
         }
         //아이템 목록 index
-        public void ShowInvenItem(int cursor)
+        public void ShowInvenItem(int cursor, int category)
         {
             //category 0전부 1장비류 2물약류
             int idx = 0;
@@ -235,12 +246,14 @@ namespace TextRpg.InvenShop
             Console.WriteLine("");
             if (category == 0)
             {
-                if (cursor == idx + 1)
-                    Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                    $"등급: {item.Grade}★, 가격: {item.Price}");
-                else
-                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                    $"등급: {item.Grade}★, 가격: {item.Price}");
+                foreach (var item in invenItems)
+                {
+                    if (cursor == idx + 1)
+                        Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                        $"등급: {item.Grade}★, 가격: {item.Price}");
+                    else
+                        Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                        $"등급: {item.Grade}★, 가격: {item.Price}");
 
                     idx++;
                 }
@@ -249,20 +262,34 @@ namespace TextRpg.InvenShop
             {
                 foreach (var item in invenItems)
                 {
-                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                        $"등급: {item.Grade}★, 가격: {item.Price}");
+                    if (item is Weapon || item is Armor)
+                    {
+                        if (cursor == idx + 1)
+                            Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                        else
+                            Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
 
-                    idx++;
+                        idx++;
+                    }
                 }
             }
             else if (category == 2)
             {
                 foreach (var item in invenItems)
                 {
-                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                        $"등급: {item.Grade}★, 가격: {item.Price}");
+                    if (item is HealingPotion || item is ManaPotion)
+                    {
+                        if (cursor == idx + 1)
+                            Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                        else
+                            Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
 
-                    idx++;
+                        idx++;
+                    }
                 }
             }
         }
