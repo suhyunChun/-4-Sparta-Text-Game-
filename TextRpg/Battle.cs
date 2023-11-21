@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Media;
+using WMPLib;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
 using static System.Net.Mime.MediaTypeNames;
+using System.Reflection;
 
 namespace TextRpg
 {
@@ -23,15 +24,20 @@ namespace TextRpg
         int deadCnt;
         FontColor fontColor;
         ConsoleKeyInfo c;
-        SoundPlayer dungeonBGM;
-
+        WindowsMediaPlayer wmp;
         delegate void OriginFunction(int cursor);
 
         public Battle(Job _player, Inventory _inventory)
         {
-            Program.sd.Stop();
-            dungeonBGM = new SoundPlayer("..\\..\\..\\dungeon.wav");
-            dungeonBGM.Play();
+            Program.wmp.controls.stop();
+            string executableFilePath = Assembly.GetEntryAssembly().Location;
+            string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
+            string audioFilePath = Path.Combine(executableDirectoryPath, "dungeon.wav");
+            wmp = new WindowsMediaPlayer();
+            wmp.URL = audioFilePath;
+            wmp.controls.play();
+            wmp.settings.volume = 5;
+
             mobs = new List<Mob>();
             player = _player;
             items = _inventory.invenItems;
@@ -96,8 +102,8 @@ namespace TextRpg
                     SelectSkillOrAtk(1);
                     break;
                 case 2:
-                    dungeonBGM.Stop();
-                    Program.sd.Play();
+                    wmp.controls.stop();
+                    Program.wmp.controls.play();
                     Program.StartMenu("쫄보", 1);
                     break;
             }
@@ -582,8 +588,8 @@ namespace TextRpg
             Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
             Console.ReadKey();
-            dungeonBGM.Stop();
-            Program.sd.Play();
+            wmp.controls.stop();
+            Program.wmp.controls.play();
             Program.StartMenu(player.Occupation, 1);
         }
 

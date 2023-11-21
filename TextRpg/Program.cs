@@ -1,11 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Media;
 using System.Reflection;
 using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
+using WMPLib;
 
 
 namespace TextRpg
@@ -26,14 +26,10 @@ namespace TextRpg
         delegate void func3(int idx, int cursor);
         static ConsoleKeyInfo c;
 
-        public static SoundPlayer sd = new SoundPlayer("..\\..\\..\\henesys.wav");
-        /*public static Thread bgmThread = new Thread(() =>
-        {
-            sd.LoadAsync();
-        });*/
+        public static WindowsMediaPlayer wmp;
+
         // 아이템 세팅
         // 테스팅을 위해 포션추가
-
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
             inventory.AddItem(new Weapon("낡은 검1", 3, 1000, 10, false));
@@ -91,7 +87,14 @@ namespace TextRpg
 
             Console.Clear();
             Console.WriteLine("헤네시스에 오신걸 환영합니다.");
-            sd.Play();
+
+            wmp = new WindowsMediaPlayer();
+            string executableFilePath = Assembly.GetEntryAssembly().Location;
+            string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
+            string audioFilePath = Path.Combine(executableDirectoryPath, "henesys.wav");
+            wmp.URL = audioFilePath;
+            wmp.controls.play();
+            wmp.settings.volume = 5;
 
             // 공백시 입장 불가
             do
