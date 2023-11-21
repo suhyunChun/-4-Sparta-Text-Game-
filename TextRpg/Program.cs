@@ -26,7 +26,7 @@ namespace TextRpg
         delegate void func3(int idx, int cursor);
         static ConsoleKeyInfo c;
 
-        public static SoundPlayer sd = new SoundPlayer("henesys.wav");
+        public static SoundPlayer sd = new SoundPlayer("..\\..\\..\\henesys.wav");
         /*public static Thread bgmThread = new Thread(() =>
         {
             sd.LoadAsync();

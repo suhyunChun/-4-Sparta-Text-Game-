@@ -30,7 +30,7 @@ namespace TextRpg
         public Battle(Job _player, Inventory _inventory)
         {
             Program.sd.Stop();
-            dungeonBGM = new SoundPlayer("dungeon.wav");
+            dungeonBGM = new SoundPlayer("..\\..\\..\\dungeon.wav");
             dungeonBGM.Play();
             mobs = new List<Mob>();
             player = _player;
