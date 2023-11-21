@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextRpg.InvenShop;
 using TextRpg.Player;
 
 namespace TextRpg.Item
@@ -28,6 +29,8 @@ namespace TextRpg.Item
 
         }
 
+        public void BonusStatus(Inventory invetory) { }
+      
 
         public Items(string name, string kind, int grade, int price, bool isEquiped)
         {

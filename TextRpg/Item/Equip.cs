@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TextRpg.Player;
 using System.Xml.Linq;
+using TextRpg.InvenShop;
 
 namespace TextRpg.Item
 {
@@ -29,9 +30,27 @@ namespace TextRpg.Item
             }
         }
 
+        public int BonusStatus(Inventory inventory)
+        {
+            int BonusAtk = 0;
+            List<Items> itemList = inventory.invenItems;
+
+            foreach (Items equip in itemList)
+            {
+                if (equip is Weapon && equip.IsEquiped == true)
+                {
+                    BonusAtk += Atk;
+                }
+            }
+
+            return BonusAtk;
+
+        }
+
+
         public void Use(Job player) //장착
         {
-            IsEquiped = !IsEquiped;
+            
         }
 
         // 무기 생성자
@@ -47,6 +66,23 @@ namespace TextRpg.Item
     public class Armor : Items
     {
         private int Def;
+
+        public int BonusStatus(Inventory inventory)
+        {
+            int BonusDef = 0;
+            List<Items> itemList = inventory.invenItems;
+
+            foreach (Items equip in itemList)
+            {
+                if (equip is Armor && equip.IsEquiped == true)
+                {
+                    BonusDef += Def;
+                }
+            }
+
+            return BonusDef;
+
+        }
 
         public void Drop()
         {

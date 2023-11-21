@@ -16,6 +16,7 @@ namespace TextRpg.InvenShop
     public class Inventory
     {
         Items emptyItem;
+        FontColor fontColor;
         public Job player;
         public List<Items> invenItems;
         public bool onEquipMenu;
@@ -31,6 +32,7 @@ namespace TextRpg.InvenShop
         {
             invenItems = new List<Items>();
             player = _player;
+            fontColor = new FontColor();
         }
 
         // 아이템 추가
@@ -47,6 +49,7 @@ namespace TextRpg.InvenShop
         // 인벤토리 목록
         public void DisplayInventory()
         {
+
             Console.Write("[소지품 목록]");
             switch (arraySortNum)
             {
@@ -78,21 +81,43 @@ namespace TextRpg.InvenShop
                 {
                     foreach (var item in invenItems)
                     {
-                        Console.WriteLine($"- 이름: {item.Name}, 종류: {item.Kind}, " +
+                        if (item.IsEquiped == true)
+                        {
+                            Console.Write("- [");
+                            fontColor.WriteColorFont("E", FontColor.Color.Yellow);
+                            Console.Write("]");
+                            Console.WriteLine($"이름: {item.Name}, 종류: {item.Kind}, " +
                             $"등급: {item.Grade}★, 가격: {item.Price}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                        }
                     }
                 }
                 else if (onEquipMenu == true)//장비관리창
                 {
+
                     int idx = 0;
                     foreach (var item in invenItems)
                     {
-                        if (item is Weapon && item.IsEquiped == true)
+                        if (item.IsEquiped == true)
                         {
-                        }
-                        Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            Console.Write("- [");
+                            fontColor.WriteColorFont("E", FontColor.Color.Yellow);
+                            Console.Write("]");
+                            Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                             $"등급: {item.Grade}★, 가격: {item.Price}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                        }
+
                         idx++;
+
                     }
                 }
             }
@@ -100,14 +125,30 @@ namespace TextRpg.InvenShop
         //장착상태 적용
         public void EquipmentStatusChange(int num)
         {
-            if (invenItems[num].IsEquiped == true)
+            invenItems[num].IsEquiped = !invenItems[num].IsEquiped;
+
+            if (invenItems[num] is Weapon)
             {
-                invenItems[num].IsEquiped = false;
+                for (int i = 0; i < invenItems.Count; i++)
+                {
+                    if (i != num && invenItems[i] is Weapon)
+                    {
+                        invenItems[i].IsEquiped = false;
+                    }
+                }
             }
-            else if (invenItems[num].IsEquiped == false)
+
+            else if (invenItems[num] is Armor)
             {
-                invenItems[num].IsEquiped = true;
+                for (int i = 0; i < invenItems.Count; i++)
+                {
+                    if (i != num && invenItems[i] is Armor)
+                    {
+                        invenItems[i].IsEquiped = false;
+                    }
+                }
             }
+
         }
         //아이템 분류
         public void InventoryArraySort()

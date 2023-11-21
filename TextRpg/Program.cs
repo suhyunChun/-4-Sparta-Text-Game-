@@ -10,6 +10,7 @@ namespace TextRpg
 {
     internal class Program
     {
+        static List<Items> item;
         static Inventory inventory;
         static Shop shop;
         // public이 붙음, player생성 시 다양한 곳에서 땡겨오기 위해
@@ -26,17 +27,20 @@ namespace TextRpg
 
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
-            inventory.AddItem(new Weapon("낡은 검", 3, 1000, 10, true));
-            inventory.AddItem(new Armor("낡은 방패", 1, 100, 10, true));
-            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, true));
-            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, true));
-            inventory.AddItem(new ManaPotion("마나 회복 물약", 1, 100, 10, true));
-            inventory.AddItem(new ManaPotion("마나 회복 물약", 1, 100, 10, true));
+            inventory.AddItem(new Weapon("낡은 검1", 3, 1000, 10, false));
+            inventory.AddItem(new Weapon("낡은 검2", 3, 1000, 11, false));
+            inventory.AddItem(new Weapon("낡은 검3", 3, 1000, 12, false));
 
-            shop.AddShopItem(new Weapon("황금 검", 2, 300, 20, true));
-            shop.AddShopItem(new Armor("황금 방패", 2, 300, 15, true));
-            shop.AddShopItem(new HealingPotion("고급 회복 물약", 2, 200, 20, true));
-            shop.AddShopItem(new HealingPotion("고오급 회복 물약", 2, 1000000, 20, true));
+            inventory.AddItem(new Armor("낡은 방패", 1, 100, 10, false));
+            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, false));
+            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, false));
+            inventory.AddItem(new ManaPotion("마나 회복 물약", 1, 100, 10, false));
+            inventory.AddItem(new ManaPotion("마나 회복 물약", 1, 100, 10, false));
+
+            shop.AddShopItem(new Weapon("황금 검", 2, 300, 20, false));
+            shop.AddShopItem(new Armor("황금 방패", 2, 300, 15, false));
+            shop.AddShopItem(new HealingPotion("고급 회복 물약", 2, 200, 20, false));
+            shop.AddShopItem(new HealingPotion("고오급 회복 물약", 2, 1000000, 20, false));
         }
         // 시작 씬
         private static void PrintStartScene()
@@ -258,50 +262,42 @@ namespace TextRpg
 
         }
 
-        // 던전입장
-        private static void StageSelected()
-        {
-            Console.Clear();
-            Console.WriteLine("스테이지 선택 메뉴입니다.");
-            Console.WriteLine("");
-
-            Console.WriteLine("스테이지를 선택해 주세요");
-            Console.WriteLine("");
-
-            Console.WriteLine("1. Stage 1");
-            Console.WriteLine("2. Stage 2");
-            Console.WriteLine("3. Stage 3");
-            Console.WriteLine("");
-
-            switch (CheckValidInput(0, 3))
-            {
-                case 1:
-                    break;
-                case 2:
-                    break;
-                case 3:
-                    break;
-                case 0:
-                    StartMenu(player.Occupation,1);
-                    break;
-            }
-
-
-        }
 
         //상태 메뉴
         private static void StatusMenu()
         {
+            List<Items> bonusItem = inventory.invenItems;
+            var weapons = bonusItem.OfType<Weapon>().ToList();
+            var armors = bonusItem.OfType<Armor>().ToList();
+
+            int bonusAtk = 0;
+            int bonusDef = 0;
+
+            // 무기 합 계산
+            foreach(var weapon in weapons)
+            {
+                bonusAtk = weapon.BonusStatus(inventory);
+                break;
+            }
+
+            // 방어구 합 계산
+            foreach (var armor in armors)
+            {
+                bonusDef = armor.BonusStatus(inventory);
+                break;
+
+            }
+
             Console.Clear();
             Console.WriteLine("상태 메뉴입니다.");
             Console.WriteLine("캐릭터의 정보를 표기하는 곳입니다.");
-
+          
             Console.WriteLine($"플레이어 이름: {player.Name} ( {player.Occupation} )");
             Console.WriteLine("LV: {0}", player.Level.ToString("00"));
             Console.WriteLine($"현재 경험치 {player.Exp} / {player.MaxExp}");
             Console.WriteLine();
-            Console.WriteLine($"공격력: {player.Atk}");
-            Console.WriteLine($"방어력: {player.Def}");
+            Console.WriteLine($"공격력: {player.Atk + bonusAtk}" + " + " + $"({bonusAtk})");
+            Console.WriteLine($"방어력: {player.Def + bonusDef}" + " + " + $"({bonusDef})");
             Console.WriteLine($"체력: {player.Health} / {player.MaxHealth}");
             Console.WriteLine($"마나: {player.Mana} / {player.MaxMana}");
             Console.WriteLine($"소지골드: {player.Gold}");
@@ -455,8 +451,7 @@ namespace TextRpg
             }
             else
             {
-                equipNum -= 1;
-                inventory.EquipmentStatusChange(equipNum);
+                inventory.EquipmentStatusChange(equipNum - 1);
                 EquipMenu();
             }
         }
