@@ -15,6 +15,12 @@ namespace TextRpg.Item
         // 힐링 양
         private int HealingAmount;
 
+        public int healingAmount
+        {
+            get { return HealingAmount; }
+            set { HealingAmount = value; }
+        }
+
         // 힐링 포션 생성자
         public HealingPotion(string name, int grade, int price, int healingAmount ,bool isEquiped)
             : base(name, "힐링포션", grade, price, false)
@@ -50,6 +56,12 @@ namespace TextRpg.Item
     public class ManaPotion : Items
     {
         private int ManaAmount;
+
+        public int manaAmount
+        {
+            get { return ManaAmount; }
+            set { ManaAmount = value; }
+        }
 
         public ManaPotion(string name, int grade, int price, int manaAmount, bool isEquiped)
         : base(name, "마나포션", grade, price, false)

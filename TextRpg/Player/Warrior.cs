@@ -9,7 +9,7 @@ namespace TextRpg.Player
     public class Warrior : Job
     {
         // 체력 200, 공격력 5, 방어력 15
-        public Warrior(string id, string name, List<int> items) : base(id, name, "전사", 1, 0, 4, 2, 2, 0, 0, 3000, 0, 0, items, false)
+        public Warrior(string id, string name, List<int> items) : base(id, name, "전사", 1, 0, 4, 2, 2, 3000, 0, 0, items, false)
         {
             if (Health <= 0)
             {
@@ -29,11 +29,11 @@ namespace TextRpg.Player
             }
         }
 
-        public override int Skill_1(ICharacter target)
+        public override int Skill_1(Job player, ICharacter target)
         {
 
             // 공통값
-            int vitSkillResult = base.Skill_1(target);
+            int vitSkillResult = base.Skill_1(player, target);
 
             // 재정의하는 내용
             Console.WriteLine("전사의 스킬 발동!");

@@ -65,27 +65,27 @@ namespace TextRpg.Player
 
             //PlusExp += Exp;
         }
-        public int Attack(ICharacter target)
+        public int Attack(Job player, ICharacter target)
         {
             Random rand = new Random();
             var err = Atk * 0.1;
-            int dps = rand.Next((int)(Atk - err), (int)(Atk + err + 1));
-            dps -= (int)target.Def;
+            int dps = rand.Next((int)(Atk - err), (int)(Atk + 1));
+            dps -= (int)player.PlusDef;
             if (dps <= 1) dps = 1;
             return dps;
         }
 
-        public virtual int Skill_1(ICharacter target)
+        public virtual int Skill_1(Job player, ICharacter target)
         {
             return 0;
         }
 
-        public virtual int Skill_2(ICharacter target)
+        public virtual int Skill_2(Job player, ICharacter target)
         {
             return 0;
         }
 
-        public virtual int Skill_3(ICharacter target)
+        public virtual int Skill_3(Job player, ICharacter target)
         {
             return 0;
         }

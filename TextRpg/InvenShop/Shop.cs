@@ -5,12 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.Player;
+using TextRpg.Appearance;
 
 namespace TextRpg.InvenShop
 {
     //상점 클래스
     public class Shop
     {
+        FontColor fontColor;
         private List<Items> shopItems;
         private Inventory inventory;
          
@@ -33,6 +35,7 @@ namespace TextRpg.InvenShop
         public Shop()
         {
             shopItems = new List<Items>();
+            fontColor = new FontColor();
         }
 
         // 상점 아이템 추가
@@ -48,9 +51,32 @@ namespace TextRpg.InvenShop
             Console.WriteLine("");
             foreach (var item in shopItems)
             {
-                Console.WriteLine($"- 이름: {item.Name}, 종류: {item.Kind}, " +
-                    $"등급: {item.Grade}★, 가격: {item.Price}");
 
+                Console.Write(
+                        $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                        $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                        $"등급: {item.Grade} ★ " + " | " +
+                        $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
+                                                );
+
+                if (item is Weapon weapon)
+                {
+                    Console.Write($"공격력: {weapon.atk}");
+                }
+                else if (item is Armor armor)
+                {
+                    Console.Write($"방어력: {armor.def}");
+                }
+                else if (item is HealingPotion hpPotion)
+                {
+                    Console.Write($"HP 회복량: {hpPotion.healingAmount}");
+                }
+                else if (item is ManaPotion mpPotion)
+                {
+                    Console.Write($"MP 회복량: {mpPotion.manaAmount}");
+                }
+
+                Console.WriteLine();
             }
         }
 
@@ -61,8 +87,34 @@ namespace TextRpg.InvenShop
 
             foreach (var item in shopItems)
             {
-                Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                    $"등급: {item.Grade}★, 가격: {item.Price}");
+                Console.Write("-");
+                fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Green);
+
+                Console.Write(
+                         $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                         $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                         $"등급: {item.Grade} ★ " + " | " +
+                         $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
+                                                 );
+                
+                if (item is Weapon weapon)
+                {
+                    Console.Write($"공격력: {weapon.atk}");
+                }
+                else if (item is Armor armor)
+                {
+                    Console.Write($"방어력: {armor.def}");
+                }
+                else if (item is HealingPotion hpPotion)
+                {
+                    Console.Write($"HP 회복량: {hpPotion.healingAmount}");
+                }
+                else if (item is ManaPotion mpPotion)
+                {
+                    Console.Write($"MP 회복량: {mpPotion.manaAmount}");
+                }
+
+                Console.WriteLine();
 
                 idx++;
             }

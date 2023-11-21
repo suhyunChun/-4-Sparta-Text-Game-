@@ -8,6 +8,8 @@ using System.Reflection;
 using TextRpg.Player;
 using System.Collections;
 using System.Numerics;
+using TextRpg.Appearance;
+using System.Xml.Linq;
 
 namespace TextRpg.InvenShop
 {
@@ -42,9 +44,6 @@ namespace TextRpg.InvenShop
             //Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
 
         }
-
-        // 힐링포션 개수
-
 
         // 인벤토리 목록
         public void DisplayInventory()
@@ -81,40 +80,84 @@ namespace TextRpg.InvenShop
                 {
                     foreach (var item in invenItems)
                     {
-                        if (item.IsEquiped == true)
+                        if (item.IsEquiped)
                         {
                             Console.Write("- [");
-                            fontColor.WriteColorFont("E", FontColor.Color.Yellow);
+                            fontColor.WriteColorFont("E", FontColor.Color.Cyan);
                             Console.Write("]");
-                            Console.WriteLine($"이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
                         }
-                        else
-                        {
-                            Console.WriteLine($"이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
-                        }
+
+                            Console.Write($"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                                                    $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                                                    $"등급: {item.Grade} ★ " + " | " +
+                                                    $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | ");
+
+                            if (item is Weapon weapon)
+                            {
+                            Console.Write($"공격력: {weapon.atk}");
+                            }
+                            else if(item is Armor armor)
+                            {
+                                Console.Write($"방어력: {armor.def}");
+                            }
+                            else if(item is HealingPotion hpPotion)
+                            {
+                                Console.Write($"HP 회복량: {hpPotion.healingAmount}");
+                            }
+                            else if(item is ManaPotion mpPotion)
+                            {
+                                Console.Write($"MP 회복량: {mpPotion.manaAmount}");
+                            }
+
+                        Console.WriteLine();
                     }
                 }
                 else if (onEquipMenu == true)//장비관리창
                 {
 
                     int idx = 0;
+
                     foreach (var item in invenItems)
                     {
+
+                        Console.Write("-");
+                        fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Yellow);
+
                         if (item.IsEquiped == true)
                         {
-                            Console.Write("- [");
-                            fontColor.WriteColorFont("E", FontColor.Color.Yellow);
+                            Console.Write("[");
+                            fontColor.WriteColorFont("E", FontColor.Color.Cyan);
                             Console.Write("]");
-                            Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 15)}" + " | ");
                         }
                         else
                         {
-                            Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | ");
                         }
+                            Console.Write(
+                                                    $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                                                    $"등급: {item.Grade} ★ " + " | " +
+                                                    $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
+                                                    );
+
+                        if (item is Weapon weapon)
+                        {
+                            Console.Write($"공격력: {weapon.atk}");
+                        }
+                        else if (item is Armor armor)
+                        {
+                            Console.Write($"방어력: {armor.def}");
+                        }
+                        else if (item is HealingPotion hpPotion)
+                        {
+                            Console.Write($"HP 회복량: {hpPotion.healingAmount}");
+                        }
+                        else if (item is ManaPotion mpPotion)
+                        {
+                            Console.Write($"MP 회복량: {mpPotion.manaAmount}");
+                        }
+
+                        Console.WriteLine();
 
                         idx++;
 
@@ -125,6 +168,7 @@ namespace TextRpg.InvenShop
         //장착상태 적용
         public void EquipmentStatusChange(int num)
         {
+            // 토글
             invenItems[num].IsEquiped = !invenItems[num].IsEquiped;
 
             if (invenItems[num] is Weapon)
@@ -143,6 +187,28 @@ namespace TextRpg.InvenShop
                 for (int i = 0; i < invenItems.Count; i++)
                 {
                     if (i != num && invenItems[i] is Armor)
+                    {
+                        invenItems[i].IsEquiped = false;
+                    }
+                }
+            }
+
+            else if (invenItems[num] is HealingPotion)
+            {
+                for (int i = 0; i < invenItems.Count; i++)
+                {
+                    if (i != num && invenItems[i] is HealingPotion)
+                    {
+                        invenItems[i].IsEquiped = false;
+                    }
+                }
+            }
+
+            else if (invenItems[num] is ManaPotion)
+            {
+                for (int i = 0; i < invenItems.Count; i++)
+                {
+                    if (i != num && invenItems[i] is ManaPotion)
                     {
                         invenItems[i].IsEquiped = false;
                     }

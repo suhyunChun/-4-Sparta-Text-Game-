@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Reflection;
+using TextRpg.Appearance;
 using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
@@ -10,7 +11,6 @@ namespace TextRpg
 {
     internal class Program
     {
-        static List<Items> item;
         static Inventory inventory;
         static Shop shop;
         // public이 붙음, player생성 시 다양한 곳에서 땡겨오기 위해
@@ -22,13 +22,14 @@ namespace TextRpg
         delegate void func1(string str, int cursor);
         delegate void func2(int cursor);
         static ConsoleKeyInfo c;
+
         // 아이템 세팅
         // 테스팅을 위해 포션추가
 
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
-            inventory.AddItem(new Weapon("낡은 검1", 3, 1000, 10, false));
-            inventory.AddItem(new Weapon("낡은 검2", 3, 1000, 11, false));
+            inventory.AddItem(new Weapon("낡은 검1", 3, 1000, 3, false));
+            inventory.AddItem(new Weapon("낡은 검2", 3, 1000, 4, false));
             inventory.AddItem(new Weapon("낡은 검3", 3, 1000, 12, false));
 
             inventory.AddItem(new Armor("낡은 방패", 1, 100, 10, false));
@@ -173,29 +174,6 @@ namespace TextRpg
 
             } while (c.Key != ConsoleKey.Enter);
         }
-        private static void SetCursor(int min, int max, int cursor, string str, func2 Funcntion)
-        {
-            do
-            {
-                c = Console.ReadKey();
-                switch (c.Key)
-                {
-                    case ConsoleKey.UpArrow:
-                        cursor--;
-                        if (cursor < min)
-                            cursor = max;
-                        Funcntion(cursor);
-                        break;
-                    case ConsoleKey.DownArrow:
-                        cursor++;
-                        if (cursor > max)
-                            cursor = min;
-                        Funcntion(cursor);
-                        break;
-                }
-
-            } while (c.Key != ConsoleKey.Enter);
-        }
         private static void HighlightText(string str)
         {
             Console.BackgroundColor = ConsoleColor.White;
@@ -262,19 +240,18 @@ namespace TextRpg
 
         }
 
-
-        //상태 메뉴
-        private static void StatusMenu()
+        // 무기와 방어구의 스탯 계산
+        private static (float bonusAtk, float bonusDef) PlusStatus()
         {
             List<Items> bonusItem = inventory.invenItems;
             var weapons = bonusItem.OfType<Weapon>().ToList();
             var armors = bonusItem.OfType<Armor>().ToList();
 
-            int bonusAtk = 0;
-            int bonusDef = 0;
+            float bonusAtk = 0;
+            float bonusDef = 0;
 
             // 무기 합 계산
-            foreach(var weapon in weapons)
+            foreach (var weapon in weapons)
             {
                 bonusAtk = weapon.BonusStatus(inventory);
                 break;
@@ -285,19 +262,32 @@ namespace TextRpg
             {
                 bonusDef = armor.BonusStatus(inventory);
                 break;
-
             }
+
+            // 총 합을 계산하여 plusAtk, Def설정
+            player.PlusAtk = player.Atk + bonusAtk;
+            player.PlusDef = player.Def + bonusDef;
+
+            return (bonusAtk, bonusDef);
+        }
+
+
+        //상태 메뉴
+        private static void StatusMenu()
+        {
+            var (bonusAtk, bonusDef) = PlusStatus();
 
             Console.Clear();
             Console.WriteLine("상태 메뉴입니다.");
             Console.WriteLine("캐릭터의 정보를 표기하는 곳입니다.");
-          
+            Console.WriteLine("");
             Console.WriteLine($"플레이어 이름: {player.Name} ( {player.Occupation} )");
+            Console.WriteLine("");
             Console.WriteLine("LV: {0}", player.Level.ToString("00"));
-            Console.WriteLine($"현재 경험치 {player.Exp} / {player.MaxExp}");
+            Console.WriteLine($"경험치: {player.Exp} / {player.MaxExp}");
             Console.WriteLine();
-            Console.WriteLine($"공격력: {player.Atk + bonusAtk}" + " + " + $"({bonusAtk})");
-            Console.WriteLine($"방어력: {player.Def + bonusDef}" + " + " + $"({bonusDef})");
+            Console.WriteLine($"공격력: {player.PlusAtk}" + " + " + $"({bonusAtk})");
+            Console.WriteLine($"방어력: {player.PlusDef}" + " + " + $"({bonusDef})");
             Console.WriteLine($"체력: {player.Health} / {player.MaxHealth}");
             Console.WriteLine($"마나: {player.Mana} / {player.MaxMana}");
             Console.WriteLine($"소지골드: {player.Gold}");
@@ -415,6 +405,8 @@ namespace TextRpg
         //장비 관리
         private static void EquipMenu()
         {
+            PlusStatus();
+
             Console.Clear();
             Console.WriteLine("장비 관리 메뉴입니다.");
             Console.WriteLine("아이템을 장착 및 해제 할 수 있습니다.");
@@ -608,6 +600,7 @@ namespace TextRpg
             {
                 Console.WriteLine("번호를 입력해주세요.");
                 result = int.TryParse(Console.ReadLine(), out keyInput);
+            
             } while (result = false || CheckIfValid(keyInput, min, max) == false);
 
             return keyInput;

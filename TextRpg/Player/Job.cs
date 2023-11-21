@@ -56,7 +56,7 @@ namespace TextRpg.Player
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
-        public Job(string id, string name, string occupation, int level, int exp, int Str, int Agi, int Int, float itematk, float itemdef, int gold, int weapon, int armor, List<int> items, bool isDead)
+        public Job(string id, string name, string occupation, int level, int exp, int Str, int Agi, int Int, int gold, int weapon, int armor, List<int> items, bool isDead)
         {
             Id = id;
             Name = name;
@@ -66,8 +66,8 @@ namespace TextRpg.Player
             Strength = Str;
             Agility = Agi;
             Intelligence = Int;
-            PlusAtk = itematk;
-            PlusDef = itemdef;
+            PlusAtk = Atk;
+            PlusDef = Def;
             Health = MaxHealth;
             Mana = MaxMana;
             Gold = gold;
@@ -78,17 +78,22 @@ namespace TextRpg.Player
             MaxExp = 10;
 
         }
-        public int Attack(ICharacter target)
+
+        /// <summary>
+        /// player의 현재 atk로 target을 때리거나
+        /// target이 공격할 때 현재 player의 def로 막기 위해 파라미터 추가
+        /// </summary>
+        public int Attack(Job player, ICharacter target)
         {
             Random rand = new Random();
-            var err = Atk * 0.1;
-            int dps = rand.Next((int)(Atk - err), (int)(Atk + err + 1));
+            var err = player.PlusAtk * 0.1;
+            int dps = rand.Next((int)(player.PlusAtk - err), (int)(player.PlusAtk + err + 1));
             dps -= (int)target.Def;
             if (dps <= 1) dps = 1;
             return dps;
         }
         // 기술 1번 = 사용 기술. 각 직업마다의 1번 기술 및 몬스터의 1번 기술. 몬스터는 없을 시 사용 못함.
-        public virtual int Skill_1(ICharacter target)
+        public virtual int Skill_1(Job player, ICharacter target)
         {
             int dps = 0;
             int mana = 5;
@@ -97,8 +102,8 @@ namespace TextRpg.Player
                 // 랜덤값
                 Random rand = new Random();
                 // 스킬 데미지
-                var err = Atk * 0.1;
-                dps = rand.Next((int)(Atk + err + 2), (int)(Atk + err + 4));
+                var err = player.PlusAtk * 0.1;
+                dps = rand.Next((int)(player.PlusAtk + err + 2), (int)(player.PlusAtk + err + 4));
                 dps -= (int)target.Def;
                 if (dps <= 1) dps = 1;
                 Mana -= mana;
@@ -114,7 +119,7 @@ namespace TextRpg.Player
             return dps;
         }
         // 기술 2번 = 사용 기술. 각 직업마다의 2번 기술 및 몬스터의 2번 기술. 플레이어의 레벨이 5를 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public virtual int Skill_2(ICharacter target)
+        public virtual int Skill_2(Job player, ICharacter target)
         {
             int dps = 0;
             int mana = 10;
@@ -136,7 +141,7 @@ namespace TextRpg.Player
             return dps;
         }
         // 기술 3번 = 사용 기술. 각 직업마다의 3번 기술 및 몬스터의 3번 기술. 플레이어의 레벨이 10을 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public virtual int Skill_3(ICharacter target)
+        public virtual int Skill_3(Job player, ICharacter target)
         {
             int dps = 0;
             int mana = 20;
