@@ -96,6 +96,8 @@ namespace TextRpg
                     SelectSkillOrAtk(1);
                     break;
                 case 2:
+                    dungeonBGM.Stop();
+                    Program.sd.Play();
                     Program.StartMenu("쫄보", 1);
                     break;
             }
