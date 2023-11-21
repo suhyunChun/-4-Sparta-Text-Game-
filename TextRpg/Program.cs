@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Media;
 using System.Reflection;
 using TextRpg.InvenShop;
 using TextRpg.Item;
@@ -24,6 +25,12 @@ namespace TextRpg
         delegate void func2(int cursor);
         delegate void func3(int idx, int cursor);
         static ConsoleKeyInfo c;
+
+        public static SoundPlayer sd = new SoundPlayer("henesys.wav");
+        /*public static Thread bgmThread = new Thread(() =>
+        {
+            sd.LoadAsync();
+        });*/
         // 아이템 세팅
         // 테스팅을 위해 포션추가
 
@@ -84,6 +91,7 @@ namespace TextRpg
 
             Console.Clear();
             Console.WriteLine("헤네시스에 오신걸 환영합니다.");
+            sd.Play();
 
             // 공백시 입장 불가
             do
@@ -808,9 +816,7 @@ namespace TextRpg
             shop = new Shop();
 
             fontColor = new FontColor();
-            Console.SetWindowSize(82, 30);
-
-
+            //Console.SetWindowSize(82, 30);
             PrintStartScene();
             PlayerInputName();
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.InvenShop;
@@ -22,12 +23,15 @@ namespace TextRpg
         int deadCnt;
         FontColor fontColor;
         ConsoleKeyInfo c;
+        SoundPlayer dungeonBGM;
 
         delegate void OriginFunction(int cursor);
 
         public Battle(Job _player, Inventory _inventory)
         {
-
+            Program.sd.Stop();
+            dungeonBGM = new SoundPlayer("dungeon.wav");
+            dungeonBGM.Play();
             mobs = new List<Mob>();
             player = _player;
             items = _inventory.invenItems;
@@ -576,6 +580,8 @@ namespace TextRpg
             Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
             Console.ReadKey();
+            dungeonBGM.Stop();
+            Program.sd.Play();
             Program.StartMenu(player.Occupation, 1);
         }
 
