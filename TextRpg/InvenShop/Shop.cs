@@ -133,7 +133,7 @@ namespace TextRpg.InvenShop
 
                 Console.Clear();
                 fontColor.WriteColorFont("아이템 구매 완료", FontColor.Color.Magenta);
-                Console.WriteLine("");
+                Console.WriteLine("\n");
 
                 Console.Write($"구매된 아이템:  ");
                 fontColor.WriteColorFont($"{ purchasedItem.Name} {purchasedItem.Grade}★", FontColor.Color.Yellow);
