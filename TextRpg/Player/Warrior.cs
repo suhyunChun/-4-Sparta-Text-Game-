@@ -9,7 +9,9 @@ namespace TextRpg.Player
     public class Warrior : Job
     {
         // 체력 200, 공격력 5, 방어력 15
-        public Warrior(string id, string name, List<int> items) : base(id, name, "전사", 1, 0, 4, 2, 2, 3000, 0, 0, items, false)
+        // 장비 장착 설정 시 아래 참고
+        // string id, string name, int level, int exp, float maxexp, int Str, int Agi, int Int, int hp, int mp, float itematk, float itemdef, int gold, int weapon, int armor, List<int> items
+        public Warrior(string id, string name, int level, int exp, int maxexp, int Str, int Agi, int Int, int hp, int mp, int gold, List<int> items) : base(id, name, "전사", level, exp, maxexp, Str, Agi, Int, hp, mp, 0, 0, gold, 0, 0, items, false)
         {
             if (Health <= 0)
             {

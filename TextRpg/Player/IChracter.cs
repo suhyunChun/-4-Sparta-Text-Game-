@@ -18,7 +18,7 @@ namespace TextRpg.Player
         // 레벨 = 전체적인 능력치 및 방어력 증가
         public int Level { get; }
         // 경험치
-        public float Exp { get; }
+        public int Exp { get; }
         // 힘 = 체력 관련 능력치
         public int Strength { get; }
         // 민첩성 = 공격력 관련 능력치

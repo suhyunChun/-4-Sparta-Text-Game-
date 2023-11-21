@@ -19,10 +19,10 @@ namespace TextRpg.Player
         // 레벨 = 전체적인 능력치 및 방어력 증가
         public int Level { get; set; }
 
-        public float MaxExp { get; set; }
+        public int MaxExp { get; set; }
 
         // 경험치
-        public float Exp { get; set; }
+        public int Exp { get; set; }
         // 힘 = 체력 관련 능력치
         public int Strength { get; set; }
         // 민첩성 = 공격력 관련 능력치
@@ -56,7 +56,7 @@ namespace TextRpg.Player
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
-        public Job(string id, string name, string occupation, int level, int exp, int Str, int Agi, int Int, int gold, int weapon, int armor, List<int> items, bool isDead)
+        public Job(string id, string name, string occupation, int level, int exp, int maxexp, int Str, int Agi, int Int, int hp, int mp, float itematk, float itemdef, int gold, int weapon, int armor, List<int> items, bool isDead)
         {
             Id = id;
             Name = name;
@@ -66,16 +66,16 @@ namespace TextRpg.Player
             Strength = Str;
             Agility = Agi;
             Intelligence = Int;
-            PlusAtk = Atk;
-            PlusDef = Def;
-            Health = MaxHealth;
-            Mana = MaxMana;
+            PlusAtk = itematk;
+            PlusDef = itemdef;
+            Health = hp;
+            Mana = mp;
             Gold = gold;
             Weapon = weapon;
             Armor = armor;
             Item = items;
             IsDead = isDead;
-            MaxExp = 10;
+            MaxExp = maxexp;
 
         }
 

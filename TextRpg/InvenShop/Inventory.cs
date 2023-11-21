@@ -42,8 +42,9 @@ namespace TextRpg.InvenShop
         }
 
         // 아이템 추가
-        internal void AddItem(Items item)
+        internal void AddItem(Items item, Job Player)
         {
+            Player.Item.Add(item.Id);
             invenItems.Add(item);
             if(item is HealingPotion||item is ManaPotion)
             {
@@ -410,8 +411,8 @@ namespace TextRpg.InvenShop
             {
                 Items sellInvenItem = invenItems[index];
 
-                int totalGold = player.Gold + sellInvenItem.Price;
-                player.Gold += sellInvenItem.Price;
+                int totalGold = player.Gold + (int)(sellInvenItem.Price * 0.8f); // 판매가격 80% - 나재민
+                player.Gold += (int)(sellInvenItem.Price * 0.8f);
 
                 Console.Clear();
                 Console.WriteLine($"아이템이 판매되었습니다: {sellInvenItem.Name}");
@@ -432,7 +433,7 @@ namespace TextRpg.InvenShop
         }
 
         // 아이템 삭제
-        public void RemoveItem(int index)
+        public void RemoveItem(int index, Job Player)
         {
 
             if (index >= 0 && index < invenItems.Count)
@@ -441,12 +442,13 @@ namespace TextRpg.InvenShop
                 Console.WriteLine($"아이템이 삭제되었습니다: {removeItem.Name}");
                 Console.WriteLine("아무키나 입력하시면 인벤토리로 이동합니다.");
                 invenItems.RemoveAt(index);
+                Player.Item.Remove(invenItems[index].Id);
                 Console.ReadLine();
             }
         }
 
         // 아이템 사용
-        public void UseHpPotion()
+        public void UseHpPotion(Job Player)
         {
             // OfType -> LINQ의 지정된 형식으로 형변환이 가능한 요소만을 선택하여 .ToList list에 담은걸 hpPotions에 넣는다.
             var hpPotions = invenItems.OfType<HealingPotion>().ToList();
@@ -455,10 +457,14 @@ namespace TextRpg.InvenShop
             {
                 if (hpPotion is HealingPotion)
                 {
+                    // 장착하지 않은 포션일 경우 패스
+                    if (!hpPotion.IsEquiped)
+                        continue;
+
                     // hpPotion을 사용하고 remove해줌
                     // 하나만 사용해야 하기 때문에 사용시 바로 break로 반복문 탈출
                     hpPotion.Use(player);
-
+                    Player.Item.Remove(hpPotion.Id);
                     invenItems.Remove(hpPotion);
 
                     break;
@@ -466,7 +472,7 @@ namespace TextRpg.InvenShop
             }
         }
 
-        public void UseMpPotion()
+        public void UseMpPotion(Job Player)
         {
             var mpPotions = invenItems.OfType<ManaPotion>().ToList();
 
@@ -474,8 +480,11 @@ namespace TextRpg.InvenShop
             {
                 if (mpPotion is ManaPotion)
                 {
-                    mpPotion.Use(player);
+                    if (!mpPotion.IsEquiped)
+                        continue;
 
+                    mpPotion.Use(player);
+                    Player.Item.Remove(mpPotion.Id);
                     invenItems.Remove(mpPotion);
 
                     break;

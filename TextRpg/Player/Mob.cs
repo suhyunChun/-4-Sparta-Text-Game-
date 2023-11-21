@@ -18,7 +18,7 @@ namespace TextRpg.Player
         // 레벨 = 전체적인 능력치 및 방어력 증가
         public int Level { get; set; }
         // 경험치
-        public float Exp { get; set; }
+        public int Exp { get; set; }
         // 힘 = 체력 관련 능력치
 
         //public float PlusExp { get; set; } Exp만 있어도 될듯??? // 나재민
@@ -29,8 +29,10 @@ namespace TextRpg.Player
         // 지능 = 마력과 기술 피해 관련 능력치
         public int Intelligence { get; }
         // 체력 = 힘으로 증가
+        public int MaxHealth { get; }
         public int Health { get; set; }
         // 마력 = 지능으로 증가
+        public int MaxMana { get; }
         public int Mana { get; set; }
         // 공격력 = 민첩성으로 증가
         public float Atk { get; }
@@ -51,16 +53,20 @@ namespace TextRpg.Player
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
-        public Mob(string name, string occupation, int level, float exp, int health, float atk, float def, bool isDead)
+        public Mob(string name, string occupation, int level, int exp, int health, int mana, float atk, float def, int gold, bool isDead)
         {
             Name = name;
             Occupation = occupation;
             Level = level;
             Exp = exp;
-            Health = health;
+            MaxHealth = health;
+            Health = MaxHealth;
+            MaxMana = mana;
+            Mana = MaxMana;
             Atk = atk;
             Def = def;
             Gold = 3000;
+            // Item = items;
             IsDead = isDead;
         }
         public int Attack(Job player, ICharacter target)

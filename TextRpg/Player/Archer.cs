@@ -11,7 +11,9 @@ namespace TextRpg.Player
     {
 
         // 체력 150, 공격력 12, 방어력 5
-        public Archer(string id, string name, List<int> items) : base(id, name, "궁수", 1, 0, 2, 4, 2, 3000, 0, 0, items, false)
+        // 장비 장착 설정 시 아래 참고
+        // string id, string name, int level, int exp, float maxexp, int Str, int Agi, int Int, int hp, int mp, float itematk, float itemdef, int gold, int weapon, int armor, List<int> items
+        public Archer(string id, string name, int level, int exp, int maxexp, int Str, int Agi, int Int, int hp, int mp, int gold, List<int> items) : base(id, name, "궁수", level, exp, maxexp, Str, Agi, Int, hp, mp, 0, 0, gold, 0, 0, items, false)
         {
             if (Health <= 0)
             {

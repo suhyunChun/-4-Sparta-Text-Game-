@@ -22,8 +22,8 @@ namespace TextRpg.Item
         }
 
         // 힐링 포션 생성자
-        public HealingPotion(string name, int grade, int price, int healingAmount ,bool isEquiped)
-            : base(name, "힐링포션", grade, price, false)
+        public HealingPotion(int id, string name, int grade, int price, int healingAmount ,bool isEquiped)
+            : base(id, name, "힐링포션", grade, price, false)
         {
             HealingAmount = healingAmount;
         }
@@ -61,8 +61,8 @@ namespace TextRpg.Item
             set { ManaAmount = value; }
         }
 
-        public ManaPotion(string name, int grade, int price, int manaAmount, bool isEquiped)
-        : base(name, "마나포션", grade, price, false)
+        public ManaPotion(int id, string name, int grade, int price, int manaAmount, bool isEquiped)
+        : base(id, name, "마나포션", grade, price, false)
         {
             ManaAmount = manaAmount;
         }
