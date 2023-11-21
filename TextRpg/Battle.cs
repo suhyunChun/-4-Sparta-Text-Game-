@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WMPLib;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
 using static System.Net.Mime.MediaTypeNames;
+using System.Reflection;
 
 namespace TextRpg
 {
@@ -22,11 +24,19 @@ namespace TextRpg
         int deadCnt;
         FontColor fontColor;
         ConsoleKeyInfo c;
-
+        WindowsMediaPlayer wmp;
         delegate void OriginFunction(int cursor);
 
         public Battle(Job _player, Inventory _inventory)
         {
+            Program.wmp.controls.stop();
+            string executableFilePath = Assembly.GetEntryAssembly().Location;
+            string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
+            string audioFilePath = Path.Combine(executableDirectoryPath, "dungeon.wav");
+            wmp = new WindowsMediaPlayer();
+            wmp.URL = audioFilePath;
+            wmp.controls.play();
+            wmp.settings.volume = 5;
 
             mobs = new List<Mob>();
             player = _player;
@@ -92,6 +102,8 @@ namespace TextRpg
                     SelectSkillOrAtk(1);
                     break;
                 case 2:
+                    wmp.controls.stop();
+                    Program.wmp.controls.play();
                     Program.StartMenu("쫄보", 1);
                     break;
             }
@@ -576,6 +588,8 @@ namespace TextRpg
             Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
             Console.ReadKey();
+            wmp.controls.stop();
+            Program.wmp.controls.play();
             Program.StartMenu(player.Occupation, 1);
         }
 

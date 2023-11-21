@@ -10,6 +10,7 @@ using Newtonsoft.Json.Linq;
 using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
+using WMPLib;
 using System.Diagnostics.Metrics;
 
 
@@ -33,6 +34,9 @@ namespace TextRpg
         delegate void func2(int cursor);
         delegate void func3(int idx, int cursor);
         static ConsoleKeyInfo c;
+
+        public static WindowsMediaPlayer wmp;
+
         // 아이템 세팅
         // 테스팅을 위해 포션추가
         private static void GameItemSetting(Inventory inventory, Shop shop)
@@ -93,6 +97,14 @@ namespace TextRpg
 
             Console.Clear();
             Console.WriteLine("헤네시스에 오신걸 환영합니다.");
+
+            wmp = new WindowsMediaPlayer();
+            string executableFilePath = Assembly.GetEntryAssembly().Location;
+            string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
+            string audioFilePath = Path.Combine(executableDirectoryPath, "henesys.wav");
+            wmp.URL = audioFilePath;
+            wmp.controls.play();
+            wmp.settings.volume = 5;
 
             // 공백시 입장 불가
             do
@@ -883,9 +895,7 @@ namespace TextRpg
             string[] domainNum = Folder(Domain);
 
             fontColor = new FontColor();
-            Console.SetWindowSize(82, 30);
-
-
+            //Console.SetWindowSize(82, 30);
             PrintStartScene();
 
             // 아이디 입력
