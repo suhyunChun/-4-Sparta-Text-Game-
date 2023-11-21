@@ -44,9 +44,13 @@ namespace TextRpg
         // 테스팅을 위해 포션추가
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
-            inventory.AddItem(new Weapon(11110101, "낡은 검1", 3, 100, 3, false), player);
-            inventory.AddItem(new Weapon(11110102, "낡은 검2", 3, 100, 4, false), player);
-            inventory.AddItem(new Weapon(11110103, "낡은 검3", 3, 100, 12, false), player);
+            inventory.AddItem(new Weapon(11110101, "나뭇가지", 1, 100, 3, false), player);
+            inventory.AddItem(new Weapon(11110102, "낡은 회초리", 1, 100, 4, false), player);
+            inventory.AddItem(new Weapon(11110103, "낡은 검", 1, 100, 12, false), player);
+
+
+            inventory.AddItem(new Armor(11210102, "녹슨 방패", 1, 100, 11, false), player);
+            inventory.AddItem(new Armor(11210103, "빛바랜 방패", 1, 100, 11, false), player);
 
             inventory.AddItem(new Armor(11210101, "낡은 방패", 1, 100, 10, false), player);
             inventory.AddItem(new HealingPotion(11412101, "일반 회복 물약", 1, 100, 10, false), player);
@@ -55,7 +59,15 @@ namespace TextRpg
             inventory.AddItem(new ManaPotion(11510101, "마나 회복 물약", 1, 100, 10, false), player);
 
             shop.AddShopItem(new Weapon(21110101, "황금 검", 2, 300, 20, false));
+            shop.AddShopItem(new Weapon(21110102, "폭풍의 창", 2, 500, 25, false));
+            shop.AddShopItem(new Weapon(21110103, "어둠의 활", 2, 1000, 28, false));
+            shop.AddShopItem(new Weapon(21110104, "영원의 대검", 3, 2000, 35, false));
+
             shop.AddShopItem(new Armor(21210101, "황금 방패", 2, 300, 15, false));
+            shop.AddShopItem(new Armor(21210102, "신령의 갑옷", 2, 500, 25, false));
+            shop.AddShopItem(new Armor(21210103, "대지의 방패", 2, 700, 30, false));
+            shop.AddShopItem(new Armor(21210104, "영원의 갑옷", 3, 1400, 45, false));
+
             shop.AddShopItem(new HealingPotion(21410101, "고급 회복 물약", 2, 200, 20, false));
             shop.AddShopItem(new HealingPotion(21410102, "고오급 회복 물약", 2, 1000000, 20, false));
 
