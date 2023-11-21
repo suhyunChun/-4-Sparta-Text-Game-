@@ -47,7 +47,7 @@ namespace TextRpg.InvenShop
 
 
         // 인벤토리 목록
-        public void DisplayInventory()
+        public void DisplayInventory(int cursor)
         {
 
             Console.Write("[소지품 목록]");
@@ -107,12 +107,20 @@ namespace TextRpg.InvenShop
                             Console.Write("- [");
                             fontColor.WriteColorFont("E", FontColor.Color.Yellow);
                             Console.Write("]");
-                            Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            if (cursor == idx + 1)
+                                Program.HighlightText($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                            else
+                                Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                             $"등급: {item.Grade}★, 가격: {item.Price}");
                         }
                         else
                         {
-                            Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            if (cursor == idx + 1)
+                                Program.HighlightText($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                            else
+                                Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                             $"등급: {item.Grade}★, 가격: {item.Price}");
                         }
 
@@ -219,14 +227,18 @@ namespace TextRpg.InvenShop
             }
         }
         //아이템 목록 index
-        public void ShowInvenItem()
+        public void ShowInvenItem(int cursor)
         {
             int idx = 0;
             Console.WriteLine("[소지품 목록]");
             Console.WriteLine("");
             foreach (var item in invenItems)
             {
-                Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                if (cursor == idx + 1)
+                    Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                    $"등급: {item.Grade}★, 가격: {item.Price}");
+                else
+                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                     $"등급: {item.Grade}★, 가격: {item.Price}");
 
                 idx++;

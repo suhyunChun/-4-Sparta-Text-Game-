@@ -310,17 +310,14 @@ namespace TextRpg
             }
             mobs[idx].Health -= characterSkill;
             Console.WriteLine();
-            Console.WriteLine("0. 다음");
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                // 몬스터가 전부 죽었다면 Victory
-                if (mobs.Count == deadCnt)
-                    BattleResult(true);
-                else
-                    MonsterAttackResult();
-            }
+            Console.ReadKey();
+            // 몬스터가 전부 죽었다면 Victory
+            if (mobs.Count == deadCnt)
+                BattleResult(true);
+            else
+                MonsterAttackResult();
 
 
         }
@@ -476,17 +473,15 @@ namespace TextRpg
             {
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
             }
-            Console.WriteLine("0. 다음");
+
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                // 몬스터가 전부 죽었다면 Victory
-                if (mobs.Count == deadCnt)
-                    BattleResult(true);
-                else
-                    MonsterAttackResult();
-            }
+            Console.ReadKey();
+            // 몬스터가 전부 죽었다면 Victory
+            if (mobs.Count == deadCnt)
+                BattleResult(true);
+            else
+                MonsterAttackResult();
 
         }
 
@@ -515,17 +510,14 @@ namespace TextRpg
                 player.Health -= (int)mobs[i].Atk;
             }
 
-            Console.WriteLine("0. 다음");
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                // 플레이어가 죽었다면 Lose
-                if (player.IsDead)
-                    BattleResult(false);
-                else
-                    BattleScene(1);
-            }
+            Console.ReadKey();
+            // 플레이어가 죽었다면 Lose
+            if (player.IsDead)
+                BattleResult(false);
+            else
+                BattleScene(1);
         }
 
         private void BattleResult(bool isVictory)
@@ -566,14 +558,10 @@ namespace TextRpg
                 Console.WriteLine("");
             }
 
-            Console.WriteLine("0. 다음");
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                Program.StartMenu(player.Occupation, 1);
-            }
+            Console.ReadKey();
+            Program.StartMenu(player.Occupation, 1);
         }
 
         // 아이템 사용하기
