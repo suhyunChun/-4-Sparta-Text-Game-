@@ -683,7 +683,9 @@ namespace TextRpg
             {
                 if (hpPotion is HealingPotion)
                 {
-                    count++;
+                    //장착한 포션의 경우만 카운트
+                    if(hpPotion.IsEquiped)
+                        count++;
                 }
             }
 
@@ -768,7 +770,8 @@ namespace TextRpg
             {
                 if (mpPotion is ManaPotion)
                 {
-                    count++;
+                    if(mpPotion.IsEquiped)
+                        count++;
                 }
             }
 
@@ -890,7 +893,7 @@ namespace TextRpg
             {
                 player.Exp = player.Exp - player.MaxExp;
                 player.Level++;
-                player.MaxExp *= 1.5f;
+                player.MaxExp = (int)(player.MaxExp * 1.5f);
 
                 Console.WriteLine();
                 Console.WriteLine("레벨업을 했습니다!");

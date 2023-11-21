@@ -411,8 +411,8 @@ namespace TextRpg.InvenShop
             {
                 Items sellInvenItem = invenItems[index];
 
-                int totalGold = player.Gold + sellInvenItem.Price;
-                player.Gold += sellInvenItem.Price;
+                int totalGold = player.Gold + (int)(sellInvenItem.Price * 0.8f); // 판매가격 80% - 나재민
+                player.Gold += (int)(sellInvenItem.Price * 0.8f);
 
                 Console.Clear();
                 Console.WriteLine($"아이템이 판매되었습니다: {sellInvenItem.Name}");
@@ -457,6 +457,10 @@ namespace TextRpg.InvenShop
             {
                 if (hpPotion is HealingPotion)
                 {
+                    // 장착하지 않은 포션일 경우 패스
+                    if (!hpPotion.IsEquiped)
+                        continue;
+
                     // hpPotion을 사용하고 remove해줌
                     // 하나만 사용해야 하기 때문에 사용시 바로 break로 반복문 탈출
                     hpPotion.Use(player);
@@ -476,6 +480,9 @@ namespace TextRpg.InvenShop
             {
                 if (mpPotion is ManaPotion)
                 {
+                    if (!mpPotion.IsEquiped)
+                        continue;
+
                     mpPotion.Use(player);
                     Player.Item.Remove(mpPotion.Id);
                     invenItems.Remove(mpPotion);
