@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Reflection;
 using TextRpg.Appearance;
 using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
+using WMPLib;
 
 
 namespace TextRpg
@@ -21,11 +23,13 @@ namespace TextRpg
 
         delegate void func1(string str, int cursor);
         delegate void func2(int cursor);
+        delegate void func3(int idx, int cursor);
         static ConsoleKeyInfo c;
+
+        public static WindowsMediaPlayer wmp;
 
         // 아이템 세팅
         // 테스팅을 위해 포션추가
-
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
             inventory.AddItem(new Weapon("낡은 검1", 3, 1000, 3, false));
@@ -82,7 +86,15 @@ namespace TextRpg
             string playerName;
 
             Console.Clear();
-            Console.WriteLine("OO 마을에 오신걸 환영합니다.");
+            Console.WriteLine("헤네시스에 오신걸 환영합니다.");
+
+            wmp = new WindowsMediaPlayer();
+            string executableFilePath = Assembly.GetEntryAssembly().Location;
+            string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
+            string audioFilePath = Path.Combine(executableDirectoryPath, "henesys.wav");
+            wmp.URL = audioFilePath;
+            wmp.controls.play();
+            wmp.settings.volume = 5;
 
             // 공백시 입장 불가
             do
@@ -104,6 +116,7 @@ namespace TextRpg
         private static void SelectedJobMenu(string playerName, int cursor)
         {
             Console.Clear();
+            Console.CursorVisible = false;
             fontColor.WriteColorFont($"{playerName}", FontColor.Color.DarkYellow);
             Console.WriteLine(" 님 반갑습니다!");
             Console.WriteLine("먼저 직업을 선택해주세요.");
@@ -134,23 +147,22 @@ namespace TextRpg
                     player = new Warrior("1", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
                 case 2:
                     player = new Mage("2", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
                 case 3:
                     player = new Archer("3", playerName, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
         }
-
         private static void SetCursor(int min, int max, int cursor, string str, func1 Funcntion)
         {
             do
@@ -174,7 +186,53 @@ namespace TextRpg
 
             } while (c.Key != ConsoleKey.Enter);
         }
-        private static void HighlightText(string str)
+        private static void SetCursor(int min, int max, int cursor, func2 Funcntion)
+        {
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < min)
+                            cursor = max;
+                        Funcntion(cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > max)
+                            cursor = min;
+                        Funcntion(cursor);
+                        break;
+                }
+
+            } while (c.Key != ConsoleKey.Enter);
+        }
+        private static void SetCursor(int min, int max, int cursor, int idx, func3 Funcntion)
+        {
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < min)
+                            cursor = max;
+                        Funcntion(idx, cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > max)
+                            cursor = min;
+                        Funcntion(idx, cursor);
+                        break;
+                }
+
+            } while (c.Key != ConsoleKey.Enter);
+        }
+        public static void HighlightText(string str)
         {
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Black;
@@ -182,7 +240,7 @@ namespace TextRpg
             Console.ResetColor();
         }
         // 시작 메뉴
-        public static void StartMenu(string occupation,int cursor)
+        public static void StartMenu(string occupation, int cursor)
         {
             Console.Clear();
             fontColor.WriteColorFont($"{occupation}", FontColor.Color.DarkYellow);
@@ -226,10 +284,10 @@ namespace TextRpg
                     StatusMenu();
                     break;
                 case 2:
-                    InventoryMenu();
+                    InventoryMenu(1);
                     break;
                 case 3:
-                    ShopMenu();
+                    ShopMenu(1);
                     break;
                 case 4:
                     battle = new Battle(player, inventory);
@@ -293,65 +351,156 @@ namespace TextRpg
             Console.WriteLine($"소지골드: {player.Gold}");
             Console.WriteLine(" ");
 
-            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-
-            switch (CheckValidInput(0, 0))
-            {
-                case 0:
-                    StartMenu(player.Occupation,1);
-                    break;
-            }
+            Console.ReadKey();
+            StartMenu(player.Occupation, 1);
 
         }
 
         // 인벤토리 메뉴
-        private static void InventoryMenu()
+        private static void InventoryMenu(int cursor)
         {
             Console.Clear();
             Console.WriteLine("인벤토리 메뉴입니다.");
             Console.WriteLine("아이템을 관리할 수 있습니다.");
             Console.WriteLine("");
-            inventory.DisplayInventory();
-
-            Console.WriteLine("");
-            Console.WriteLine("1. 장비 관리하기");
-            Console.WriteLine("2. 아이템 사용하기");
-            Console.WriteLine("3. 아이템 버리기");
-            Console.WriteLine("4. 아이템 정렬");
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine("0. 뒤로가기");
+            inventory.DisplayInventory(0);
             Console.WriteLine("");
 
+            if (cursor == 1)
+                HighlightText("1. 장비 관리하기");
+            else
+                Console.WriteLine("1. 장비 관리하기");
+            if (cursor == 2)
+                HighlightText("2. 아이템 사용하기");
+            else
+                Console.WriteLine("2. 아이템 사용하기");
+            if (cursor == 3)
+                HighlightText("3. 아이템 버리기");
+            else
+                Console.WriteLine("3. 아이템 버리기");
+            if (cursor == 4)
+                HighlightText("4. 아이템 정렬");
+            else
+                Console.WriteLine("4. 아이템 정렬");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+            SetCursor(0, 4, cursor, InventoryMenu);
 
-            switch (CheckValidInput(0, 4))
+            switch (cursor)
             {
                 case 1:
-                    EquipMenu();
+                    EquipMenu(1);
                     break;
                 case 2:
-                    //item.Use();
+                    InventoryItemUseMenu(1);
                     break;
                 case 3:
-                    DropItemMenu();
+                    DropItemMenu(1);
                     break;
                 case 4:
                     inventory.InventoryArraySort();
-                    InventoryMenu();
+                    InventoryMenu(1);
                     break;
                 case 0:
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
 
         }
 
         //아이템 사용하기 메뉴 
+        private static void InventoryItemUseMenu(int cursor)
+        {
+            Console.Clear();
+            Console.WriteLine("인벤토리 - 아이템사용하기");
+            Console.WriteLine("어떤 아이템을 사용하시겠습니까?");
+            Console.WriteLine("");
+            inventory.ShowInvenItem(cursor, 2);
 
+            Console.WriteLine("");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
 
+            SetCursor(0,inventory.potionItems.Count, cursor, InventoryItemUseMenu);
+            switch (cursor)
+            {
+                case 0:
+                    InventoryMenu(cursor);
+                    break;
+                default:
+                    ItemUsed(cursor - 1);
+                    break;
+            }
+        }
+        //아이템 사용시 확인메뉴
+        private static void ItemUsed(int indexItem)
+        {
+            Console.Clear();
+            Console.WriteLine("");
+            if (inventory.potionItems != null)
+            {
+                if (inventory.potionItems[indexItem].Kind == "힐링포션")//힐링포션부분
+                {
+                    if (player.Health >= player.MaxHealth)
+                    {
+                        player.Health = player.MaxHealth;
+                        Console.WriteLine("체력이 가득 찼습니다.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("힐링포션을 사용했습니다.");
+                        int beforeHp = player.Health;
+                        inventory.potionItems[indexItem].Use(player);
+                        if (player.Health >= player.MaxHealth)
+                            player.Health = player.MaxHealth;
+                        fontColor.WriteColorFont($"물약을 사용하였습니다. HP : {beforeHp} -> {player.Health}", FontColor.Color.Blue);
+                        Console.WriteLine("");
+                        inventory.invenItems.Remove(inventory.potionItems[indexItem]);
+                        inventory.potionItems.RemoveAt(indexItem);
+                    }
+                }
+                else if (inventory.potionItems[indexItem].Kind == "마나포션")//마나포션부분
+                {
+                    if (player.Mana >= player.MaxMana)
+                    {
+                        player.Mana = player.MaxMana;
+                        Console.WriteLine("마나가 가득 찼습니다.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("마나포션을 사용했습니다.");
+                        int beforeMP = player.Mana;
+                        inventory.potionItems[indexItem].Use(player);
+                        if (player.Mana >= player.MaxMana)
+                            player.Mana = player.MaxMana;
+                        fontColor.WriteColorFont($"물약을 사용하였습니다. HP : {beforeMP} -> {player.Mana}", FontColor.Color.Blue);
+                        Console.WriteLine("");
+                        inventory.invenItems.Remove(inventory.potionItems[indexItem]);
+                        inventory.potionItems.RemoveAt(indexItem);
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine("포션이 없습니다!");
+            }
+            Console.WriteLine("");
+            Console.WriteLine(" Press Any Key . . .");
+            Console.ReadKey();
+            InventoryItemUseMenu(1);
+        }
         //아이템 버리기 메뉴
-        private static void DropItemMenu()
+        private static void DropItemMenu(int cursor)
         {
             Console.Clear();
             Console.WriteLine("인벤토리 - 아이템버리기");
@@ -360,25 +509,29 @@ namespace TextRpg
             Console.WriteLine($"아이템개수: {inventory.ItemCnt}");
 
             Console.WriteLine("");
-            inventory.ShowInvenItem();
+            inventory.ShowInvenItem(cursor, 0);
             Console.WriteLine("");
-            Console.WriteLine("0. 뒤로가기");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
             Console.WriteLine("");
 
-            int keyInput = CheckValidInput(0, inventory.ItemCnt);
-            switch (keyInput)
+            //int keyInput = CheckValidInput(0, inventory.ItemCnt);
+            SetCursor(0, inventory.ItemCnt, cursor, DropItemMenu);
+            switch (cursor)
             {
                 case 0:
-                    InventoryMenu();
+                    InventoryMenu(1);
                     break;
                 default:
-                    IsRemoveItem(keyInput - 1);
+                    IsRemoveItem(cursor - 1, 1);
                     break;
             }
         }
 
         //아이템 버리기 경고
-        private static void IsRemoveItem(int itemIndex)
+        private static void IsRemoveItem(int itemIndex, int cursor)
         {
             Console.Clear();
             Console.WriteLine("정말 아이템을 삭제하시겠습니까?");
@@ -386,24 +539,30 @@ namespace TextRpg
             inventory.CurrentRemoveItem(itemIndex);
             Console.WriteLine("");
 
-            Console.WriteLine("1. 네");
-            Console.WriteLine("2. 아니오");
+            if (cursor == 1)
+                HighlightText("1. 네");
+            else
+                Console.WriteLine("1. 네");
+            if (cursor == 2)
+                HighlightText("2. 아니오");
+            else
+                Console.WriteLine("2. 아니오");
             Console.WriteLine("");
-
-            switch (CheckValidInput(1, 2))
+            SetCursor(1, 2, cursor, itemIndex, IsRemoveItem);
+            switch (cursor)
             {
                 case 1:
                     inventory.RemoveItem(itemIndex);
-                    DropItemMenu();
+                    DropItemMenu(1);
                     break;
                 case 2:
-                    DropItemMenu();
+                    DropItemMenu(1);
                     break;
             }
         }
 
         //장비 관리
-        private static void EquipMenu()
+        private static void EquipMenu(int cursor)
         {
             PlusStatus();
 
@@ -414,27 +573,31 @@ namespace TextRpg
 
             Console.WriteLine("");
             inventory.onEquipMenu = true;
-            inventory.DisplayInventory();
+            inventory.DisplayInventory(cursor);
 
             Console.WriteLine("");
-            Console.WriteLine("0. 뒤로가기");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
             Console.WriteLine("");
 
-            int equipNum = CheckValidInput(0, inventory.ItemCnt);
-            if (equipNum == 0)
+            //int equipNum = CheckValidInput(0, inventory.ItemCnt);
+            SetCursor(0, inventory.ItemCnt, cursor, EquipMenu);
+            if (cursor == 0)
             {
                 inventory.onEquipMenu = false;
-                InventoryMenu();
+                InventoryMenu(1);
             }
             else
             {
-                inventory.EquipmentStatusChange(equipNum - 1);
-                EquipMenu();
+                inventory.EquipmentStatusChange(cursor - 1);
+                EquipMenu(cursor);
             }
         }
 
         // 상점 메뉴
-        private static void ShopMenu()
+        private static void ShopMenu(int cursor)
         {
             Console.Clear();
             Console.WriteLine("상점 메뉴입니다.");
@@ -443,28 +606,39 @@ namespace TextRpg
 
             shop.DisplayShop();
             Console.WriteLine("");
-            Console.WriteLine("1. 아이템 사기");
-            Console.WriteLine("2. 아이템 팔기");
-            Console.WriteLine("");
-            Console.WriteLine("0. 뒤로가기");
 
-            switch (CheckValidInput(0, 2))
+            if (cursor == 1)
+                HighlightText("1. 아이템 사기");
+            else
+                Console.WriteLine("1. 아이템 사기");
+            if (cursor == 2)
+                HighlightText("2. 아이템 팔기");
+            else
+                Console.WriteLine("2. 아이템 팔기");
+            Console.WriteLine("");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
+            SetCursor(0, 2, cursor, ShopMenu);
+
+            switch (cursor)
             {
                 case 1:
-                    BuyShopMenu();
+                    BuyShopMenu(1);
                     break;
                 case 2:
-                    SellShopMenu();
+                    SellShopMenu(1);
                     break;
                 case 0:
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
 
         }
 
         // 아이템 사기 메뉴
-        private static void BuyShopMenu()
+        private static void BuyShopMenu(int cursor)
         {
             Console.Clear();
             Console.WriteLine("상점 - 아이템 사기");
@@ -472,39 +646,42 @@ namespace TextRpg
             Console.WriteLine($"상점의 아이템 개수: {shop.ShopItemCnt}");
             Console.WriteLine("");
 
-            shop.BuyShopItem();
+            shop.BuyShopItem(cursor);
             Console.WriteLine("");
 
-            Console.WriteLine("0. 뒤로가기");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
             Console.WriteLine("");
+            SetCursor(0, shop.ShopItemCnt, cursor, BuyShopMenu);
+            //int keyInput = CheckValidInput(0, shop.ShopItemCnt);
 
-            int keyInput = CheckValidInput(0, shop.ShopItemCnt);
-
-            switch (keyInput)
+            switch (cursor)
             {
                 case 0:
-                    ShopMenu();
+                    ShopMenu(1);
                     break;
                 default:
-                    if (player.Gold == 0 || player.Gold < shop.ShopItemPrice(keyInput - 1))
+                    if (player.Gold == 0 || player.Gold < shop.ShopItemPrice(cursor - 1))
                     {
                         Console.WriteLine("소지금이 부족합니다!");
                         Console.WriteLine($"현재 소지금액: {player.Gold}");
                         Console.WriteLine("아무키나 입력하시면 상점으로 이동합니다.");
-                        Console.ReadLine();
-                        ShopMenu();
+                        Console.ReadKey();
+                        ShopMenu(1);
                     }
                     else
                     {
-                        shop.BuyItemAddInventory(player, inventory, keyInput - 1);
-                        IsMoreBuyItem();
+                        shop.BuyItemAddInventory(player, inventory, cursor - 1);
+                        IsMoreBuyItem(1);
                     }
                     break;
             }
         }
 
         // 아이템을 더 구매할지 여부
-        private static void IsMoreBuyItem()
+        private static void IsMoreBuyItem(int cursor)
         {
             Console.Clear();
             Console.WriteLine("아이템을 더 구매하시겠습니까?");
@@ -513,24 +690,30 @@ namespace TextRpg
             Console.WriteLine($"현재 소지금액: {player.Gold}");
             Console.WriteLine("");
 
-            Console.WriteLine("1. 더 구매한다.");
-            Console.WriteLine("2. 시작메뉴로 돌아간다.");
+            if (cursor == 1)
+                HighlightText("1. 더 구매한다.");
+            else
+                Console.WriteLine("1. 더 구매한다.");
+            if (cursor == 2)
+                HighlightText("2. 시작메뉴로 돌아간다.");
+            else
+                Console.WriteLine("2. 시작메뉴로 돌아간다.");
             Console.WriteLine("");
-
-            switch (CheckValidInput(1, 2))
+            SetCursor(1, 2, cursor, IsMoreBuyItem);
+            switch (cursor)
             {
                 case 1:
-                    BuyShopMenu();
+                    BuyShopMenu(1);
                     break;
                 case 2:
-                    StartMenu(player.Occupation,1);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
 
         }
 
         // 아이템 팔기 메뉴
-        private static void SellShopMenu()
+        private static void SellShopMenu(int cursor)
         {
             Console.Clear();
             Console.WriteLine("상점 - 아이템 팔기.");
@@ -538,63 +721,91 @@ namespace TextRpg
             Console.WriteLine($"인벤토리 아이템 개수: {inventory.ItemCnt}");
             Console.WriteLine("");
 
-            inventory.ShowInvenItem();
+            inventory.ShowInvenItem(cursor, 0);
             Console.WriteLine("");
 
-            Console.WriteLine("0. 뒤로가기");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
             Console.WriteLine("");
 
-            int keyInput = CheckValidInput(0, inventory.ItemCnt);
+            SetCursor(0, inventory.ItemCnt, cursor, SellShopMenu);
+            //int keyInput = CheckValidInput(0, inventory.ItemCnt);
 
-            switch (keyInput)
+            switch (cursor)
             {
                 case 0:
-                    ShopMenu();
+                    ShopMenu(1);
                     break;
                 default:
-                    if (IsRealSellItem())
+                    if (IsRealSellItem(1))
                     {
-                        inventory.SellItem(player, keyInput - 1);
-                        ShopMenu();
+                        inventory.SellItem(player, cursor - 1);
+                        ShopMenu(1);
                     }
                     else
                     {
                         Console.WriteLine("판매되지 않았습니다.");
-                        SellShopMenu();
+                        SellShopMenu(1);
                     }
                     break;
             }
         }
 
         // 정말 판매할지 안할지 선택
-        private static bool IsRealSellItem()
+        private static bool IsRealSellItem(int cursor)
         {
             Console.Clear();
             Console.WriteLine("정말 판매하시겠습니까?");
             Console.WriteLine($"선택된 아이템: ");
             Console.WriteLine("");
 
-            Console.WriteLine("1. 판매한다.");
-            Console.WriteLine("2. 판매하지 않는다.");
+            if (cursor == 1)
+                HighlightText("1. 판매한다.");
+            else
+                Console.WriteLine("1. 판매한다.");
+            if (cursor == 2)
+                HighlightText("2. 판매하지 않는다.");
+            else
+                Console.WriteLine("2. 판매하지 않는다.");
 
-            switch (CheckValidInput(1, 2))
+            do
+            {
+                c = Console.ReadKey();
+                switch (c.Key)
+                {
+                    case ConsoleKey.UpArrow:
+                        cursor--;
+                        if (cursor < 1)
+                            cursor = 2;
+                        IsRealSellItem(cursor);
+                        break;
+                    case ConsoleKey.DownArrow:
+                        cursor++;
+                        if (cursor > 2)
+                            cursor = 1;
+                        IsRealSellItem(cursor);
+                        break;
+                }
+            } while (c.Key != ConsoleKey.Enter);
+
+            switch (cursor)
             {
                 case 1:
                     return true;
-                    break;
                 case 2:
                     return false;
-                    break;
             }
 
             return false;
         }
 
         // 핸들러
-        public static int CheckValidInput(int min, int max)
-        {
-            int keyInput;
-            bool result;
+        /*        public static int CheckValidInput(int min, int max)
+                {
+                    int keyInput;
+                    bool result;
 
             do
             {
@@ -603,9 +814,9 @@ namespace TextRpg
             
             } while (result = false || CheckIfValid(keyInput, min, max) == false);
 
-            return keyInput;
+                    return keyInput;
 
-        }
+                }*/
 
         private static bool CheckIfValid(int keyInput, int min, int max)
         {
@@ -623,8 +834,7 @@ namespace TextRpg
             shop = new Shop();
 
             fontColor = new FontColor();
-
-
+            //Console.SetWindowSize(82, 30);
             PrintStartScene();
             PlayerInputName();
 

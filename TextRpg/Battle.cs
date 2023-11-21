@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using WMPLib;
 using System.Text;
 using System.Threading.Tasks;
 using TextRpg.Appearance;
@@ -8,6 +9,7 @@ using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
 using static System.Net.Mime.MediaTypeNames;
+using System.Reflection;
 
 namespace TextRpg
 {
@@ -24,11 +26,20 @@ namespace TextRpg
 
         FontColor fontColor;
         ConsoleKeyInfo c;
-
+        WindowsMediaPlayer wmp;
         delegate void OriginFunction(int cursor);
 
         public Battle(Job _player, Inventory _inventory)
         {
+            Program.wmp.controls.stop();
+            string executableFilePath = Assembly.GetEntryAssembly().Location;
+            string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
+            string audioFilePath = Path.Combine(executableDirectoryPath, "dungeon.wav");
+            wmp = new WindowsMediaPlayer();
+            wmp.URL = audioFilePath;
+            wmp.controls.play();
+            wmp.settings.volume = 5;
+
             mobs = new List<Mob>();
             player = _player;
             items = _inventory.invenItems;
@@ -40,7 +51,7 @@ namespace TextRpg
             fontColor = new FontColor();
 
         }
-        
+
         /// <summary>
         /// 전투 시작하면 보게 되는 화면
         /// </summary>
@@ -48,7 +59,7 @@ namespace TextRpg
         {
             SceneTitle(false);
             // 몬스터와 플레이어의 정보 나열
-            DisplayStatus(false,1);
+            DisplayStatus(false, 1);
             Console.WriteLine("");
 
             // 1.공격 2.도망 선택
@@ -93,21 +104,27 @@ namespace TextRpg
                     SelectSkillOrAtk(1);
                     break;
                 case 2:
-                    Program.StartMenu("쫄보",1);
+                    wmp.controls.stop();
+                    Program.wmp.controls.play();
+                    Program.StartMenu("쫄보", 1);
                     break;
             }
         }
 
-        public int CirticalAttack(int damage, ref bool isCritical){
+        public int CirticalAttack(int damage, ref bool isCritical)
+        {
             int critical = new Random().Next(1, 100);
-            if(critical <= 15){ // 크리티컬일때
+            if (critical <= 15)
+            { // 크리티컬일때
                 isCritical = true;
-                double newCharacterSkill = damage*1.6;
+                double newCharacterSkill = damage * 1.6;
                 damage = (int)Math.Round(newCharacterSkill);
-            } else{
+            }
+            else
+            {
                 isCritical = false;
             }
-           
+
             return damage;
         }
         // 스킬 공격 또는 아이템 사용 선택
@@ -115,7 +132,7 @@ namespace TextRpg
         {
             SceneTitle(false);
             // 몬스터와 플레이어의 정보 나열
-            DisplayStatus(false,1);
+            DisplayStatus(false, 1);
             Console.WriteLine("");
 
             // 1.공격 2.스킬 3.아이템사용 선택
@@ -145,10 +162,10 @@ namespace TextRpg
                     BattleScene(1);
                     break;
                 case 1:
-                    SelectMonster(false,1);
+                    SelectMonster(false, 1);
                     break;
                 case 2:
-                    SelectSkillAtkMonster(false,1);
+                    SelectSkillAtkMonster(false, 1);
                     break;
                 case 3:
                     UsingItem(1);
@@ -158,10 +175,10 @@ namespace TextRpg
         }
 
         // 스킬로 어떤 몬스터를 가격할 지 선택
-        private void SelectSkillAtkMonster(bool reSelect,int cursor)
+        private void SelectSkillAtkMonster(bool reSelect, int cursor)
         {
             SceneTitle(false);
-            DisplayStatus(true,cursor);
+            DisplayStatus(true, cursor);
             Console.WriteLine("");
             if (reSelect)
             {
@@ -211,14 +228,14 @@ namespace TextRpg
                 case 3:
                 case 4:
                     if (mobs[cursor - 1].IsDead)
-                    SelectMonster(true,1);
+                        SelectMonster(true, 1);
                     PlayerSkillResult(cursor - 1);
                     break;
             }
         }
 
         // 마나 여부 체크
-        private void TryUseSkillWithManaCheck(int skillMana,int cursor)
+        private void TryUseSkillWithManaCheck(int skillMana, int cursor)
         {
             // 플레이어의 현재 마나가 스킬보다 작을 때
             if (player.Mana < skillMana)
@@ -264,7 +281,7 @@ namespace TextRpg
                         IsMpPotionUsed(1);
                         break;
                     case 2:
-                        Program.StartMenu(player.Occupation,1);
+                        Program.StartMenu(player.Occupation, 1);
                         break;
                 }
 
@@ -281,44 +298,39 @@ namespace TextRpg
             int skill_1Mana = 5;
 
             // 사용 마나 여부 체크
-            TryUseSkillWithManaCheck(skill_1Mana,1);
-            
+            TryUseSkillWithManaCheck(skill_1Mana, 1);
+
             // 캐릭터의 스킬 
             bool isCritical = false;
 
-            int characterSkill = player.Skill_1(player, mobs[idx]);
-            characterSkill = CirticalAttack(characterSkill,ref isCritical);
+            int characterSkill = player.Skill_1(mobs[idx]);
+            characterSkill = CirticalAttack(characterSkill, ref isCritical);
 
 
-           
+
             //몬스터에게 데미지 가하기
-            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]  {(isCritical? "- 치명타 공격!!" : "")}");
+            Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {characterSkill}]  {(isCritical ? "- 치명타 공격!!" : "")}");
             Console.WriteLine("");
             mobs[idx].IsDead = mobs[idx].Health - characterSkill <= 0 ? true : false;
             Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
             Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - characterSkill)}");
-            Console.WriteLine();
             if (mobs[idx].IsDead)
             {
                 deadCnt++;
                 player.Exp += mobs[idx].Exp;
                 LevelController();
-                Console.WriteLine($"현재 경험치: {player.Exp}");
-                Console.WriteLine();
             }
+            Console.WriteLine($"현재 경험치: {player.Exp} / {player.MaxExp}");
             mobs[idx].Health -= characterSkill;
             Console.WriteLine();
-            Console.WriteLine("0. 다음");
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                // 몬스터가 전부 죽었다면 Victory
-                if (mobs.Count == deadCnt)
-                    BattleResult(true);
-                else
-                    MonsterAttackResult();
-            }
+            Console.ReadKey();
+            // 몬스터가 전부 죽었다면 Victory
+            if (mobs.Count == deadCnt)
+                BattleResult(true);
+            else
+                MonsterAttackResult();
 
 
         }
@@ -328,16 +340,34 @@ namespace TextRpg
         /// </summary>
         private void ApperMonster()
         {
-
             Random rand = new Random();
-            int numberOfMob = rand.Next(1, 5);
+            int numberOfMob = rand.Next(1, 5);      // 몬스터 출현 숫자
+
             for (int i = 1; i <= numberOfMob; i++)
             {
-                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 5, 10, 5, 5, false));
+                int randomMonster = rand.Next(0, 3);    // 몬스터의 종류 숫자
+
+                switch (randomMonster)
+                {
+                    case 0:
+                        mobs.Add(new Mob($"({i})달팽이", "달팽이", 1, 5, 10, 5, 5, false));
+                        break;
+
+                    case 1:
+                        mobs.Add(new Mob($"({i})슬라임", "슬라임", 2, 7, 15, 7, 6, false));
+                        break;
+
+                    case 2:
+                        mobs.Add(new Mob($"({i})고블린", "고블린", 3, 9, 20, 10, 8, false));
+                        break;
+
+                    default:
+                        break;
+                }
 
             }
         }
-        private void DisplayStatus(bool isSelect,int cursor)
+        private void DisplayStatus(bool isSelect, int cursor)
         {
             for (int i = 0; i < mobs.Count; i++)
             {
@@ -368,10 +398,10 @@ namespace TextRpg
         /// <summary>
         /// 공격 선택 시 공격할 몬스터 선택
         /// </summary>
-        private void SelectMonster(bool reSelect,int cursor)
+        private void SelectMonster(bool reSelect, int cursor)
         {
             SceneTitle(false);
-            DisplayStatus(true,cursor);
+            DisplayStatus(true, cursor);
             Console.WriteLine("");
             if (reSelect)
             {
@@ -419,7 +449,7 @@ namespace TextRpg
                 case 3:
                 case 4:
                     if (mobs[cursor - 1].IsDead)
-                        SelectMonster(true,1);
+                        SelectMonster(true, 1);
                     PlayerAttackResult(cursor - 1);
                     break;
             }
@@ -433,7 +463,7 @@ namespace TextRpg
         {
             SceneTitle(false);
 
-            int dodge = new Random().Next(1,100);
+            int dodge = new Random().Next(1, 100);
             //데미지 계산
             bool isCritical = false;
             int Damage = player.Attack(player, mobs[idx]);
@@ -443,8 +473,9 @@ namespace TextRpg
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
-
                 mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
+                Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+
                 if (mobs[idx].IsDead)
                 {
                     deadCnt++;
@@ -461,24 +492,26 @@ namespace TextRpg
                     player.Gold += addGold;
                     Console.WriteLine($"획득한 골드 : {addGold}");
                     Console.WriteLine($"소지 골드: {player.Gold}");
+                    player.Exp += mobs[idx].Exp;
+                    LevelController();
                 }
-                Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
+                Console.WriteLine($"현재 경험치: {player.Exp} / {player.MaxExp}");
                 Console.WriteLine("");
                 mobs[idx].Health -= Damage;
-            }else{
+            }
+            else
+            {
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
             }
-            Console.WriteLine("0. 다음");
+
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                // 몬스터가 전부 죽었다면 Victory
-                if (mobs.Count == deadCnt)
-                    BattleResult(true);
-                else
-                    MonsterAttackResult();
-            }
+            Console.ReadKey();
+            // 몬스터가 전부 죽었다면 Victory
+            if (mobs.Count == deadCnt)
+                BattleResult(true);
+            else
+                MonsterAttackResult();
 
         }
 
@@ -507,17 +540,14 @@ namespace TextRpg
                 player.Health -= (int)mobs[i].Atk;
             }
 
-            Console.WriteLine("0. 다음");
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                // 플레이어가 죽었다면 Lose
-                if (player.IsDead)
-                    BattleResult(false);
-                else
-                    BattleScene(1);
-            }
+            Console.ReadKey();
+            // 플레이어가 죽었다면 Lose
+            if (player.IsDead)
+                BattleResult(false);
+            else
+                BattleScene(1);
         }
 
         private void BattleResult(bool isVictory)
@@ -559,14 +589,12 @@ namespace TextRpg
                 Console.WriteLine("");
             }
 
-            Console.WriteLine("0. 다음");
+            Console.WriteLine("Press Any Key...");
             Console.WriteLine("");
-
-            int input = Program.CheckValidInput(0, 0);
-            if (input == 0)
-            {
-                Program.StartMenu(player.Occupation,1);
-            }
+            Console.ReadKey();
+            wmp.controls.stop();
+            Program.wmp.controls.play();
+            Program.StartMenu(player.Occupation, 1);
         }
 
         // 아이템 사용하기
@@ -626,7 +654,7 @@ namespace TextRpg
             Console.Clear();
             Console.WriteLine("체력이 이미 만땅입니다.");
             Console.WriteLine("아무키나 누르면 전투로 돌아갑니다.");
-            Console.ReadLine();
+            Console.ReadKey();
             SelectSkillOrAtk(1);
         }
 
@@ -644,7 +672,7 @@ namespace TextRpg
             int count = 0;
 
             // invetory 내의 아이템에서 HealingPotion으로 생성된 아이템을 카운트
-            foreach (Items hpPotion in items) 
+            foreach (Items hpPotion in items)
             {
                 if (hpPotion is HealingPotion)
                 {
@@ -664,15 +692,15 @@ namespace TextRpg
             }
             // 포션을 먹었을 때 체력이 가득 차는 경우 ex) 포션 힐량 20 이고 플레이어 체력 190 / 200 일 경우 초과하기 때문에
             // 맥스 체력 이상으로 올라가지 않게하기 위해 넘어갈 경우 Max체력을 넣어줌
-            else if(player.Health > player.MaxHealth) 
+            else if (player.Health >= player.MaxHealth)
             {
                 player.Health = player.MaxHealth;
                 Console.WriteLine("체력이 가득 찼습니다.");
                 ReturnToSelectAtk();
-                
+
             }
             // 체력이 가득차있는데 포션을 먹으려는 경우
-            else if(player.Health == player.MaxHealth)
+            else if (player.Health == player.MaxHealth)
             {
                 Console.WriteLine("체력이 가득찼습니다.");
                 ReturnToSelectAtk();
@@ -701,6 +729,8 @@ namespace TextRpg
                         // 포션 사용
                         int beforeHp = player.Health;
                         inventory.UseHpPotion();
+                        if (player.Health >= player.MaxHealth)
+                            player.Health = player.MaxHealth;
                         fontColor.WriteColorFont($"물약을 사용하였습니다. HP : {beforeHp} -> {player.Health}", FontColor.Color.Blue);
                         Thread.Sleep(1500);
                         IsHpPotionUsed(1);
@@ -718,7 +748,7 @@ namespace TextRpg
         {
             Console.WriteLine("전투화면으로 돌아갑니다.");
             Console.WriteLine("아무 키나 입력해주세요.");
-            Console.ReadLine();
+            Console.ReadKey();
             SelectSkillOrAtk(1);
         }
 
@@ -748,11 +778,11 @@ namespace TextRpg
                 Console.WriteLine("");
                 Console.WriteLine("전투화면으로 돌아갑니다.");
                 Console.WriteLine("아무 키나 입력해주세요.");
-                Console.ReadLine();
+                Console.ReadKey();
                 SelectSkillOrAtk(1);
 
             }
-            else if (player.Mana > player.MaxMana)
+            else if (player.Mana >= player.MaxMana)
             {
                 player.Mana = player.MaxMana;
                 Console.WriteLine("마나가 가득 찼습니다.");
@@ -784,6 +814,8 @@ namespace TextRpg
                     case 1:
                         int beforeMp = player.Mana;
                         inventory.UseMpPotion();
+                        if (player.Mana >= player.MaxMana)
+                            player.Mana = player.MaxMana;
                         fontColor.WriteColorFont($"물약을 사용하였습니다. Mana : {beforeMp} -> {player.Mana}", FontColor.Color.Blue);
                         Thread.Sleep(1500);
                         IsMpPotionUsed(1);
@@ -819,7 +851,7 @@ namespace TextRpg
         /// <summary>
         /// min에서부터 max까지인 함수에서 커서 컨트롤
         /// </summary>
-        void SetCursor(int min,int max,int cursor, OriginFunction funcName)
+        void SetCursor(int min, int max, int cursor, OriginFunction funcName)
         {
             do
             {
@@ -852,37 +884,40 @@ namespace TextRpg
                 player.Exp = player.Exp - player.MaxExp;
                 player.Level++;
                 player.MaxExp *= 1.5f;
-                player.Health = player.MaxHealth;
-                player.Mana = player.MaxMana;
 
+                Console.WriteLine();
                 Console.WriteLine("레벨업을 했습니다!");
                 Console.WriteLine($"Lv {player.Level - 1} -> Lv {player.Level}");
 
                 // 레벨에 따라 캐릭터 능력치 변경 (?)
-                
+
                 if (player.Occupation == "전사")
                 {
                     player.Strength += 2;
                     player.Agility++;
                     player.Intelligence++;
-                } else if (player.Occupation == "궁수")
+                }
+                else if (player.Occupation == "궁수")
                 {
                     player.Strength++;
                     player.Agility += 2;
                     player.Intelligence++;
                 }
-                else if(player.Occupation == "마법사")
+                else if (player.Occupation == "마법사")
                 {
                     player.Strength++;
                     player.Agility++;
                     player.Intelligence += 2;
-                } else
+                }
+                else
                 {
                     player.Strength++;
                     player.Agility++;
                     player.Intelligence++;
                 }
 
+                player.Health = player.MaxHealth;
+                player.Mana = player.MaxMana;
 
             }
         }

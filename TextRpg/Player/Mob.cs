@@ -62,8 +62,6 @@ namespace TextRpg.Player
             Def = def;
             Gold = 3000;
             IsDead = isDead;
-
-            //PlusExp += Exp;
         }
         public int Attack(Job player, ICharacter target)
         {
