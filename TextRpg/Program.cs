@@ -42,22 +42,106 @@ namespace TextRpg
 
         // 아이템 세팅
         // 테스팅을 위해 포션추가
-        private static void GameItemSetting(Inventory inventory, Shop shop)
+        // 아이템들
+        // 무기
+        public static Weapon Sword1 = new Weapon(11110101, "낡은 검1", 3, 100, 3, false);
+        public static Weapon Sword2 = new Weapon(11110102, "낡은 검2", 3, 100, 4, false);
+        public static Weapon Sword3 = new Weapon(11110103, "낡은 검3", 3, 100, 12, false);
+        public static Weapon GoldSword = new Weapon(21110101, "황금 검", 2, 300, 20, false);
+        // 방어구
+        public static Armor Armor1 = new Armor(11210101, "낡은 방패", 1, 100, 10, false);
+        public static Armor GoldArmor = new Armor(21210101, "황금 방패", 2, 300, 15, false);
+        // 체력 포션
+        public static HealingPotion HPPotion1 = new HealingPotion(11412101, "일반 회복 물약", 1, 100, 10, false);
+        public static HealingPotion RareHPPotion1 = new HealingPotion(21410101, "고급 회복 물약", 2, 200, 20, false);
+        public static HealingPotion RareHPPotion2 = new HealingPotion(21410102, "고오급 회복 물약", 2, 1000000, 20, false);
+        // 마나 포션
+        public static ManaPotion MPPotion1 = new ManaPotion(11510101, "마나 회복 물약", 1, 100, 10, false);
+        // 더미
+        public static HealingPotion Dummy = new HealingPotion(0, null, 0, 0, 0, false);
+
+
+        private static void FirstInventorySetting(Inventory inventory)
         {
-            inventory.AddItem(new Weapon(11110101, "낡은 검1", 3, 100, 3, false), player);
-            inventory.AddItem(new Weapon(11110102, "낡은 검2", 3, 100, 4, false), player);
-            inventory.AddItem(new Weapon(11110103, "낡은 검3", 3, 100, 12, false), player);
+            inventory.AddItem(Sword1, player);
+            inventory.AddItem(Sword2, player);
+            inventory.AddItem(Sword3, player);
 
-            inventory.AddItem(new Armor(11210101, "낡은 방패", 1, 100, 10, false), player);
-            inventory.AddItem(new HealingPotion(11412101, "일반 회복 물약", 1, 100, 10, false), player);
-            inventory.AddItem(new HealingPotion(11412101, "일반 회복 물약", 1, 100, 10, false), player);
-            inventory.AddItem(new ManaPotion(11510101, "마나 회복 물약", 1, 100, 10, false), player);
-            inventory.AddItem(new ManaPotion(11510101, "마나 회복 물약", 1, 100, 10, false), player);
+            inventory.AddItem(Armor1, player);
+            inventory.AddItem(HPPotion1, player);
+            inventory.AddItem(HPPotion1, player);
+            inventory.AddItem(MPPotion1, player);
+            inventory.AddItem(MPPotion1, player);
+        }
+        // 아이템 탐색 등록
+        private static Items ItemFind(int i)
+        {
+            Items j = Dummy;
+            if(Sword1.Id == i)
+            {
+                j = Sword1;
+            }
+            else if (Sword2.Id == i)
+            {
+                j = Sword2;
+            }
+            else if (Sword3.Id == i)
+            {
+                j = Sword3;
+            }
+            else if (GoldSword.Id == i)
+            {
+                j = GoldSword;
+            }
+            else if (Armor1.Id == i)
+            {
+                j = Armor1;
+            }
+            else if (GoldArmor.Id == i)
+            {
+                j = GoldArmor;
+            }
+            else if (HPPotion1.Id == i)
+            {
+                j = HPPotion1;
+            }
+            else if (RareHPPotion1.Id == i)
+            {
+                j = RareHPPotion1;
+            }
+            else if (RareHPPotion2.Id == i)
+            {
+                j = RareHPPotion2;
+            }
+            else if (MPPotion1.Id == i)
+            {
+                j = MPPotion1;
+            }
+            return j;
+        }
 
-            shop.AddShopItem(new Weapon(21110101, "황금 검", 2, 300, 20, false));
-            shop.AddShopItem(new Armor(21210101, "황금 방패", 2, 300, 15, false));
-            shop.AddShopItem(new HealingPotion(21410101, "고급 회복 물약", 2, 200, 20, false));
-            shop.AddShopItem(new HealingPotion(21410102, "고오급 회복 물약", 2, 1000000, 20, false));
+        private static void LoadInventorySetting(Inventory inventory, Job player)
+        {
+            List<int> Items = new List<int>();
+            foreach (int i in player.Item)
+            {
+                Items.Add(i);
+            }
+            foreach (int i in Items)
+            {
+                // 아이템 추가 목록
+                Items load = ItemFind(i);
+                inventory.AddItem(load, player);
+                
+            }
+        }
+
+        private static void GameItemSetting(Shop shop)
+        {
+            shop.AddShopItem(GoldSword);
+            shop.AddShopItem(GoldArmor);
+            shop.AddShopItem(RareHPPotion1);
+            shop.AddShopItem(RareHPPotion2);
 
         }
         // 시작 씬
@@ -164,7 +248,7 @@ namespace TextRpg
                     int mp = 10 + Int * 2;
                     player = new Warrior(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    GameItemSetting(inventory, shop);
+                    GameItemSetting(shop);
                     break;
                 case 2:
                     Str = 2;
@@ -174,7 +258,7 @@ namespace TextRpg
                     mp = 10 + Int * 2;
                     player = new Mage(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    GameItemSetting(inventory, shop);
+                    GameItemSetting(shop);
                     break;
                 case 3:
                     Str = 2;
@@ -184,7 +268,7 @@ namespace TextRpg
                     mp = 10 + Int * 2;
                     player = new Archer(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    GameItemSetting(inventory, shop);
+                    GameItemSetting(shop);
                     break;
             }
         }
@@ -915,13 +999,13 @@ namespace TextRpg
         // 계정 등록
         private static Job Registration(string id, DirectoryInfo domain)
         {
+
+            
             JObject account = new JObject();
             JArray itemlist = new JArray();
             Job memberPath;
-            foreach(int item in player.Item)
-            {
-                itemlist.Add(item);
-            }
+
+            
 
             account.Add("Id", id);
             account.Add("Name", player.Name);
@@ -939,6 +1023,14 @@ namespace TextRpg
             account.Add("Gold", 3000);
             account.Add("Weapon", player.Weapon);
             account.Add("Armor", player.Armor);
+
+            FirstInventorySetting(inventory);
+
+            foreach (int item in player.Item)
+            {
+                itemlist.Add(item);
+            }
+
             account.Add("Item", itemlist);
 
             // 파일 경로 설정
@@ -951,8 +1043,66 @@ namespace TextRpg
             return memberPath;
         }
 
-        // 메인
-        static void Main(string[] args)
+        // 로그인
+        private static Job Login(DirectoryInfo domain)
+        {
+            // 변수 지정
+            FileInfo[] saves = domain.GetFiles();
+            List<string> saveId = new List<string> { };
+            string savePath;
+            string json;
+            Job memberPath;
+
+            // 시작
+            Console.WriteLine("아이디를 선택해주세요.");
+            Console.WriteLine();
+            // 아이디 목록 검색
+            for (int num = 0; num < saves.Length; num++)
+            {
+                // 검색된 아이디 불러오기
+                savePath = saves[num].FullName;
+                json = File.ReadAllText(savePath);
+                memberPath = JsonConvert.DeserializeObject<Job>(json);
+                saveId.Add(memberPath.Id);
+                // 커서로 변경
+                Console.WriteLine($"{num + 1}. {memberPath.Id}   ");
+            }
+            // 아이디 선택
+            Console.WriteLine();
+            string input = Console.ReadLine();
+            if (input == "") input = "0";
+            int inputisint = int.Parse(input);
+            bool b = false;
+            while (b == false)
+            {
+                if (inputisint > 0 && inputisint <= saves.Length)
+                {
+                    b = true;
+                }
+                else
+                {
+                    Console.WriteLine("옳지 않은 번호입니다. 다시 써주세요.");
+                    input = Console.ReadLine();
+                    if (input == "") input = "0";
+                    inputisint = int.Parse(input);
+                }
+            }
+            // 아이디 다시 불러오기
+            int select = int.Parse(input) - 1;
+            savePath = saves[select].FullName;
+            json = File.ReadAllText(savePath);
+            memberPath = JsonConvert.DeserializeObject<Job>(json);
+            inventory = new Inventory(memberPath);
+            LoadInventorySetting(inventory, memberPath);
+            // 아이디 확정 후 리턴
+            Console.WriteLine($"{memberPath.Name} 을(를) 불러 옵니다.");
+            return memberPath;
+        }
+
+
+
+            // 메인
+            static void Main(string[] args)
         {
             shop = new Shop();
             DirectoryInfo Domain = FolderSet();
@@ -963,25 +1113,29 @@ namespace TextRpg
             PrintStartScene();
 
             // 아이디 입력
-            Console.Clear();
-            Console.WriteLine("저장된 기록이 없습니다. ID를 입력해주세요.");
-            Pname = Console.ReadLine();
-            Console.WriteLine("정상적으로 등록되었습니다.");
-            Thread.Sleep(2000);
+            
             Console.Clear();
 
             if (domainNum.Length == 0)
             {
+                Console.WriteLine("저장된 기록이 없습니다. ID를 입력해주세요.");
+                Pname = Console.ReadLine();
+                Console.WriteLine("정상적으로 등록되었습니다.");
+                Thread.Sleep(2000);
+
                 PlayerInputName();
                 // 플레이어 재정의
                 player = Registration(Pname, Domain);
+                StartMenu(player.Occupation, 1);
             }
             else
             {
-
+                // 플레이어 재정의
+                player = Login(Domain);
+                StartMenu(player.Occupation, 1);
             }
 
-            StartMenu(player.Occupation, 1);
+            
 
 
 
