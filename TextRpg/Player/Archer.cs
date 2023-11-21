@@ -28,7 +28,7 @@ namespace TextRpg.Player
 
             // 재정의하는 내용
             Console.WriteLine("궁수의 스킬 발동!");
-            Console.WriteLine("속사!");
+            Console.WriteLine("연발 사격!");
             Console.WriteLine("");
 
             return vitSkillResult;
