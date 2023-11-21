@@ -301,8 +301,8 @@ namespace TextRpg.InvenShop
             {
                 Items sellInvenItem = invenItems[index];
 
-                int totalGold = player.Gold + sellInvenItem.Price;
-                player.Gold += sellInvenItem.Price;
+                int totalGold = player.Gold + (int)(sellInvenItem.Price * 0.8f); // 판매가격 80% - 나재민
+                player.Gold += (int)(sellInvenItem.Price * 0.8f);
 
                 Console.Clear();
                 Console.WriteLine($"아이템이 판매되었습니다: {sellInvenItem.Name}");
