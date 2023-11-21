@@ -179,17 +179,41 @@ namespace TextRpg.InvenShop
             }
         }
         //아이템 목록 index
-        public void ShowInvenItem()
+        public void ShowInvenItem(int category)
         {
+            //category 0전부 1장비류 2물약류
             int idx = 0;
             Console.WriteLine("[소지품 목록]");
             Console.WriteLine("");
-            foreach (var item in invenItems)
+            if (category == 0)
             {
-                Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                    $"등급: {item.Grade}★, 가격: {item.Price}");
+                foreach (var item in invenItems)
+                {
+                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                        $"등급: {item.Grade}★, 가격: {item.Price}");
 
-                idx++;
+                    idx++;
+                }
+            }
+            else if (category == 1)
+            {
+                foreach (var item in invenItems)
+                {
+                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                        $"등급: {item.Grade}★, 가격: {item.Price}");
+
+                    idx++;
+                }
+            }
+            else if (category == 2)
+            {
+                foreach (var item in invenItems)
+                {
+                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                        $"등급: {item.Grade}★, 가격: {item.Price}");
+
+                    idx++;
+                }
             }
         }
 

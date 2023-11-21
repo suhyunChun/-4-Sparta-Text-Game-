@@ -345,7 +345,7 @@ namespace TextRpg
                     EquipMenu();
                     break;
                 case 2:
-                    //item.Use();
+                    InventoryItemUseMenu();
                     break;
                 case 3:
                     DropItemMenu();
@@ -362,8 +362,32 @@ namespace TextRpg
         }
 
         //아이템 사용하기 메뉴 
+        private static void InventoryItemUseMenu()
+        {
+            Console.Clear();
+            Console.WriteLine("인벤토리 - 아이템사용하기");
+            Console.WriteLine("어떤 아이템을 사용하시겠습니까?");
+            Console.WriteLine("");
+            inventory.ShowInvenItem();
 
+            Console.WriteLine("");
+            Console.WriteLine("어떤 아이템을 사용하시겠습니까?");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
 
+            int keyInput = CheckValidInput(0, inventory.ItemCnt);
+            switch (keyInput)
+            {
+                case 0:
+                    InventoryMenu();
+                    break;
+                default:
+                    IsRemoveItem(keyInput - 1);
+                    break;
+            }
+        }
         //아이템 버리기 메뉴
         private static void DropItemMenu()
         {

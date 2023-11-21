@@ -92,24 +92,45 @@ namespace TextRpg.Player
         {
             int dps = 0;
             int mana = 5;
+            int skillFailureProbability = 1;
             if (Occupation == "전사")
             {
                 // 랜덤값
                 Random rand = new Random();
                 // 스킬 데미지
                 var err = Atk * 0.1;
-                dps = rand.Next((int)(Atk + err + 2), (int)(Atk + err + 4));
+                dps = rand.Next((int)(Atk + err + 2), (int)(Atk + err + 5));
                 dps -= (int)target.Def;
                 if (dps <= 1) dps = 1;
                 Mana -= mana;
             }
             else if (Occupation == "마법사")
             {
+                int percent = new Random().Next(0, 10);
 
+                if (percent >= skillFailureProbability)
+                {
+                    // 랜덤값
+                    Random rand = new Random();
+                    // 스킬 데미지
+                    var err = Atk * 0.2;
+                    dps = rand.Next((int)(Atk + err), (int)(Atk + err + 8));
+                    dps -= (int)target.Def;
+                    if (dps <= 1) dps = 1;
+                    Mana -= mana;
+                }
+                else dps = 0; 
             }
             else if (Occupation == "궁수")
             {
-
+                // 랜덤값
+                Random rand = new Random();
+                // 스킬 데미지
+                var err = Atk * 0.05;
+                dps = rand.Next((int)(Atk + err + 3), (int)(Atk + err + 4));
+                dps -= (int)target.Def;
+                if (dps <= 1) dps = 1;
+                Mana -= mana;
             }
             return dps;
         }
