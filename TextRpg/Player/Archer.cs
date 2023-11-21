@@ -20,5 +20,19 @@ namespace TextRpg.Player
  
         }
 
+        public override int Skill_1(ICharacter target)
+        {
+
+            // 공통값
+            int vitSkillResult = base.Skill_1(target);
+
+            // 재정의하는 내용
+            Console.WriteLine("궁수의 스킬 발동!");
+            Console.WriteLine("연발 사격!");
+            Console.WriteLine("");
+
+            return vitSkillResult;
+        }
+
     }
 }

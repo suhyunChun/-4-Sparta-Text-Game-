@@ -16,5 +16,26 @@ namespace TextRpg.Player
                 IsDead = true;
             }
         }
+        public override int Skill_1(ICharacter target)
+        {
+
+            // 공통값
+            int vitSkillResult = base.Skill_1(target);
+
+            // 재정의하는 내용
+            if (vitSkillResult == 0)
+            {
+                Console.WriteLine("마법 캐스팅이 실패 했습니다!");
+                Console.WriteLine("마법이 취소됩니다.");
+                Console.WriteLine("");
+            }
+
+            Console.WriteLine("마법사의 스킬 발동!");
+            Console.WriteLine("매직 미사일");
+            Console.WriteLine("");
+
+            return vitSkillResult;
+        }
+
     }
 }

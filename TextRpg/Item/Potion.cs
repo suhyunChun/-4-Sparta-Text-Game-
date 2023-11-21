@@ -42,8 +42,6 @@ namespace TextRpg.Item
             
             }
         }
-
-
     }
 
     // 마나 포션
