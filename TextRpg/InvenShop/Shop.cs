@@ -55,13 +55,17 @@ namespace TextRpg.InvenShop
         }
 
         // 아이템 사기
-        public void BuyShopItem()
+        public void BuyShopItem(int cursor)
         {
             int idx = 0;
 
             foreach (var item in shopItems)
             {
-                Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                if (idx + 1 == cursor)
+                    Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
+                    $"등급: {item.Grade}★, 가격: {item.Price}");
+                else
+                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
                     $"등급: {item.Grade}★, 가격: {item.Price}");
 
                 idx++;

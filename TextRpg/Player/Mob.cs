@@ -68,8 +68,6 @@ namespace TextRpg.Player
             Gold = 3000;
             // Item = items;
             IsDead = isDead;
-
-            //PlusExp += Exp;
         }
         public int Attack(ICharacter target)
         {
