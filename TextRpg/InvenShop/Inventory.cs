@@ -57,7 +57,7 @@ namespace TextRpg.InvenShop
         }
 
         // 인벤토리 목록
-        public void DisplayInventory(int cursor)
+        public void DisplayInventory()
         {
 
             Console.Write("[소지품 목록]");
@@ -96,9 +96,12 @@ namespace TextRpg.InvenShop
                             Console.Write("- [");
                             fontColor.WriteColorFont("E", FontColor.Color.Cyan);
                             Console.Write("]");
+                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 14)}" + " | ");
+                        }else
+                        {
+                            Console.Write($"- 이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | ");
                         }
-
-                            Console.Write($"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                            Console.Write(
                                                     $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
                                                     $"등급: {item.Grade} ★ " + " | " +
                                                     $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | ");
@@ -134,7 +137,7 @@ namespace TextRpg.InvenShop
                         Console.Write("-");
                         fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Yellow);
 
-                        if (item.IsEquiped == true)
+                        if (item.IsEquiped)
                         {
                             Console.Write("[");
                             fontColor.WriteColorFont("E", FontColor.Color.Cyan);
@@ -144,22 +147,8 @@ namespace TextRpg.InvenShop
                         else
                         {
                             Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | ");
-                            if (cursor == idx + 1)
-                                Program.HighlightText($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
-                            else
-                                Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
-                        }
-                        else
-                        {
-                            if (cursor == idx + 1)
-                                Program.HighlightText($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
-                            else
-                                Console.WriteLine($"{idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
-                        }
+                         }
+                       
                             Console.Write(
                                                     $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
                                                     $"등급: {item.Grade} ★ " + " | " +
@@ -311,7 +300,7 @@ namespace TextRpg.InvenShop
             }
         }
         //아이템 목록 index
-        public void ShowInvenItem(int cursor, int category)
+        public void ShowInvenItem (int category)
         {
             //category 0전부 1장비류 2물약류
             int idx = 0;
@@ -321,14 +310,36 @@ namespace TextRpg.InvenShop
             {
                 foreach (var item in invenItems)
                 {
-                    if (cursor == idx + 1)
-                        Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                        $"등급: {item.Grade}★, 가격: {item.Price}");
-                    else
-                        Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                        $"등급: {item.Grade}★, 가격: {item.Price}");
+                    Console.Write("-");
+                    fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Green);
+
+                    Console.Write(
+                        $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                        $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                        $"등급: {item.Grade} ★ " + " | " +
+                        $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
+                                                );
+
+                    if (item is Weapon weapon)
+                    {
+                        Console.Write($"공격력: {weapon.atk}");
+                    }
+                    else if (item is Armor armor)
+                    {
+                        Console.Write($"방어력: {armor.def}");
+                    }
+                    else if (item is HealingPotion hpPotion)
+                    {
+                        Console.Write($"HP 회복량: {hpPotion.healingAmount}");
+                    }
+                    else if (item is ManaPotion mpPotion)
+                    {
+                        Console.Write($"MP 회복량: {mpPotion.manaAmount}");
+                    }
 
                     idx++;
+
+                    Console.WriteLine("");
                 }
             }
             else if (category == 1)
@@ -337,14 +348,26 @@ namespace TextRpg.InvenShop
                 {
                     if (item is Weapon || item is Armor)
                     {
-                        if (cursor == idx + 1)
-                            Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
-                        else
-                            Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                        Console.Write("-");
+                        fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Green);
 
+                        Console.Write(
+                            $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                            $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                            $"등급: {item.Grade} ★ " + " | " +
+                            $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
+                                                    );
+
+                        if (item is Weapon weapon)
+                        {
+                            Console.Write($"공격력: {weapon.atk}");
+                        }
+                        else if (item is Armor armor)
+                        {
+                            Console.Write($"방어력: {armor.def}");
+                        }
                         idx++;
+                        Console.WriteLine("");
                     }
                 }
             }
@@ -354,14 +377,27 @@ namespace TextRpg.InvenShop
                 {
                     if (item is HealingPotion || item is ManaPotion)
                     {
-                        if (cursor == idx + 1)
-                            Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
-                        else
-                            Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                            $"등급: {item.Grade}★, 가격: {item.Price}");
+                        Console.Write("-");
+                        fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Green);
+
+                        Console.Write(
+                            $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                            $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                            $"등급: {item.Grade} ★ " + " | " +
+                            $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
+                                                    );
+
+                       if (item is HealingPotion hpPotion)
+                        {
+                            Console.Write($"HP 회복량: {hpPotion.healingAmount}");
+                        }
+                        else if (item is ManaPotion mpPotion)
+                        {
+                            Console.Write($"MP 회복량: {mpPotion.manaAmount}");
+                        }
 
                         idx++;
+                        Console.WriteLine("");
                     }
                 }
             }

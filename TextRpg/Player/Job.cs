@@ -118,8 +118,8 @@ namespace TextRpg.Player
                     // 랜덤값
                     Random rand = new Random();
                     // 스킬 데미지
-                    var err = Atk * 0.2;
-                    dps = rand.Next((int)(Atk + err), (int)(Atk + err + 8));
+                    var err = player.PlusAtk * 0.2;
+                    dps = rand.Next((int)(player.PlusAtk + err), (int)(player.PlusAtk + err + 8));
                     dps -= (int)target.Def;
                     if (dps <= 1) dps = 1;
                     Mana -= mana;
@@ -131,8 +131,8 @@ namespace TextRpg.Player
                 // 랜덤값
                 Random rand = new Random();
                 // 스킬 데미지
-                var err = Atk * 0.05;
-                dps = rand.Next((int)(Atk + err + 3), (int)(Atk + err + 4));
+                var err = player.PlusAtk * 0.05;
+                dps = rand.Next((int)(player.PlusAtk + err + 3), (int)(player.PlusAtk + err + 4));
                 dps -= (int)target.Def;
                 if (dps <= 1) dps = 1;
                 Mana -= mana;

@@ -16,11 +16,11 @@ namespace TextRpg.Player
                 IsDead = true;
             }
         }
-        public override int Skill_1(ICharacter target)
+        public override int Skill_1(Job player, ICharacter target)
         {
 
             // 공통값
-            int vitSkillResult = base.Skill_1(target);
+            int vitSkillResult = base.Skill_1(player, target);
 
             // 재정의하는 내용
             if (vitSkillResult == 0)

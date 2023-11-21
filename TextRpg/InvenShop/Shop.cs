@@ -81,7 +81,7 @@ namespace TextRpg.InvenShop
         }
 
         // 아이템 사기
-        public void BuyShopItem(int cursor)
+        public void BuyShopItem()
         {
             int idx = 0;
 
@@ -91,11 +91,11 @@ namespace TextRpg.InvenShop
                 fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Green);
 
                 Console.Write(
-                         $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
-                         $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
-                         $"등급: {item.Grade} ★ " + " | " +
-                         $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
-                                                 );
+                    $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                    $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                    $"등급: {item.Grade} ★ " + " | " +
+                    $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
+                                            );
                 
                 if (item is Weapon weapon)
                 {
@@ -114,15 +114,9 @@ namespace TextRpg.InvenShop
                     Console.Write($"MP 회복량: {mpPotion.manaAmount}");
                 }
 
-                Console.WriteLine();
-                if (idx + 1 == cursor)
-                    Program.HighlightText($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                    $"등급: {item.Grade}★, 가격: {item.Price}");
-                else
-                    Console.WriteLine($"- {idx + 1} 이름: {item.Name}, 종류: {item.Kind}, " +
-                    $"등급: {item.Grade}★, 가격: {item.Price}");
-
                 idx++;
+
+                Console.WriteLine();
             }
         }
 
@@ -138,13 +132,28 @@ namespace TextRpg.InvenShop
                 player.Gold -= purchasedItem.Price;
 
                 Console.Clear();
-                Console.WriteLine("아이템이 구매되었습니다!");
+                fontColor.WriteColorFont("아이템 구매 완료", FontColor.Color.Magenta);
                 Console.WriteLine("");
 
-                Console.WriteLine($"구매된 아이템: {purchasedItem.Name}{purchasedItem.Grade}★");
+                Console.Write($"구매된 아이템:  ");
+                fontColor.WriteColorFont($"{ purchasedItem.Name} {purchasedItem.Grade}★", FontColor.Color.Yellow);
+                Console.WriteLine("");
+                
+
                 Console.WriteLine("");
 
-                Console.WriteLine($"소지 금액: {player.Gold}");
+                
+                if(player.Gold < 1500)
+                {
+                    Console.Write("소지 금액: ");
+                    fontColor.WriteColorFont($"{player.Gold}", FontColor.Color.DarkRed);
+                }
+                else
+                {
+                    Console.Write($"소지 금액: {player.Gold}");
+                }
+
+                Console.WriteLine("\n");
 
                 Console.WriteLine("아무키나 입력하여 다음행동을 진행해주세요");
                 Console.ReadLine();

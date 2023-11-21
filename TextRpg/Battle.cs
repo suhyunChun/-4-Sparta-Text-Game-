@@ -303,7 +303,7 @@ namespace TextRpg
             // 캐릭터의 스킬 
             bool isCritical = false;
 
-            int characterSkill = player.Skill_1(mobs[idx]);
+            int characterSkill = player.Skill_1(player, mobs[idx]);
             characterSkill = CirticalAttack(characterSkill, ref isCritical);
 
 
@@ -369,6 +369,8 @@ namespace TextRpg
         }
         private void DisplayStatus(bool isSelect, int cursor)
         {
+            string playerLevel = player.Level.ToString("00");
+
             for (int i = 0; i < mobs.Count; i++)
             {
                 if (mobs[i].IsDead)
@@ -387,8 +389,13 @@ namespace TextRpg
             }
             Console.WriteLine("");
             Console.WriteLine("[내정보]");
-            Console.WriteLine();
-            Console.WriteLine($"Lv.{player.Level} {player.Name} ({player.Occupation})");
+            Console.WriteLine("");
+
+            Console.Write($"Lv.");
+            fontColor.WriteColorFont($"{playerLevel} ", FontColor.Color.Yellow);
+
+            fontColor.WriteColorFont($"{player.Name} ", FontColor.Color.DarkYellow);
+            fontColor.WriteColorFont($"({player.Occupation})", FontColor.Color.DarkGreen);
             Console.WriteLine("");
             //TODO: 100 -> 직업별 MaxHP로
             Console.WriteLine($"{player.Health}/ {player.MaxHealth}");
