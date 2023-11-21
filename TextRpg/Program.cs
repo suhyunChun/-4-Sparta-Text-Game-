@@ -34,9 +34,9 @@ namespace TextRpg
         // 테스팅을 위해 포션추가
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
-            inventory.AddItem(new Weapon("낡은 검1", 3, 1000, 3, false));
-            inventory.AddItem(new Weapon("낡은 검2", 3, 1000, 4, false));
-            inventory.AddItem(new Weapon("낡은 검3", 3, 1000, 12, false));
+            inventory.AddItem(new Weapon("낡은 검1", 3, 100, 3, false));
+            inventory.AddItem(new Weapon("낡은 검2", 3, 100, 4, false));
+            inventory.AddItem(new Weapon("낡은 검3", 3, 100, 12, false));
 
             inventory.AddItem(new Armor("낡은 방패", 1, 100, 10, false));
             inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, false));
@@ -764,6 +764,8 @@ namespace TextRpg
             fontColor.WriteColorFont("[ 아이템 판매 ]", FontColor.Color.Magenta);
             Console.WriteLine("\n");
             Console.WriteLine("판매하고 싶은 아이템을 선택해주세요");
+            fontColor.WriteColorFont("판매 시, 80%의 금액을 받을 수 있습니다.", FontColor.Color.DarkRed);
+            Console.WriteLine();
             Console.WriteLine($"인벤토리 아이템 개수: {inventory.ItemCnt}");
             Console.WriteLine("");
 
