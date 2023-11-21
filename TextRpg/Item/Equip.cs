@@ -54,8 +54,8 @@ namespace TextRpg.Item
         }
 
         // 무기 생성자
-        public Weapon(string name, int grade, int price, int atk, bool isEquiped)
-            : base(name, "무기", grade, price, false)
+        public Weapon(int id, string name, int grade, int price, int atk, bool isEquiped)
+            : base(id, name, "무기", grade, price, false)
         {
             Atk = atk;
         }
@@ -101,8 +101,8 @@ namespace TextRpg.Item
         }
 
         // 방어구 생성자
-        public Armor(string name, int grade, int price, int def, bool isEquiped) //외부에서 받아오는 값 
-            : base(name, "방어구", grade, price, false) // = Name = name 
+        public Armor(int id, string name, int grade, int price, int def, bool isEquiped) //외부에서 받아오는 값 
+            : base(id, name, "방어구", grade, price, false) // = Name = name 
         {
             Def = def;
         }

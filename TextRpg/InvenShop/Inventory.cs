@@ -36,8 +36,9 @@ namespace TextRpg.InvenShop
         }
 
         // 아이템 추가
-        internal void AddItem(Items item)
+        internal void AddItem(Items item, Job player)
         {
+            player.Item.Add(item.Id);
             invenItems.Add(item);
             //Console.WriteLine($"{item.Name}을(를) 추가했습니다.");
 
@@ -274,7 +275,7 @@ namespace TextRpg.InvenShop
         }
 
         // 아이템 삭제
-        public void RemoveItem(int index)
+        public void RemoveItem(int index, Job player)
         {
 
             if (index >= 0 && index < invenItems.Count)
@@ -283,6 +284,7 @@ namespace TextRpg.InvenShop
                 Console.WriteLine($"아이템이 삭제되었습니다: {removeItem.Name}");
                 Console.WriteLine("아무키나 입력하시면 인벤토리로 이동합니다.");
                 invenItems.RemoveAt(index);
+                player.Item.Remove(invenItems[index].Id);
                 Console.ReadLine();
             }
         }

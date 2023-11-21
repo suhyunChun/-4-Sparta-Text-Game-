@@ -9,6 +9,7 @@ namespace TextRpg.Item
 {
     public abstract class Item : IItem
     {
+        public int Id { get; }
         public string Name { get; }
         public string Kind { get; }
         public int Grade { get; }
@@ -20,7 +21,8 @@ namespace TextRpg.Item
         // 아이템 드랍
         public abstract void Drop();
 
-        public Item(string name, string kind, int grade, int price ){
+        public Item(int id, string name, string kind, int grade, int price ){
+            Id = id;
             Name = name;
             Kind = kind;
             Grade = grade;

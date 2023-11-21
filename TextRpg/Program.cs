@@ -28,20 +28,21 @@ namespace TextRpg
 
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
-            inventory.AddItem(new Weapon("낡은 검1", 3, 1000, 10, false));
-            inventory.AddItem(new Weapon("낡은 검2", 3, 1000, 11, false));
-            inventory.AddItem(new Weapon("낡은 검3", 3, 1000, 12, false));
+            inventory.AddItem(new Weapon(11110101, "낡은 검1", 3, 1000, 10, false), player);
+            inventory.AddItem(new Weapon(11110102, "낡은 검2", 3, 1000, 11, false), player);
+            inventory.AddItem(new Weapon(11110103, "낡은 검3", 3, 1000, 12, false), player);
 
-            inventory.AddItem(new Armor("낡은 방패", 1, 100, 10, false));
-            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, false));
-            inventory.AddItem(new HealingPotion("일반 회복 물약", 1, 100, 10, false));
-            inventory.AddItem(new ManaPotion("마나 회복 물약", 1, 100, 10, false));
-            inventory.AddItem(new ManaPotion("마나 회복 물약", 1, 100, 10, false));
+            inventory.AddItem(new Armor(11210101, "낡은 방패", 1, 100, 10, false), player);
+            inventory.AddItem(new HealingPotion(11412101, "일반 회복 물약", 1, 100, 10, false), player);
+            inventory.AddItem(new HealingPotion(11412101, "일반 회복 물약", 1, 100, 10, false), player);
+            inventory.AddItem(new ManaPotion(11510101, "마나 회복 물약", 1, 100, 10, false), player);
+            inventory.AddItem(new ManaPotion(11510101, "마나 회복 물약", 1, 100, 10, false), player);
 
-            shop.AddShopItem(new Weapon("황금 검", 2, 300, 20, false));
-            shop.AddShopItem(new Armor("황금 방패", 2, 300, 15, false));
-            shop.AddShopItem(new HealingPotion("고급 회복 물약", 2, 200, 20, false));
-            shop.AddShopItem(new HealingPotion("고오급 회복 물약", 2, 1000000, 20, false));
+            shop.AddShopItem(new Weapon(21110101, "황금 검", 2, 300, 20, false));
+            shop.AddShopItem(new Armor(21210101, "황금 방패", 2, 300, 15, false));
+            shop.AddShopItem(new HealingPotion(21410101, "고급 회복 물약", 2, 200, 20, false));
+            shop.AddShopItem(new HealingPotion(21410102, "고오급 회복 물약", 2, 1000000, 20, false));
+
         }
         // 시작 씬
         private static void PrintStartScene()
@@ -447,7 +448,7 @@ namespace TextRpg
             switch (cursor)
             {
                 case 1:
-                    inventory.RemoveItem(itemIndex);
+                    inventory.RemoveItem(itemIndex, player);
                     DropItemMenu(1);
                     break;
                 case 2:

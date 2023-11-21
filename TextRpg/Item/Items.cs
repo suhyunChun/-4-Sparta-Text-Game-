@@ -10,6 +10,7 @@ namespace TextRpg.Item
 {
     public class Items : IItem
     {
+        public int Id { get; }
         public string Name { get;}
 
         public string Kind { get;}
@@ -32,8 +33,9 @@ namespace TextRpg.Item
         public void BonusStatus(Inventory invetory) { }
       
 
-        public Items(string name, string kind, int grade, int price, bool isEquiped)
+        public Items(int id, string name, string kind, int grade, int price, bool isEquiped)
         {
+            Id = id;
             Name = name;
             Kind = kind;
             Grade = grade;
