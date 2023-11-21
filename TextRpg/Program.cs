@@ -2,20 +2,29 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
+using System.Numerics;
+using System.IO;
+using System.Xml.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
+using System.Diagnostics.Metrics;
 
 
 namespace TextRpg
 {
     internal class Program
     {
+        // 경로 설정
+        DirectoryInfo Domain;
         static List<Items> item;
         static Inventory inventory;
         static Shop shop;
         // public이 붙음, player생성 시 다양한 곳에서 땡겨오기 위해
         public static Job player;
+        public static string Pname;
         static Items items;
         static Battle battle;
         static FontColor fontColor;
@@ -26,7 +35,6 @@ namespace TextRpg
         static ConsoleKeyInfo c;
         // 아이템 세팅
         // 테스팅을 위해 포션추가
-
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
             inventory.AddItem(new Weapon(11110101, "낡은 검1", 3, 1000, 10, false), player);
@@ -127,29 +135,41 @@ namespace TextRpg
             Console.WriteLine(" ");
 
             // 임시 불러오기용 인벤토리
-            List<int> items = new List<int>() { 11110101, 11412103 };
+            List<int> items = new List<int>();
             // 캐릭터를 선택한 후 inventory, shop 생성, 사실상 게임 시작부분이기 때문에 이때 생성하여 인벤토리에
             // player를 전달하기 위함
             SetCursor(1, 3, cursor, playerName, SelectedJobMenu);
             switch (cursor)
             {
                 case 1:
-                    player = new Warrior("1", playerName, items);
+                    int Str = 4;
+                    int Agi = 2;
+                    int Int = 2;
+                    int hp = 100 + Str * 20;
+                    int mp = 10 + Int * 2;
+                    player = new Warrior(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation, 1);
                     break;
                 case 2:
-                    player = new Mage("2", playerName, items);
+                    Str = 2;
+                    Agi = 4;
+                    Int = 2;
+                    hp = 100 + Str * 20;
+                    mp = 10 + Int * 2;
+                    player = new Mage(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation, 1);
                     break;
                 case 3:
-                    player = new Archer("3", playerName, items);
+                    Str = 2;
+                    Agi = 2;
+                    Int = 4;
+                    hp = 100 + Str * 20;
+                    mp = 10 + Int * 2;
+                    player = new Archer(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
-                    StartMenu(player.Occupation, 1);
                     break;
             }
         }
@@ -802,18 +822,94 @@ namespace TextRpg
             return false;
         }
 
+        // 계정 폴더 생성
+        private static DirectoryInfo FolderSet()
+        {
+            return new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"save");
+        }
+        private static string[] Folder(DirectoryInfo domain)
+        {
+            if (!domain.Exists)
+            {
+                domain.Create();
+            }
+            return Directory.GetFiles(domain.ToString(), "*.json");
+        }
+
+        // 계정 등록
+        private static Job Registration(string id, DirectoryInfo domain)
+        {
+            JObject account = new JObject();
+            JArray itemlist = new JArray();
+            Job memberPath;
+            foreach(int item in player.Item)
+            {
+                itemlist.Add(item);
+            }
+
+            account.Add("Id", id);
+            account.Add("Name", player.Name);
+            account.Add("Occupation", player.Occupation);
+            account.Add("Level", 1);
+            account.Add("MaxExp", 10);
+            account.Add("Exp", 0);
+            account.Add("Strength", player.Strength);
+            account.Add("Agility", player.Agility);
+            account.Add("Intelligence", player.Intelligence);
+            account.Add("Health", player.MaxHealth);
+            account.Add("Mana", player.MaxMana);
+            account.Add("PlusAtk", player.PlusAtk);
+            account.Add("PlusDef", player.PlusDef);
+            account.Add("Gold", 3000);
+            account.Add("Weapon", player.Weapon);
+            account.Add("Armor", player.Armor);
+            account.Add("Item", itemlist);
+
+            // 파일 경로 설정
+            string fileName = $"{id}.json";
+            string directory = domain.FullName + @"\" + fileName;
+            // 데이터 파일 생성 (프로젝트 이름\bin\Debug\net6.0 경로에 저장)
+            File.WriteAllText(directory, account.ToString());
+            string json = File.ReadAllText(directory);
+            memberPath = JsonConvert.DeserializeObject<Job>(json);
+            return memberPath;
+        }
 
         // 메인
         static void Main(string[] args)
         {
             shop = new Shop();
+            DirectoryInfo Domain = FolderSet();
+            string[] domainNum = Folder(Domain);
 
             fontColor = new FontColor();
             Console.SetWindowSize(82, 30);
 
 
             PrintStartScene();
-            PlayerInputName();
+
+            // 아이디 입력
+            Console.Clear();
+            Console.WriteLine("저장된 기록이 없습니다. ID를 입력해주세요.");
+            Pname = Console.ReadLine();
+            Console.WriteLine("정상적으로 등록되었습니다.");
+            Thread.Sleep(2000);
+            Console.Clear();
+
+            if (domainNum.Length == 0)
+            {
+                PlayerInputName();
+                // 플레이어 재정의
+                player = Registration(Pname, Domain);
+            }
+            else
+            {
+
+            }
+
+            StartMenu(player.Occupation, 1);
+
+
 
             //inventory.DisplayInventory();
             //shop.DisplayInventory();

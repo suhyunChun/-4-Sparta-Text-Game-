@@ -56,7 +56,7 @@ namespace TextRpg.Player
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
-        public Job(string id, string name, string occupation, int level, int exp, int Str, int Agi, int Int, float itematk, float itemdef, int gold, int weapon, int armor, List<int> items, bool isDead)
+        public Job(string id, string name, string occupation, int level, int exp, float maxexp, int Str, int Agi, int Int, int hp, int mp, float itematk, float itemdef, int gold, int weapon, int armor, List<int> items, bool isDead)
         {
             Id = id;
             Name = name;
@@ -68,14 +68,14 @@ namespace TextRpg.Player
             Intelligence = Int;
             PlusAtk = itematk;
             PlusDef = itemdef;
-            Health = MaxHealth;
-            Mana = MaxMana;
+            Health = hp;
+            Mana = mp;
             Gold = gold;
             Weapon = weapon;
             Armor = armor;
             Item = items;
             IsDead = isDead;
-            MaxExp = 10;
+            MaxExp = maxexp;
 
         }
         public int Attack(ICharacter target)

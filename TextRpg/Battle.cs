@@ -336,15 +336,15 @@ namespace TextRpg
                 switch (randomMonster)
                 {
                     case 0:
-                        mobs.Add(new Mob($"({i})달팽이", "달팽이", 1, 5, 10, 5, 5, false));
+                        mobs.Add(new Mob($"({i})달팽이", "달팽이", 1, 5, 10, 5, 5, 1, 0, false));
                         break;
 
                     case 1:
-                        mobs.Add(new Mob($"({i})슬라임", "슬라임", 2, 7, 15, 7, 6, false));
+                        mobs.Add(new Mob($"({i})슬라임", "슬라임", 2, 7, 15, 7, 6, 2, 0, false));
                         break;
 
                     case 2:
-                        mobs.Add(new Mob($"({i})고블린", "고블린", 3, 9, 20, 10, 8, false));
+                        mobs.Add(new Mob($"({i})고블린", "고블린", 3, 9, 20, 10, 8, 4, 0, false));
                         break;
 
                     default:
@@ -710,7 +710,7 @@ namespace TextRpg
                     case 1:
                         // 포션 사용
                         int beforeHp = player.Health;
-                        inventory.UseHpPotion();
+                        inventory.UseHpPotion(player);
                         if (player.Health >= player.MaxHealth)
                             player.Health = player.MaxHealth;
                         fontColor.WriteColorFont($"물약을 사용하였습니다. HP : {beforeHp} -> {player.Health}", FontColor.Color.Blue);
@@ -789,7 +789,7 @@ namespace TextRpg
                 {
                     case 1:
                         int beforeMp = player.Mana;
-                        inventory.UseMpPotion();
+                        inventory.UseMpPotion(player);
                         if (player.Mana >= player.MaxMana)
                             player.Mana = player.MaxMana;
                         fontColor.WriteColorFont($"물약을 사용하였습니다. Mana : {beforeMp} -> {player.Mana}", FontColor.Color.Blue);
