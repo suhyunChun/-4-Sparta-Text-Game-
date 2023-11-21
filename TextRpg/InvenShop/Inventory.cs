@@ -346,6 +346,10 @@ namespace TextRpg.InvenShop
             {
                 if (hpPotion is HealingPotion)
                 {
+                    // 장착하지 않은 포션일 경우 패스
+                    if (!hpPotion.IsEquiped)
+                        continue;
+
                     // hpPotion을 사용하고 remove해줌
                     // 하나만 사용해야 하기 때문에 사용시 바로 break로 반복문 탈출
                     hpPotion.Use(player);
@@ -365,6 +369,9 @@ namespace TextRpg.InvenShop
             {
                 if (mpPotion is ManaPotion)
                 {
+                    if (!mpPotion.IsEquiped)
+                        continue;
+
                     mpPotion.Use(player);
 
                     invenItems.Remove(mpPotion);
