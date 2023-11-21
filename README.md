@@ -44,12 +44,23 @@
     ![image](https://github.com/suhyunChun/-4-Sparta-Text-Game-/assets/89771577/47dbfb22-1b6b-43a1-add0-5cabb21c73fe)
 
     현재 하이라이트 되어있는 아이템을 장착 또는 장착 해제를 할 수 있다. 똑같은 종류의 무기를 장착하려고 하면 (낡은검 1을 장착한 상태로 낡은검2 장착시도) 이 전에 장착하고 있던 무기는 해제된다.
-    장착된 장비는 앞에 **[E]** 라고 표시해준다. 
+    장착된 장비는 앞에 **[E]** 라고 표시해준다. 장착된 아이템은 장착관리 페이지를 벗어나도 어떤 장비가 장착 중인지 표시를 해준다. 
+
+    장비 장착 후 상태보기 창
+
+    ![image](https://github.com/suhyunChun/-4-Sparta-Text-Game-/assets/89771577/14e5ec88-9775-4886-a640-f51e2fc4d62d)
     
   *  **아이템 사용**
- 
+    
+    ![image](https://github.com/suhyunChun/-4-Sparta-Text-Game-/assets/89771577/daf5e930-c63d-42bf-9941-cfab6a2c973b)
+
+    아이템 사용하기 창을 들어가면 포션류 아이템들을 보여준다. 일반 회복 물약과 마나 회복 물약 두가지가 있으며, 가득 찬 상태에서는 "가득 찬 상태입니다" 메세지 창과 함께 아이템이 사용되지 않는다. 
+  
   *  **아이템 버리기**
- 
+
+  ![image](https://github.com/suhyunChun/-4-Sparta-Text-Game-/assets/89771577/9989e6c2-55fb-4299-a202-f70a4cf8935a)
+
+
   *  **아이템 정렬**
  
     
