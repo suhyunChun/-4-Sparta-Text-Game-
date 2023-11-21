@@ -177,6 +177,7 @@ namespace TextRpg
                     player = new Warrior(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
+                    StartMenu(player.Occupation, 1);
                     break;
                 case 2:
                     Str = 2;
@@ -187,6 +188,7 @@ namespace TextRpg
                     player = new Mage(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
+                    StartMenu(player.Occupation, 1);
                     break;
                 case 3:
                     Str = 2;
@@ -197,6 +199,7 @@ namespace TextRpg
                     player = new Archer(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
                     GameItemSetting(inventory, shop);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
         }
@@ -973,6 +976,7 @@ namespace TextRpg
             fontColor = new FontColor();
             //Console.SetWindowSize(82, 30);
             PrintStartScene();
+            PlayerInputName();
 
             // 아이디 입력
             Console.Clear();
@@ -993,7 +997,6 @@ namespace TextRpg
 
             }
 
-            StartMenu(player.Occupation, 1);
 
 
 
