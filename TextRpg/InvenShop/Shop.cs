@@ -53,7 +53,7 @@ namespace TextRpg.InvenShop
             {
 
                 Console.Write(
-                        $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
+                        $"- 이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
                         $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
                         $"등급: {item.Grade} ★ " + " | " +
                         $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "

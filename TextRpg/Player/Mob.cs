@@ -65,7 +65,7 @@ namespace TextRpg.Player
             Mana = MaxMana;
             Atk = atk;
             Def = def;
-            Gold = 3000;
+            Gold = gold;
             // Item = items;
             IsDead = isDead;
         }

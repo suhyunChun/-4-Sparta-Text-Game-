@@ -104,7 +104,7 @@ namespace TextRpg
             wmp = new WindowsMediaPlayer();
             string executableFilePath = Assembly.GetEntryAssembly().Location;
             string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
-            string audioFilePath = Path.Combine(executableDirectoryPath, "henesys.wav");
+            string audioFilePath = Path.Combine(executableDirectoryPath, "Sounds", "henesys.wav");
             wmp.URL = audioFilePath;
             wmp.controls.play();
             wmp.settings.volume = 5;
