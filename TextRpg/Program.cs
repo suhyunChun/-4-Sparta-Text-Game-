@@ -169,7 +169,7 @@ namespace TextRpg
 
             } while (c.Key != ConsoleKey.Enter);
         }
-        private static void SetCursor(int min, int max, int cursor, string str, func2 Funcntion)
+        private static void SetCursor(int min, int max, int cursor, func2 Funcntion)
         {
             do
             {
@@ -244,7 +244,7 @@ namespace TextRpg
                     StatusMenu();
                     break;
                 case 2:
-                    InventoryMenu();
+                    InventoryMenu(1);
                     break;
                 case 3:
                     ShopMenu();
@@ -320,26 +320,41 @@ namespace TextRpg
         }
 
         // 인벤토리 메뉴
-        private static void InventoryMenu()
+        private static void InventoryMenu(int cursor)
         {
             Console.Clear();
             Console.WriteLine("인벤토리 메뉴입니다.");
             Console.WriteLine("아이템을 관리할 수 있습니다.");
             Console.WriteLine("");
             inventory.DisplayInventory();
-
-            Console.WriteLine("");
-            Console.WriteLine("1. 장비 관리하기");
-            Console.WriteLine("2. 아이템 사용하기");
-            Console.WriteLine("3. 아이템 버리기");
-            Console.WriteLine("4. 아이템 정렬");
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine("0. 뒤로가기");
             Console.WriteLine("");
 
+            if (cursor == 1)
+                HighlightText("1. 장비 관리하기");
+            else
+                Console.WriteLine("1. 장비 관리하기");
+            if (cursor == 2)
+                HighlightText("2. 아이템 사용하기");
+            else
+                Console.WriteLine("2. 아이템 사용하기");
+            if (cursor == 3)
+                HighlightText("3. 아이템 버리기");
+            else
+                Console.WriteLine("3. 아이템 버리기");
+            if (cursor == 4)
+                HighlightText("4. 아이템 정렬");
+            else
+                Console.WriteLine("4. 아이템 정렬");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            if (cursor == 0)
+                HighlightText("0. 뒤로가기");
+            else
+                Console.WriteLine("0. 뒤로가기");
+            Console.WriteLine("");
+            SetCursor(0, 4, cursor, InventoryMenu);
 
-            switch (CheckValidInput(0, 4))
+            switch (cursor)
             {
                 case 1:
                     EquipMenu();
@@ -352,7 +367,7 @@ namespace TextRpg
                     break;
                 case 4:
                     inventory.InventoryArraySort();
-                    InventoryMenu();
+                    InventoryMenu(1);
                     break;
                 case 0:
                     StartMenu(player.Occupation,1);
@@ -383,7 +398,7 @@ namespace TextRpg
             switch (keyInput)
             {
                 case 0:
-                    InventoryMenu();
+                    InventoryMenu(1);
                     break;
                 default:
                     IsRemoveItem(keyInput - 1);
@@ -436,7 +451,7 @@ namespace TextRpg
             if (equipNum == 0)
             {
                 inventory.onEquipMenu = false;
-                InventoryMenu();
+                InventoryMenu(1);
             }
             else
             {
