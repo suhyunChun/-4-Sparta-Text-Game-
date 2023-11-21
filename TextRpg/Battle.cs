@@ -860,8 +860,6 @@ namespace TextRpg
                 player.Exp = player.Exp - player.MaxExp;
                 player.Level++;
                 player.MaxExp *= 1.5f;
-                player.Health = player.MaxHealth;
-                player.Mana = player.MaxMana;
 
                 Console.WriteLine();
                 Console.WriteLine("레벨업을 했습니다!");
@@ -894,6 +892,8 @@ namespace TextRpg
                     player.Intelligence++;
                 }
 
+                player.Health = player.MaxHealth;
+                player.Mana = player.MaxMana;
 
             }
         }

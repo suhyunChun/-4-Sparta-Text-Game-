@@ -83,7 +83,7 @@ namespace TextRpg
             string playerName;
 
             Console.Clear();
-            Console.WriteLine("OO 마을에 오신걸 환영합니다.");
+            Console.WriteLine("헤네시스에 오신걸 환영합니다.");
 
             // 공백시 입장 불가
             do
