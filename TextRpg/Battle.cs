@@ -300,10 +300,9 @@ namespace TextRpg
             {
                 deadCnt++;
                 player.Exp += mobs[idx].Exp;
-                Console.WriteLine($"현재 경험치: {player.Exp}");
                 LevelController();
-                Console.WriteLine();
             }
+            Console.WriteLine($"현재 경험치: {player.Exp} / {player.MaxExp}");
             mobs[idx].Health -= characterSkill;
             Console.WriteLine();
             Console.WriteLine("0. 다음");
@@ -326,12 +325,30 @@ namespace TextRpg
         /// </summary>
         private void ApperMonster()
         {
-
             Random rand = new Random();
-            int numberOfMob = rand.Next(1, 5);
+            int numberOfMob = rand.Next(1, 5);      // 몬스터 출현 숫자
+
             for (int i = 1; i <= numberOfMob; i++)
             {
-                mobs.Add(new Mob("달팽이" + i, "달팽이", 2, 5, 10, 5, 5, false));
+                int randomMonster = rand.Next(0, 3);    // 몬스터의 종류 숫자
+
+                switch (randomMonster)
+                {
+                    case 0:
+                        mobs.Add(new Mob($"({i})달팽이", "달팽이", 1, 5, 10, 5, 5, false));
+                        break;
+
+                    case 1:
+                        mobs.Add(new Mob($"({i})슬라임", "슬라임", 2, 7, 15, 7, 6, false));
+                        break;
+
+                    case 2:
+                        mobs.Add(new Mob($"({i})고블린", "고블린", 3, 9, 20, 10, 8, false));
+                        break;
+
+                    default:
+                        break;
+                }
 
             }
         }
@@ -454,7 +471,6 @@ namespace TextRpg
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
                 mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
                 Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
-                Console.WriteLine($"현재 경험치: {player.Exp}");
 
                 if (mobs[idx].IsDead)
                 {
@@ -462,8 +478,7 @@ namespace TextRpg
                     player.Exp += mobs[idx].Exp;
                     LevelController();
                 }
-                //Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
-                //Console.WriteLine($"현재 경험치: {player.Exp}");
+                Console.WriteLine($"현재 경험치: {player.Exp} / {player.MaxExp}");
                 Console.WriteLine("");
                 mobs[idx].Health -= Damage;
             }else{
