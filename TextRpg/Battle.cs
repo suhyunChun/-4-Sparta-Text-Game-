@@ -4,6 +4,7 @@ using System.Linq;
 using WMPLib;
 using System.Text;
 using System.Threading.Tasks;
+using TextRpg.Appearance;
 using TextRpg.InvenShop;
 using TextRpg.Item;
 using TextRpg.Player;
@@ -17,11 +18,12 @@ namespace TextRpg
         //몬스터 List
         List<Mob> mobs;
         List<Items> items;
-        Mob mob;
         Job player;
         Inventory inventory;
+
         int originalHP;
         int deadCnt;
+
         FontColor fontColor;
         ConsoleKeyInfo c;
         WindowsMediaPlayer wmp;
@@ -43,7 +45,7 @@ namespace TextRpg
             items = _inventory.invenItems;
             inventory = _inventory;
             deadCnt = 0;
-            originalHP = _player.Health;
+            originalHP = _player.MaxHealth;
             ApperMonster();
 
             fontColor = new FontColor();
@@ -301,7 +303,7 @@ namespace TextRpg
             // 캐릭터의 스킬 
             bool isCritical = false;
 
-            int characterSkill = player.Skill_1(mobs[idx]);
+            int characterSkill = player.Skill_1(player, mobs[idx]);
             characterSkill = CirticalAttack(characterSkill, ref isCritical);
 
 
@@ -367,6 +369,8 @@ namespace TextRpg
         }
         private void DisplayStatus(bool isSelect, int cursor)
         {
+            string playerLevel = player.Level.ToString("00");
+
             for (int i = 0; i < mobs.Count; i++)
             {
                 if (mobs[i].IsDead)
@@ -385,7 +389,14 @@ namespace TextRpg
             }
             Console.WriteLine("");
             Console.WriteLine("[내정보]");
-            Console.WriteLine($"Lv.{player.Level} {player.Name} ({player.Occupation})");
+            Console.WriteLine("");
+
+            Console.Write($"Lv.");
+            fontColor.WriteColorFont($"{playerLevel} ", FontColor.Color.Yellow);
+
+            fontColor.WriteColorFont($"{player.Name} ", FontColor.Color.DarkYellow);
+            fontColor.WriteColorFont($"({player.Occupation})", FontColor.Color.DarkGreen);
+            Console.WriteLine("");
             //TODO: 100 -> 직업별 MaxHP로
             Console.WriteLine($"{player.Health}/ {player.MaxHealth}");
             Console.WriteLine($"{player.Mana} / {player.MaxMana}");
@@ -462,25 +473,11 @@ namespace TextRpg
             int dodge = new Random().Next(1, 100);
             //데미지 계산
             bool isCritical = false;
-            int Damage = player.Attack(mobs[idx]);
+            int Damage = player.Attack(player, mobs[idx]);
             Damage = CirticalAttack(Damage, ref isCritical);
 
-            //몬스터에게 데미지 가하기
-            //Console.WriteLine($"{player.Name} 의 공격!");
-            //Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}]");
-            //Console.WriteLine("");
-            //Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
-            //mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
-            //if (mobs[idx].IsDead)
-            //{
-            //    deadCnt++;
-            //}
-            //Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
-            //Console.WriteLine("");
-            //mobs[idx].Health -= Damage;
-            if (dodge > 11)
-            {
-                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical ? "- 치명타 공격!!" : "")}");
+            if(dodge > 11){
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
                 mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
@@ -489,6 +486,19 @@ namespace TextRpg
                 if (mobs[idx].IsDead)
                 {
                     deadCnt++;
+                    //경험치 
+                    Console.WriteLine(mobs[idx].Exp);
+                    player.Exp += mobs[idx].Exp;
+                    Console.WriteLine($"현재 경험치: {player.Exp}");
+                    Console.WriteLine("");
+
+                    //골드
+                    int goldRandom = new Random().Next(5, 10);
+                    int addGold = (mobs[idx].Gold / goldRandom);
+                    Console.WriteLine(mobs[idx].Gold);
+                    player.Gold += addGold;
+                    Console.WriteLine($"획득한 골드 : {addGold}");
+                    Console.WriteLine($"소지 골드: {player.Gold}");
                     player.Exp += mobs[idx].Exp;
                     LevelController();
                 }
@@ -568,6 +578,7 @@ namespace TextRpg
                 Console.WriteLine($"Lv.{player.Level} {player.Name}");
                 Console.WriteLine($"HP {originalHP} -> {player.Health}");
                 Console.WriteLine("");
+
             }
             else
             {
@@ -762,10 +773,16 @@ namespace TextRpg
             }
 
             Console.Clear();
-            Console.WriteLine($"마나포션 개수: {count}");
+            Console.Write($"마나포션 개수: ");
+            fontColor.WriteColorFont($"{count}", FontColor.Color.DarkCyan);
+            Console.WriteLine("");
+            Console.WriteLine("");
+
             if (count <= 0)
             {
-                Console.WriteLine("포션이 부족합니다.");
+                fontColor.WriteColorFont("포션이 부족합니다!", FontColor.Color.DarkRed);
+                Console.WriteLine("");
+                Console.WriteLine("");
                 Console.WriteLine("전투화면으로 돌아갑니다.");
                 Console.WriteLine("아무 키나 입력해주세요.");
                 Console.ReadKey();

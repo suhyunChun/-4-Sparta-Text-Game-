@@ -48,12 +48,17 @@ namespace TextRpg.Player
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; }
         // 공격 = 일반 공격. 공격, 치명타, 회피 등을 체크 후 피해를 줌.
-        public int Attack(ICharacter target);
+
+        /// <summary>
+        /// player의 현재 atk로 target을 때리거나
+        /// target이 공격할 때 현재 player의 def로 막기 위해 파라미터 추가
+        /// </summary>
+        public int Attack(Job player, ICharacter target);
         // 기술 1번 = 사용 기술. 각 직업마다의 1번 기술 및 몬스터의 1번 기술. 몬스터는 없을 시 사용 못함.
-        public int Skill_1(ICharacter target);
+        public int Skill_1(Job player, ICharacter target);
         // 기술 2번 = 사용 기술. 각 직업마다의 2번 기술 및 몬스터의 2번 기술. 플레이어의 레벨이 5를 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public int Skill_2(ICharacter target);
+        public int Skill_2(Job player, ICharacter target);
         // 기술 3번 = 사용 기술. 각 직업마다의 3번 기술 및 몬스터의 3번 기술. 플레이어의 레벨이 10을 달성하면 해금됨. 몬스터는 없을 시 사용 못함.
-        public int Skill_3(ICharacter target);
+        public int Skill_3(Job player, ICharacter target);
     }
 }

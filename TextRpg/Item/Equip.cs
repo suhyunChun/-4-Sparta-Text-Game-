@@ -17,6 +17,11 @@ namespace TextRpg.Item
         // 공격력
         private int Atk;
 
+        public int atk
+        {
+            get { return Atk; }
+            set { Atk = value; }
+        }
         // public static int ItemCnt = 0;
 
         public void Drop()
@@ -30,6 +35,7 @@ namespace TextRpg.Item
             }
         }
 
+        // 아이템 방어력 계산, 아이템중 weapon을 들고와 BonusDef를 return
         public int BonusStatus(Inventory inventory)
         {
             int BonusAtk = 0;
@@ -39,14 +45,14 @@ namespace TextRpg.Item
             {
                 if (equip is Weapon && equip.IsEquiped == true)
                 {
-                    BonusAtk += Atk;
+                    return BonusAtk += Atk;
                 }
+               
             }
 
             return BonusAtk;
 
         }
-
 
         public void Use(Job player) //장착
         {
@@ -67,6 +73,12 @@ namespace TextRpg.Item
     {
         private int Def;
 
+        public int def
+        {
+            get { return Def; }
+            set { Def = value; }
+        }
+        // 아이템 방어력 계산, 아이템중 아머를 들고와 BonusDef를 return
         public int BonusStatus(Inventory inventory)
         {
             int BonusDef = 0;
@@ -76,8 +88,9 @@ namespace TextRpg.Item
             {
                 if (equip is Armor && equip.IsEquiped == true)
                 {
-                    BonusDef += Def;
+                    return BonusDef += Def;
                 }
+
             }
 
             return BonusDef;
