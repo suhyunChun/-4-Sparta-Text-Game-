@@ -104,6 +104,7 @@ namespace TextRpg
         private static void SelectedJobMenu(string playerName, int cursor)
         {
             Console.Clear();
+            Console.CursorVisible = false;
             fontColor.WriteColorFont($"{playerName}", FontColor.Color.DarkYellow);
             Console.WriteLine(" 님 반갑습니다!");
             Console.WriteLine("먼저 직업을 선택해주세요.");
