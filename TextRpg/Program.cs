@@ -1230,7 +1230,6 @@ namespace TextRpg
             fontColor = new FontColor();
             //Console.SetWindowSize(82, 30);
             PrintStartScene();
-            PlayerInputName();
 
             // 아이디 입력
             
