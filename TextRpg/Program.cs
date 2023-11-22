@@ -175,6 +175,14 @@ namespace TextRpg
                 // 아이템 추가 목록
                 Items load = ItemFind(i);
                 inventory.invenItems.Add(load);
+                if (load is HealingPotion || load is ManaPotion)
+                {
+                    inventory.potionItems.Add(load);
+                }
+                else if (load is Weapon || load is Armor)
+                {
+                    inventory.equipmentItems.Add(load);
+                }
             }
         }
 
