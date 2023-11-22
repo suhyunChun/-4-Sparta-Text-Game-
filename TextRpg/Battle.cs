@@ -45,7 +45,7 @@ namespace TextRpg
             items = _inventory.invenItems;
             inventory = _inventory;
             deadCnt = 0;
-            originalHP = _player.MaxHealth;
+            originalHP = _player.Health;
             ApperMonster();
 
             fontColor = new FontColor();
