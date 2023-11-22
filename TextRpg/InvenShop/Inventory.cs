@@ -68,16 +68,16 @@ namespace TextRpg.InvenShop
                     Console.WriteLine("");
                     break;
                 case 1:
-                    Console.WriteLine(" - 등급 순");
+                    Console.WriteLine(" - 높은 등급 순");
                     break;
                 case 2:
-                    Console.WriteLine(" - 등급 역순");
+                    Console.WriteLine(" - 낮은 등급 순");
                     break;
                 case 3:
-                    Console.WriteLine(" - 가격 순");
+                    Console.WriteLine(" - 높은 가격 순");
                     break;
                 case 4:
-                    Console.WriteLine(" - 가격 역순");
+                    Console.WriteLine(" - 낮은 가격 순");
                     break;
             }
             Console.WriteLine("");
@@ -242,21 +242,7 @@ namespace TextRpg.InvenShop
             }
             switch (arraySortNum)
             {
-                case 1://아이템 등급 순서대로 오름정렬
-                    for (int i = 0; i < ItemCnt - 1; i++)
-                    {
-                        for (int j = i + 1; j < ItemCnt; j++)
-                        {
-                            if (invenItems[i].Grade > invenItems[j].Grade)
-                            {
-                                emptyItem = invenItems[i];
-                                invenItems[i] = invenItems[j];
-                                invenItems[j] = emptyItem;
-                            }
-                        }
-                    }
-                    break;
-                case 2://아이템 등급 순서대로 내림정렬
+                case 1://아이템 등급 순서대로 내림정렬
                     for (int i = 0; i < ItemCnt - 1; i++)
                     {
                         for (int j = i + 1; j < ItemCnt; j++)
@@ -270,12 +256,12 @@ namespace TextRpg.InvenShop
                         }
                     }
                     break;
-                case 3://아이템 가격 순서대로 오름정렬
+                case 2://아이템 등급 순서대로 오름정렬
                     for (int i = 0; i < ItemCnt - 1; i++)
                     {
                         for (int j = i + 1; j < ItemCnt; j++)
                         {
-                            if (invenItems[i].Price > invenItems[j].Price)
+                            if (invenItems[i].Grade > invenItems[j].Grade)
                             {
                                 emptyItem = invenItems[i];
                                 invenItems[i] = invenItems[j];
@@ -284,12 +270,26 @@ namespace TextRpg.InvenShop
                         }
                     }
                     break;
-                case 4://아이템 가격 순서대로 내림정렬
+                case 3://아이템 가격 순서대로 내림정렬
                     for (int i = 0; i < ItemCnt - 1; i++)
                     {
                         for (int j = i + 1; j < ItemCnt; j++)
                         {
                             if (invenItems[i].Price < invenItems[j].Price)
+                            {
+                                emptyItem = invenItems[i];
+                                invenItems[i] = invenItems[j];
+                                invenItems[j] = emptyItem;
+                            }
+                        }
+                    }
+                    break;
+                case 4://아이템 가격 순서대로 오름정렬
+                    for (int i = 0; i < ItemCnt - 1; i++)
+                    {
+                        for (int j = i + 1; j < ItemCnt; j++)
+                        {
+                            if (invenItems[i].Price > invenItems[j].Price)
                             {
                                 emptyItem = invenItems[i];
                                 invenItems[i] = invenItems[j];
