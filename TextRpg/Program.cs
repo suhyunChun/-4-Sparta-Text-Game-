@@ -305,7 +305,7 @@ namespace TextRpg
                     int mp = 10 + Int * 2;
                     player = new Warrior(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    player = Registration(Pname, Domain);
+                    Registration(Pname, Domain);
                     StartMenu(player.Occupation, 1);
                     break;
                 case 2:
@@ -316,7 +316,7 @@ namespace TextRpg
                     mp = 10 + Int * 2;
                     player = new Mage(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    player = Registration(Pname, Domain);
+                    Registration(Pname, Domain);
                     StartMenu(player.Occupation, 1);
                     break;
                 case 3:
@@ -327,7 +327,7 @@ namespace TextRpg
                     mp = 10 + Int * 2;
                     player = new Archer(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    player = Registration(Pname, Domain);
+                    Registration(Pname, Domain);
                     StartMenu(player.Occupation, 1);
                     break;
             }
@@ -1134,7 +1134,7 @@ namespace TextRpg
         }
 
         // 계정 등록
-        private static Job Registration(string id, DirectoryInfo domain)
+        private static void Registration(string id, DirectoryInfo domain)
         {
 
             
@@ -1175,9 +1175,6 @@ namespace TextRpg
             string directory = domain.FullName + @"\" + fileName;
             // 데이터 파일 생성 (프로젝트 이름\bin\Debug\net6.0 경로에 저장)
             File.WriteAllText(directory, account.ToString());
-            string json = File.ReadAllText(directory);
-            memberPath = JsonConvert.DeserializeObject<Job>(json);
-            return memberPath;
         }
 
         // 로그인
@@ -1219,7 +1216,18 @@ namespace TextRpg
             savePath = saves[select].FullName;
             json = File.ReadAllText(savePath);
             memberPath = JsonConvert.DeserializeObject<Job>(json);
-            player = memberPath;
+            switch (memberPath.Occupation)
+            {
+                case "전사":
+                    player = JsonConvert.DeserializeObject<Warrior>(json);
+                    break;
+                case "마법사":
+                    player = JsonConvert.DeserializeObject<Mage>(json);
+                    break;
+                case "궁수":
+                    player = JsonConvert.DeserializeObject<Archer>(json);
+                    break;
+            }
             inventory = new Inventory(player);
             LoadInventorySetting(inventory, memberPath);
             // 아이디 확정 후 리턴
