@@ -23,7 +23,8 @@ namespace TextRpg
     internal class Program
     {
         // 경로 설정
-        DirectoryInfo Domain;
+        static DirectoryInfo Domain;
+        static string[] domainNum;
         static List<Items> item;
         static Inventory inventory;
         static Shop shop;
@@ -33,7 +34,6 @@ namespace TextRpg
         static Items items;
         static Battle battle;
         static FontColor fontColor;
-
         delegate void func1(string str, int cursor);
         delegate void func2(int cursor);
         delegate void func3(int idx, int cursor);
@@ -297,7 +297,8 @@ namespace TextRpg
                     int mp = 10 + Int * 2;
                     player = new Warrior(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    GameItemSetting(shop);
+                    player = Registration(Pname, Domain);
+                    StartMenu(player.Occupation, 1);
                     break;
                 case 2:
                     Str = 2;
@@ -307,7 +308,8 @@ namespace TextRpg
                     mp = 10 + Int * 2;
                     player = new Mage(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    GameItemSetting(shop);
+                    player = Registration(Pname, Domain);
+                    StartMenu(player.Occupation, 1);
                     break;
                 case 3:
                     Str = 2;
@@ -317,7 +319,8 @@ namespace TextRpg
                     mp = 10 + Int * 2;
                     player = new Archer(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
                     inventory = new Inventory(player);
-                    GameItemSetting(shop);
+                    player = Registration(Pname, Domain);
+                    StartMenu(player.Occupation, 1);
                     break;
             }
         }
@@ -420,22 +423,26 @@ namespace TextRpg
                 HighlightText("3. 상점");
             else
                 Console.WriteLine("3. 상점");
+            if (cursor == 4)
+                HighlightText("4. 데이터 저장");
+            else
+                Console.WriteLine("4. 데이터 저장");
             Console.WriteLine("");
 
-            if (cursor == 4)
+            if (cursor == 5)
             {
                 Console.BackgroundColor = ConsoleColor.White;
-                fontColor.WriteColorFont("4. 던전입장", FontColor.Color.DarkRed);
+                fontColor.WriteColorFont("5. 던전입장", FontColor.Color.DarkRed);
                 Console.WriteLine("\n");
             }
             else
             {
-                fontColor.WriteColorFont("4. 던전입장", FontColor.Color.DarkRed);
+                fontColor.WriteColorFont("5. 던전입장", FontColor.Color.DarkRed);
                 Console.WriteLine("\n");
 
             }
 
-            SetCursor(1, 4, cursor, occupation, StartMenu);
+            SetCursor(1, 5, cursor, occupation, StartMenu);
 
             switch (cursor)
             {
@@ -449,9 +456,74 @@ namespace TextRpg
                     ShopMenu(1);
                     break;
                 case 4:
+                    SaveData(1);
+                    break;
+                case 5:
                     battle = new Battle(player, inventory);
                     battle.BattleScene(1);
                     //StageSelected();
+                    break;
+            }
+
+        }
+
+        private static void SaveData(int cursor)
+        {
+            Console.Clear();
+            var (bonusAtk, bonusDef) = PlusStatus();
+            string playerLevel = player.Level.ToString("00");
+
+            fontColor.WriteColorFont("[ 데이터 저장 ]", FontColor.Color.Magenta);
+            Console.WriteLine("\n");
+            Console.WriteLine("캐릭터의 정보를 저장하는 곳입니다.");
+            Console.WriteLine("");
+
+            Console.Write("플레이어 이름: ");
+            fontColor.WriteColorFont($"{player.Name} ", FontColor.Color.DarkYellow);
+            fontColor.WriteColorFont($"({player.Occupation})", FontColor.Color.DarkGreen);
+            Console.WriteLine("\n");
+
+            Console.Write("LV: ");
+            fontColor.WriteColorFont($"{playerLevel}", FontColor.Color.Yellow);
+            Console.WriteLine("\n");
+            Console.WriteLine($"경험치: {player.Exp} / {player.MaxExp}");
+            Console.WriteLine("");
+
+            Console.Write($"공격력: {player.PlusAtk} + ");
+            Console.Write("(");
+            fontColor.WriteColorFont($"{bonusAtk}", FontColor.Color.Cyan);
+            Console.Write(")");
+            Console.WriteLine("");
+
+            Console.Write($"방어력: {player.PlusDef} + ");
+            Console.Write("(");
+            fontColor.WriteColorFont($"{bonusDef}", FontColor.Color.Cyan);
+            Console.Write(")");
+            Console.WriteLine("");
+
+            Console.WriteLine($"체력: {player.Health} / {player.MaxHealth}");
+            Console.WriteLine($"마나: {player.Mana} / {player.MaxMana}");
+            Console.WriteLine($"소지골드: {player.Gold}");
+            Console.WriteLine(" ");
+
+            Console.WriteLine("데이터를 저장하시겠습니까?");
+
+            if (cursor == 1)
+                HighlightText("1. 네");
+            else
+                Console.WriteLine("1. 네");
+            if (cursor == 2)
+                HighlightText("2. 아니요");
+            else
+                Console.WriteLine("2. 아니요");
+            SetCursor(1, 2, cursor, SaveData);
+            switch (cursor)
+            {
+                case 1:
+                    Save(1);
+                    break;
+                case 2:
+                    StartMenu(player.Occupation, 1);
                     break;
             }
 
@@ -1042,13 +1114,13 @@ namespace TextRpg
         {
             return new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + @"save");
         }
-        private static string[] Folder(DirectoryInfo domain)
+        private static string[] Folder()
         {
-            if (!domain.Exists)
+            if (!Domain.Exists)
             {
-                domain.Create();
+                Domain.Create();
             }
-            return Directory.GetFiles(domain.ToString(), "*.json");
+            return Directory.GetFiles(Domain.ToString(), "*.json");
         }
 
         // 계정 등록
@@ -1099,10 +1171,13 @@ namespace TextRpg
         }
 
         // 로그인
-        private static Job Login(DirectoryInfo domain)
+        private static void Login(int cursor)
         {
+            Console.Clear();
+            Console.WriteLine("헤네시스에 오신걸 환영합니다.");
+            Console.WriteLine("저장된 기록을 불러옵니다.");
             // 변수 지정
-            FileInfo[] saves = domain.GetFiles();
+            FileInfo[] saves = Domain.GetFiles();
             List<string> saveId = new List<string> { };
             string savePath;
             string json;
@@ -1120,43 +1195,32 @@ namespace TextRpg
                 memberPath = JsonConvert.DeserializeObject<Job>(json);
                 saveId.Add(memberPath.Id);
                 // 커서 적용 필요
-                Console.WriteLine($"{num + 1}. {memberPath.Id}   ");
+                if(cursor==num+1)
+                    HighlightText($"{num + 1}. {memberPath.Id}   ");
+                else
+                    Console.WriteLine($"{num + 1}. {memberPath.Id}   ");
             }
+            SetCursor(1, saves.Length, cursor, Login);
             // 아이디 선택
             Console.WriteLine();
-            string input = Console.ReadLine();
-            if (input == "") input = "0";
-            int inputisint = int.Parse(input);
-            bool b = false;
-            while (b == false)
-            {
-                if (inputisint > 0 && inputisint <= saves.Length)
-                {
-                    b = true;
-                }
-                else
-                {
-                    Console.WriteLine("옳지 않은 번호입니다. 다시 써주세요.");
-                    input = Console.ReadLine();
-                    if (input == "") input = "0";
-                    inputisint = int.Parse(input);
-                }
-            }
+
             // 아이디 다시 불러오기
-            int select = int.Parse(input) - 1;
+            int select = cursor - 1;
             savePath = saves[select].FullName;
             json = File.ReadAllText(savePath);
             memberPath = JsonConvert.DeserializeObject<Job>(json);
-            inventory = new Inventory(memberPath);
+            player = memberPath;
+            inventory = new Inventory(player);
             LoadInventorySetting(inventory, memberPath);
             // 아이디 확정 후 리턴
-            Console.WriteLine($"{memberPath.Name} 을(를) 불러 옵니다.");
-
-            return memberPath;
+            Console.WriteLine($"ID : {memberPath.Id} \n캐릭터 명 : {memberPath.Name} 을(를) 불러 옵니다.");
+            Thread.Sleep(2000);
+            player = memberPath;
+            StartMenu(player.Occupation, 1);
         }
 
         // 계정 저장
-        private static Job Save(DirectoryInfo domain)
+        private static void Save(int cursor)
         {
             Console.Clear();
             // 변수 지정
@@ -1164,77 +1228,75 @@ namespace TextRpg
             JArray itemlist = new JArray();
             // 파일 경로 설정
             string fileName = $"{player.Id}.json";
-            string directory = domain.FullName + @"\" + fileName;
+            string directory = Domain.FullName + @"\" + fileName;
             // 시작
             Console.WriteLine("저장하기");
             Console.WriteLine("자신의 캐릭터를 저장합니다.");
-            Console.WriteLine("단, 사용한 물약의 효과는 저장되지 않습니다.");
+            fontColor.WriteColorFont("단, 사용한 물약의 효과는 저장되지 않습니다.", FontColor.Color.Red);
             Console.WriteLine("저장하시겠습니까?");
             Console.WriteLine();
-            Console.WriteLine("1. 네");
-            Console.WriteLine("0. 아니오");
-            Console.WriteLine();
             // 커서 적용 필요
-            string input = Console.ReadLine();
-            if (input == "1")
+
+            if (cursor == 1)
+                HighlightText("1. 네");
+            else
+                Console.WriteLine("1. 네");
+            if (cursor == 2)
+                HighlightText("2. 아니요");
+            else
+                Console.WriteLine("2. 아니요");
+            SetCursor(1, 2, cursor, Save);
+            switch (cursor)
             {
-                // 아이템 저장 시작
-                foreach (var item in player.Item)
-                {
-                    itemlist.Add(item);
-                }
-                // 값 저장
-                account.Add("Id", player.Id);
-                account.Add("Name", player.Name);
-                account.Add("Occupation", player.Occupation);
-                account.Add("Level", player.Level);
-                account.Add("MaxExp", player.MaxExp);
-                account.Add("Exp", player.Exp);
-                account.Add("Strength", player.Strength);
-                account.Add("Agility", player.Agility);
-                account.Add("Intelligence", player.Intelligence);
-                account.Add("Health", player.Health);
-                account.Add("Mana", player.Mana);
-                account.Add("PlusAtk", player.PlusAtk);
-                account.Add("PlusDef", player.PlusDef);
-                account.Add("Gold", player.Gold);
-                account.Add("Weapon", player.Weapon);
-                account.Add("Armor", player.Armor);
+                case 1:
+                    // 아이템 저장 시작
+                    foreach (var item in player.Item)
+                    {
+                        itemlist.Add(item);
+                    }
+                    // 값 저장
+                    account.Add("Id", player.Id);
+                    account.Add("Name", player.Name);
+                    account.Add("Occupation", player.Occupation);
+                    account.Add("Level", player.Level);
+                    account.Add("MaxExp", player.MaxExp);
+                    account.Add("Exp", player.Exp);
+                    account.Add("Strength", player.Strength);
+                    account.Add("Agility", player.Agility);
+                    account.Add("Intelligence", player.Intelligence);
+                    account.Add("Health", player.Health);
+                    account.Add("Mana", player.Mana);
+                    account.Add("PlusAtk", player.PlusAtk);
+                    account.Add("PlusDef", player.PlusDef);
+                    account.Add("Gold", player.Gold);
+                    account.Add("Weapon", player.Weapon);
+                    account.Add("Armor", player.Armor);
 
-                FirstInventorySetting(inventory);
+                    //FirstInventorySetting(inventory);
 
-                foreach (int item in player.Item)
-                {
-                    itemlist.Add(item);
-                }
+                    account.Add("Item", itemlist);
 
-                account.Add("Item", itemlist);
+                    // 데이터 덮어쓰기 (프로젝트 이름\bin\Debug\net6.0 경로에 저장)
+                    File.Delete(directory);
+                    File.WriteAllText(directory, account.ToString());
 
-                // 데이터 덮어쓰기 (프로젝트 이름\bin\Debug\net6.0 경로에 저장)
-                File.Delete(directory);
-                File.WriteAllText(directory, account.ToString());
+                    string json = File.ReadAllText(directory);
+                    Job memberPath = JsonConvert.DeserializeObject<Job>(json);
+                    player = memberPath;
+
+                    fontColor.WriteColorFont("정상적으로 저장되었습니다.", FontColor.Color.Blue);
+                    Thread.Sleep(2000);
+                    StartMenu(player.Occupation, 1);
+                    break;
+                case 2:
+                    StartMenu(player.Occupation, 1);
+                    break;
             }
-            string json = File.ReadAllText(directory);
-            Job memberPath = JsonConvert.DeserializeObject<Job>(json);
-            // 이름 리턴
-            return memberPath;
         }
-
-        // 메인
-        static void Main(string[] args)
+        private static void DataSetting(int cursor)
         {
-            shop = new Shop();
-            DirectoryInfo Domain = FolderSet();
-            string[] domainNum = Folder(Domain);
-
-            fontColor = new FontColor();
-            //Console.SetWindowSize(82, 30);
-            PrintStartScene();
-
             // 아이디 입력
-            
             Console.Clear();
-
             if (domainNum.Length == 0)
             {
                 Console.WriteLine("저장된 기록이 없습니다. ID를 입력해주세요.");
@@ -1244,46 +1306,66 @@ namespace TextRpg
 
                 PlayerInputName();
                 // 플레이어 재정의
-                player = Registration(Pname, Domain);
-                StartMenu(player.Occupation, 1);
+                //player = Registration(Pname, Domain);
+                //StartMenu(player.Occupation, 1);
             }
             else
             {
                 Console.WriteLine("저장된 기록이 존재합니다.");
-                Console.WriteLine("1. 불러오기");
-                Console.WriteLine("2. 새로 만들기");
                 // 커서 적용 필요
-                string input = Console.ReadLine();
-                if(input == "1")
+                if (cursor == 1)
+                    HighlightText("1. 불러오기");
+                else
+                    Console.WriteLine("1. 불러오기");
+                if (cursor == 2)
+                    HighlightText("2. 새로 만들기");
+                else
+                    Console.WriteLine("2. 새로 만들기");
+                Console.WriteLine("");
+                SetCursor(1, 2, cursor, DataSetting);
+                //string input = Console.ReadLine();
+                switch (cursor)
                 {
-                    Console.WriteLine("저장된 기록을 불러옵니다.");
-                    // 플레이어 재정의
-                    player = Login(Domain);
-                    Console.WriteLine("헤네시스에 오신걸 환영합니다.");
-
-                    wmp = new WindowsMediaPlayer();
-                    string executableFilePath = Assembly.GetEntryAssembly().Location;
-                    string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
-                    string audioFilePath = Path.Combine(executableDirectoryPath, "henesys.wav");
-                    wmp.URL = audioFilePath;
-                    wmp.controls.play();
-                    wmp.settings.volume = 5;
-                } else
-                {
-                    Console.WriteLine("새 기록을 새로 만듭니다.");
-                    Console.WriteLine("이미 존재하는 기록의 이름을 입력 시 덮어쓰기가 됩니다.");
-                    Pname = Console.ReadLine();
-                    Console.WriteLine("정상적으로 등록되었습니다.");
-                    Thread.Sleep(2000);
-
-                    PlayerInputName();
-                    // 플레이어 재정의
-                    player = Registration(Pname, Domain);
+                    case 1:
+                        wmp = new WindowsMediaPlayer();
+                        string executableFilePath = Assembly.GetEntryAssembly().Location;
+                        string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
+                        string audioFilePath = Path.Combine(executableDirectoryPath, "Sounds", "henesys.wav");
+                        wmp.URL = audioFilePath;
+                        wmp.controls.play();
+                        wmp.settings.volume = 5;
+                        // 플레이어 재정의
+                        Login(1);
+                        break;
+                    case 2:
+                        Console.WriteLine("새 기록을 새로 만듭니다.");
+                        Console.WriteLine("이미 존재하는 기록의 이름을 입력 시 덮어쓰기가 됩니다.");
+                        Console.WriteLine("ID를 입력해주세요.");
+                        Pname = Console.ReadLine();
+                        Console.WriteLine("정상적으로 등록되었습니다.");
+                        Thread.Sleep(2000);
+                        PlayerInputName();
+                        // 플레이어 재정의
+                        break;
                 }
-                StartMenu(player.Occupation, 1);
             }
+        }
+        // 메인
+        static void Main(string[] args)
+        {
+            shop = new Shop();
+            GameItemSetting(shop);
+            Domain = FolderSet();
+            domainNum = Folder();
 
-            
+            fontColor = new FontColor();
+            //Console.SetWindowSize(82, 30);
+            PrintStartScene();
+                        
+
+            DataSetting(1);
+
+
 
 
 
