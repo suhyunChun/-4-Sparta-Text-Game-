@@ -17,18 +17,6 @@ namespace TextRpg.Player
             {
                 IsDead = true;
             }
-
-            if (Exp >= 100)
-            {
-                Level++;
-                MaxExp += 50;
-                Strength += 2;
-                Agility++;
-                Intelligence++;
-                Health = MaxHealth;
-                Mana = MaxMana;
-                Exp = 0;
-            }
         }
 
         public override int Skill_1(Job player, ICharacter target)
