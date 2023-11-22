@@ -187,7 +187,7 @@ namespace TextRpg.InvenShop
         {
             // 토글
             invenItems[num].IsEquiped = !invenItems[num].IsEquiped;
-            Program.player.EquippedList[num] = !Program.player.EquippedList[num];
+            //Program.player.EquippedList[num] = !Program.player.EquippedList[num];
             if (invenItems[num] is Weapon)
             {
                 for (int i = 0; i < invenItems.Count; i++)
@@ -211,7 +211,10 @@ namespace TextRpg.InvenShop
                     }
                 }
             }
-
+            for(int i = 0; i < invenItems.Count; i++)
+            {
+                Program.player.EquippedList[i] = invenItems[i].IsEquiped;
+            }
             // 포션 여러개 장착 이슈로 삭제
         }
         //아이템 분류
@@ -426,6 +429,7 @@ namespace TextRpg.InvenShop
                 Console.WriteLine($"현재 소지금액: {player.Gold}");
                 Console.WriteLine("");
                 Console.WriteLine("아무키나 입력하시면 상점으로 이동합니다.");
+                player.EquippedList.RemoveAt(index);
                 player.Item.Remove(invenItems[index].Id);
                 invenItems.RemoveAt(index);
                 Console.ReadLine();
@@ -449,6 +453,7 @@ namespace TextRpg.InvenShop
                 Console.WriteLine($"아이템이 삭제되었습니다: {removeItem.Name}");
                 Console.WriteLine("아무키나 입력하시면 인벤토리로 이동합니다.");
                 Player.Item.Remove(invenItems[index].Id);
+                Player.EquippedList.RemoveAt(index);
                 invenItems.RemoveAt(index);
                 Console.ReadLine();
             }
@@ -467,13 +472,13 @@ namespace TextRpg.InvenShop
                     // 장착하지 않은 포션일 경우 패스
                     if (!hpPotion.IsEquiped)
                         continue;
-
+                    
                     // hpPotion을 사용하고 remove해줌
                     // 하나만 사용해야 하기 때문에 사용시 바로 break로 반복문 탈출
                     hpPotion.Use(player);
                     Player.Item.Remove(hpPotion.Id);
+                    Player.EquippedList.RemoveAt(invenItems.IndexOf(hpPotion));
                     invenItems.Remove(hpPotion);
-
                     break;
                 }
             }
@@ -492,6 +497,7 @@ namespace TextRpg.InvenShop
 
                     mpPotion.Use(player);
                     Player.Item.Remove(mpPotion.Id);
+                    Player.EquippedList.RemoveAt(invenItems.IndexOf(mpPotion));
                     invenItems.Remove(mpPotion);
 
                     break;
