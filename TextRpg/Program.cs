@@ -247,6 +247,7 @@ namespace TextRpg
             string audioFilePath = Path.Combine(executableDirectoryPath, "Sounds", "henesys.wav");
             wmp.URL = audioFilePath;
             wmp.controls.play();
+            
             wmp.settings.volume = 5;
 
             // 공백시 입장 불가
