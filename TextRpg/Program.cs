@@ -15,6 +15,7 @@ using TextRpg.Item;
 using TextRpg.Player;
 using WMPLib;
 using System.Diagnostics.Metrics;
+using System.Threading;
 
 
 namespace TextRpg
@@ -1064,7 +1065,7 @@ namespace TextRpg
                 json = File.ReadAllText(savePath);
                 memberPath = JsonConvert.DeserializeObject<Job>(json);
                 saveId.Add(memberPath.Id);
-                // 커서로 변경
+                // 커서 적용 필요
                 Console.WriteLine($"{num + 1}. {memberPath.Id}   ");
             }
             // 아이디 선택
@@ -1096,13 +1097,77 @@ namespace TextRpg
             LoadInventorySetting(inventory, memberPath);
             // 아이디 확정 후 리턴
             Console.WriteLine($"{memberPath.Name} 을(를) 불러 옵니다.");
+
             return memberPath;
         }
 
+        // 계정 저장
+        private static Job Save(DirectoryInfo domain)
+        {
+            Console.Clear();
+            // 변수 지정
+            JObject account = new JObject();
+            JArray itemlist = new JArray();
+            // 파일 경로 설정
+            string fileName = $"{player.Id}.json";
+            string directory = domain.FullName + @"\" + fileName;
+            // 시작
+            Console.WriteLine("저장하기");
+            Console.WriteLine("자신의 캐릭터를 저장합니다.");
+            Console.WriteLine("단, 사용한 물약의 효과는 저장되지 않습니다.");
+            Console.WriteLine("저장하시겠습니까?");
+            Console.WriteLine();
+            Console.WriteLine("1. 네");
+            Console.WriteLine("0. 아니오");
+            Console.WriteLine();
+            // 커서 적용 필요
+            string input = Console.ReadLine();
+            if (input == "1")
+            {
+                // 아이템 저장 시작
+                foreach (var item in player.Item)
+                {
+                    itemlist.Add(item);
+                }
+                // 값 저장
+                account.Add("Id", player.Id);
+                account.Add("Name", player.Name);
+                account.Add("Occupation", player.Occupation);
+                account.Add("Level", player.Level);
+                account.Add("MaxExp", player.MaxExp);
+                account.Add("Exp", player.Exp);
+                account.Add("Strength", player.Strength);
+                account.Add("Agility", player.Agility);
+                account.Add("Intelligence", player.Intelligence);
+                account.Add("Health", player.Health);
+                account.Add("Mana", player.Mana);
+                account.Add("PlusAtk", player.PlusAtk);
+                account.Add("PlusDef", player.PlusDef);
+                account.Add("Gold", player.Gold);
+                account.Add("Weapon", player.Weapon);
+                account.Add("Armor", player.Armor);
 
+                FirstInventorySetting(inventory);
 
-            // 메인
-            static void Main(string[] args)
+                foreach (int item in player.Item)
+                {
+                    itemlist.Add(item);
+                }
+
+                account.Add("Item", itemlist);
+
+                // 데이터 덮어쓰기 (프로젝트 이름\bin\Debug\net6.0 경로에 저장)
+                File.Delete(directory);
+                File.WriteAllText(directory, account.ToString());
+            }
+            string json = File.ReadAllText(directory);
+            Job memberPath = JsonConvert.DeserializeObject<Job>(json);
+            // 이름 리턴
+            return memberPath;
+        }
+
+        // 메인
+        static void Main(string[] args)
         {
             shop = new Shop();
             DirectoryInfo Domain = FolderSet();
@@ -1130,8 +1195,37 @@ namespace TextRpg
             }
             else
             {
-                // 플레이어 재정의
-                player = Login(Domain);
+                Console.WriteLine("저장된 기록이 존재합니다.");
+                Console.WriteLine("1. 불러오기");
+                Console.WriteLine("2. 새로 만들기");
+                // 커서 적용 필요
+                string input = Console.ReadLine();
+                if(input == "1")
+                {
+                    Console.WriteLine("저장된 기록을 불러옵니다.");
+                    // 플레이어 재정의
+                    player = Login(Domain);
+                    Console.WriteLine("헤네시스에 오신걸 환영합니다.");
+
+                    wmp = new WindowsMediaPlayer();
+                    string executableFilePath = Assembly.GetEntryAssembly().Location;
+                    string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
+                    string audioFilePath = Path.Combine(executableDirectoryPath, "henesys.wav");
+                    wmp.URL = audioFilePath;
+                    wmp.controls.play();
+                    wmp.settings.volume = 5;
+                } else
+                {
+                    Console.WriteLine("새 기록을 새로 만듭니다.");
+                    Console.WriteLine("이미 존재하는 기록의 이름을 입력 시 덮어쓰기가 됩니다.");
+                    Pname = Console.ReadLine();
+                    Console.WriteLine("정상적으로 등록되었습니다.");
+                    Thread.Sleep(2000);
+
+                    PlayerInputName();
+                    // 플레이어 재정의
+                    player = Registration(Pname, Domain);
+                }
                 StartMenu(player.Occupation, 1);
             }
 
