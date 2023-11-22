@@ -158,7 +158,7 @@ namespace TextRpg.InvenShop
                 Console.WriteLine("아무키나 입력하여 다음행동을 진행해주세요");
                 Console.ReadLine();
                 inventory.AddItem(purchasedItem, player);
-
+                player.EquippedList.Add(false);
                 shopItems.RemoveAt(index);
                 
             }

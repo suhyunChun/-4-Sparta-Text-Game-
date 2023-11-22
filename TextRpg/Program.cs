@@ -743,6 +743,7 @@ namespace TextRpg
                         player.Item.Remove(inventory.potionItems[indexItem].Id);
                         inventory.invenItems.Remove(inventory.potionItems[indexItem]);
                         inventory.potionItems.RemoveAt(indexItem);
+                        player.EquippedList.RemoveAt(indexItem);
                     }
                 }
                 else if (inventory.potionItems[indexItem].Kind == "마나포션")//마나포션부분
@@ -764,6 +765,7 @@ namespace TextRpg
                         player.Item.Remove(inventory.potionItems[indexItem].Id);
                         inventory.invenItems.Remove(inventory.potionItems[indexItem]);
                         inventory.potionItems.RemoveAt(indexItem);
+                        player.EquippedList.RemoveAt(indexItem);
                     }
                 }
             }
