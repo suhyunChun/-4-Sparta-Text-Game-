@@ -1174,10 +1174,12 @@ namespace TextRpg
             {
                 itemlist.Add(item);
                 equiplist.Add(false);
+                player.EquippedList.Add(false);
             }
 
             account.Add("Item", itemlist);
             account.Add("EquippedList", equiplist);
+
 
             // 파일 경로 설정
             string fileName = $"{id}.json";
