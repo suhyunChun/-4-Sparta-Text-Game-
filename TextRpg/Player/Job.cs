@@ -53,10 +53,11 @@ namespace TextRpg.Player
         public int Armor { get; set; }
         // 소지 아이템 = 플레이어가 소지중인 아이템들. 몬스터는 드롭 아이템 목록으로 사용.
         public List<int> Item { get; set; }
+        public List<bool> EquippedList { get; set; }
         // 죽음 여부 = 해치웠나?
         public bool IsDead { get; set; }
 
-        public Job(string id, string name, string occupation, int level, int exp, int maxexp, int strength, int agility, int intelligence, int health, int mana, float plusAtk, float plusDef, int gold, int weapon, int armor, List<int> items, bool isDead)
+        public Job(string id, string name, string occupation, int level, int exp, int maxexp, int strength, int agility, int intelligence, int health, int mana, float plusAtk, float plusDef, int gold, int weapon, int armor, List<int> items, List<bool> equippedList, bool isDead)
         {
             Id = id;
             Name = name;
@@ -74,6 +75,7 @@ namespace TextRpg.Player
             Weapon = weapon;
             Armor = armor;
             Item = items;
+            EquippedList = equippedList;
             IsDead = isDead;
             MaxExp = maxexp;
 

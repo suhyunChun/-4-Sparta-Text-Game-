@@ -11,7 +11,7 @@ namespace TextRpg.Player
         // 체력 200, 공격력 5, 방어력 15
         // 장비 장착 설정 시 아래 참고
         // string id, string name, int level, int exp, float maxexp, int Str, int Agi, int Int, int hp, int mp, float itematk, float itemdef, int gold, int weapon, int armor, List<int> items
-        public Warrior(string id, string name, int level, int exp, int maxexp, int strength, int agility, int intelligence, int health, int mana, int gold, List<int> items) : base(id, name, "전사", level, exp, maxexp, strength, agility, intelligence, health, mana, 0, 0, gold, 0, 0, items, false)
+        public Warrior(string id, string name, int level, int exp, int maxexp, int strength, int agility, int intelligence, int health, int mana, int gold, List<int> items, List<bool> equippedList) : base(id, name, "전사", level, exp, maxexp, strength, agility, intelligence, health, mana, 0, 0, gold, 0, 0, items, equippedList, false)
         {
             if (Health <= 0)
             {

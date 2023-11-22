@@ -51,6 +51,10 @@ namespace TextRpg
             fontColor = new FontColor();
 
         }
+        public Battle(Warrior w)
+        {
+
+        }
 
         /// <summary>
         /// 전투 시작하면 보게 되는 화면

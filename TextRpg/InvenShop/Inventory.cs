@@ -187,7 +187,7 @@ namespace TextRpg.InvenShop
         {
             // 토글
             invenItems[num].IsEquiped = !invenItems[num].IsEquiped;
-
+            Program.player.EquippedList[num] = !Program.player.EquippedList[num];
             if (invenItems[num] is Weapon)
             {
                 for (int i = 0; i < invenItems.Count; i++)
@@ -195,6 +195,7 @@ namespace TextRpg.InvenShop
                     if (i != num && invenItems[i] is Weapon)
                     {
                         invenItems[i].IsEquiped = false;
+                        Program.player.EquippedList[i] = false;
                     }
                 }
             }
@@ -206,6 +207,7 @@ namespace TextRpg.InvenShop
                     if (i != num && invenItems[i] is Armor)
                     {
                         invenItems[i].IsEquiped = false;
+                        Program.player.EquippedList[i] = false;
                     }
                 }
             }

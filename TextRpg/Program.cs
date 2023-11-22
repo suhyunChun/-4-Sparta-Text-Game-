@@ -184,6 +184,11 @@ namespace TextRpg
                     inventory.equipmentItems.Add(load);
                 }
             }
+            for(int i = 0; i < inventory.invenItems.Count; i++)
+            {
+                if (player.EquippedList[i])
+                    inventory.invenItems[i].IsEquiped = true;
+            }
         }
 
         private static void GameItemSetting(Shop shop)
@@ -292,6 +297,7 @@ namespace TextRpg
 
             // 임시 불러오기용 인벤토리
             List<int> items = new List<int>();
+            List<bool> tmp = new List<bool>();
             // 캐릭터를 선택한 후 inventory, shop 생성, 사실상 게임 시작부분이기 때문에 이때 생성하여 인벤토리에
             // player를 전달하기 위함
             SetCursor(1, 3, cursor, playerName, SelectedJobMenu);
@@ -303,7 +309,7 @@ namespace TextRpg
                     int Int = 2;
                     int hp = 100 + Str * 20;
                     int mp = 10 + Int * 2;
-                    player = new Warrior(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
+                    player = new Warrior(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items, tmp);
                     inventory = new Inventory(player);
                     Registration(Pname, Domain);
                     StartMenu(player.Occupation, 1);
@@ -314,7 +320,7 @@ namespace TextRpg
                     Int = 2;
                     hp = 100 + Str * 20;
                     mp = 10 + Int * 2;
-                    player = new Mage(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
+                    player = new Mage(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items, tmp);
                     inventory = new Inventory(player);
                     Registration(Pname, Domain);
                     StartMenu(player.Occupation, 1);
@@ -325,7 +331,7 @@ namespace TextRpg
                     Int = 4;
                     hp = 100 + Str * 20;
                     mp = 10 + Int * 2;
-                    player = new Archer(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items);
+                    player = new Archer(Pname, playerName, 1, 0, 10, Str, Agi, Int, hp, mp, 3000, items, tmp);
                     inventory = new Inventory(player);
                     Registration(Pname, Domain);
                     StartMenu(player.Occupation, 1);
@@ -1140,6 +1146,7 @@ namespace TextRpg
             
             JObject account = new JObject();
             JArray itemlist = new JArray();
+            JArray equiplist = new JArray();
             Job memberPath;
 
             
@@ -1166,9 +1173,11 @@ namespace TextRpg
             foreach (int item in player.Item)
             {
                 itemlist.Add(item);
+                equiplist.Add(false);
             }
 
             account.Add("Item", itemlist);
+            account.Add("EquippedList", equiplist);
 
             // 파일 경로 설정
             string fileName = $"{id}.json";
@@ -1243,6 +1252,7 @@ namespace TextRpg
             // 변수 지정
             JObject account = new JObject();
             JArray itemlist = new JArray();
+            JArray equiplist = new JArray();
             // 파일 경로 설정
             string fileName = $"{player.Id}.json";
             string directory = Domain.FullName + @"\" + fileName;
@@ -1271,6 +1281,12 @@ namespace TextRpg
                     {
                         itemlist.Add(item);
                     }
+
+                    // 아이템 장착 여부
+                    foreach (var item in player.EquippedList)
+                    {
+                        equiplist.Add(item);
+                    }
                     // 값 저장
                     account.Add("Id", player.Id);
                     account.Add("Name", player.Name);
@@ -1292,6 +1308,7 @@ namespace TextRpg
                     //FirstInventorySetting(inventory);
 
                     account.Add("Item", itemlist);
+                    account.Add("EquippedList", equiplist);
 
                     // 데이터 덮어쓰기 (프로젝트 이름\bin\Debug\net6.0 경로에 저장)
                     File.Delete(directory);
