@@ -10,6 +10,7 @@ using System.Collections;
 using System.Numerics;
 using TextRpg.Appearance;
 using System.Xml.Linq;
+using System.Reflection.Metadata.Ecma335;
 
 namespace TextRpg.InvenShop
 {
@@ -97,10 +98,10 @@ namespace TextRpg.InvenShop
                             Console.Write("- [");
                             fontColor.WriteColorFont("E", FontColor.Color.Cyan);
                             Console.Write("]");
-                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 14)}" + " | ");
+                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 15)}" + " | ");
                         }else
                         {
-                            Console.Write($"- 이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | ");
+                            Console.Write($"- 이름: {TextSort.PadRightForMixedText(item.Name, 18)} " + " | ");
                         }
                             Console.Write(
                                                     $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
@@ -135,19 +136,19 @@ namespace TextRpg.InvenShop
                     foreach (var item in invenItems)
                     {
 
-                        Console.Write("-");
-                        fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Yellow);
+                        Console.Write("- ");
+                        fontColor.WriteColorFont($"{TextSort.PadRightForMixedText($" {idx + 1} ", 4)}", FontColor.Color.Yellow);
 
                         if (item.IsEquiped)
                         {
                             Console.Write("[");
                             fontColor.WriteColorFont("E", FontColor.Color.Cyan);
                             Console.Write("]");
-                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 15)}" + " | ");
+                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 16)}" + " | ");
                         }
                         else
                         {
-                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | ");
+                            Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 18)} " + " | ");
                          }
                        
                             Console.Write(
@@ -209,28 +210,7 @@ namespace TextRpg.InvenShop
                 }
             }
 
-            else if (invenItems[num] is HealingPotion)
-            {
-                for (int i = 0; i < invenItems.Count; i++)
-                {
-                    if (i != num && invenItems[i] is HealingPotion)
-                    {
-                        invenItems[i].IsEquiped = false;
-                    }
-                }
-            }
-
-            else if (invenItems[num] is ManaPotion)
-            {
-                for (int i = 0; i < invenItems.Count; i++)
-                {
-                    if (i != num && invenItems[i] is ManaPotion)
-                    {
-                        invenItems[i].IsEquiped = false;
-                    }
-                }
-            }
-
+            // 포션 여러개 장착 이슈로 삭제
         }
         //아이템 분류
         public void InventoryArraySort()
@@ -311,15 +291,26 @@ namespace TextRpg.InvenShop
             {
                 foreach (var item in invenItems)
                 {
-                    Console.Write("-");
-                    fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Green);
+                    Console.Write("- ");
+                    fontColor.WriteColorFont($"{TextSort.PadRightForMixedText($" {idx + 1} ", 4)}", FontColor.Color.Yellow);
+
+                    if (item.IsEquiped)
+                    {
+                        Console.Write("[");
+                        fontColor.WriteColorFont("E", FontColor.Color.Cyan);
+                        Console.Write("]");
+                        Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 16)}" + " | ");
+                    }
+                    else
+                    {
+                        Console.Write($" 이름: {TextSort.PadRightForMixedText(item.Name, 18)} " + " | ");
+                    }
 
                     Console.Write(
-                        $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
-                        $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
-                        $"등급: {item.Grade} ★ " + " | " +
-                        $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
-                                                );
+                                            $"종류: {TextSort.PadRightForMixedText(item.Kind, 10)}" + " | " +
+                                            $"등급: {item.Grade} ★ " + " | " +
+                                            $"가격: {TextSort.PadRightForMixedNum(item.Price, 8)}" + " | "
+                                            );
 
                     if (item is Weapon weapon)
                     {
@@ -338,9 +329,9 @@ namespace TextRpg.InvenShop
                         Console.Write($"MP 회복량: {mpPotion.manaAmount}");
                     }
 
-                    idx++;
+                    Console.WriteLine();
 
-                    Console.WriteLine("");
+                    idx++;
                 }
             }
             else if (category == 1)
@@ -410,6 +401,19 @@ namespace TextRpg.InvenShop
             if (index >= 0 && index < invenItems.Count)
             {
                 Items sellInvenItem = invenItems[index];
+
+                if(sellInvenItem.IsEquiped)
+                {
+                    Console.Clear();
+                    fontColor.WriteColorFont("장착한 아이템은 판매할 수 없습니다!", FontColor.Color.Red);
+                    Console.WriteLine("\n");
+                    Console.WriteLine("아이템 장착 해제한 후 판매해주세요");
+                    Console.WriteLine("");
+                    Console.WriteLine("아무키나 입력하시면 상점으로 이동합니다.");
+                    Console.ReadLine();
+
+                    return;
+                }
 
                 int totalGold = player.Gold + (int)(sellInvenItem.Price * 0.8f); // 판매가격 80% - 나재민
                 player.Gold += (int)(sellInvenItem.Price * 0.8f);

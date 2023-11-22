@@ -63,7 +63,7 @@ namespace TextRpg
         // 체력 포션
         public static HealingPotion HPPotion1 = new HealingPotion(11412101, "일반 회복 물약", 1, 100, 10, false);
         public static HealingPotion RareHPPotion1 = new HealingPotion(21410101, "고급 회복 물약", 2, 200, 20, false);
-        public static HealingPotion RareHPPotion2 = new HealingPotion(21410102, "고오급 회복 물약", 2, 1000000, 20, false);
+        public static HealingPotion RareHPPotion2 = new HealingPotion(21410102, "고오급 회복 물약", 2, 1000000, 2000, false);
         // 마나 포션
         public static ManaPotion MPPotion1 = new ManaPotion(11510101, "마나 회복 물약", 1, 100, 10, false);
         // 더미
@@ -470,15 +470,19 @@ namespace TextRpg
             // 무기 합 계산
             foreach (var weapon in weapons)
             {
-                bonusAtk = weapon.BonusStatus(inventory);
-                break;
+                if(weapon != null && weapon.IsEquiped == true)
+                {
+                    bonusAtk = weapon.BonusStatus(inventory);
+                }
             }
 
             // 방어구 합 계산
             foreach (var armor in armors)
             {
-                bonusDef = armor.BonusStatus(inventory);
-                break;
+                if(armor != null && armor.IsEquiped == true)
+                {
+                    bonusDef = armor.BonusStatus(inventory);
+                }
             }
 
             // 총 합을 계산하여 plusAtk, Def설정
@@ -835,8 +839,10 @@ namespace TextRpg
             fontColor.WriteColorFont("[ 아이템 구매 ]", FontColor.Color.Magenta);
             Console.WriteLine("\n");
             Console.WriteLine("구매하고 싶은 아이템을 선택해주세요");
-            Console.WriteLine($"상점의 아이템 개수: {shop.ShopItemCnt}");
-            Console.WriteLine("");
+            Console.WriteLine();
+            Console.Write($"상점의 아이템 개수: ");
+            fontColor.WriteColorFont($"{shop.ShopItemCnt}", FontColor.Color.Blue);
+            Console.WriteLine("\n");
 
             shop.BuyShopItem();
             Console.WriteLine("");

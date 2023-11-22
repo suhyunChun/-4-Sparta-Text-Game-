@@ -87,8 +87,8 @@ namespace TextRpg.InvenShop
 
             foreach (var item in shopItems)
             {
-                Console.Write("-");
-                fontColor.WriteColorFont($" {idx + 1} ", FontColor.Color.Green);
+                Console.Write("- ");
+                fontColor.WriteColorFont($"{TextSort.PadRightForMixedText($" {idx + 1} ", 4)}", FontColor.Color.Yellow);
 
                 Console.Write(
                     $"이름: {TextSort.PadRightForMixedText(item.Name, 17)} " + " | " +
