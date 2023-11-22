@@ -45,13 +45,21 @@ namespace TextRpg
         // 테스팅을 위해 포션추가
         // 아이템들
         // 무기
-        public static Weapon Sword1 = new Weapon(11110101, "낡은 검1", 3, 100, 3, false);
-        public static Weapon Sword2 = new Weapon(11110102, "낡은 검2", 3, 100, 4, false);
-        public static Weapon Sword3 = new Weapon(11110103, "낡은 검3", 3, 100, 12, false);
-        public static Weapon GoldSword = new Weapon(21110101, "황금 검", 2, 300, 20, false);
+        public static Weapon Sword1 = new Weapon(11110101, "나뭇가지", 1, 100, 3, false);
+        public static Weapon Sword2 = new Weapon(11110102, "낡은 회초리", 1, 100, 4, false);
+        public static Weapon Sword3 = new Weapon(11110103, "낡은 검", 1, 100, 12, false);
+        public static Weapon RareSword1 = new Weapon(21110101, "황금 검", 2, 300, 20, false);
+        public static Weapon RareSword2 = new Weapon(21110102, "폭풍의 창", 2, 500, 25, false);
+        public static Weapon RareSword3 = new Weapon(21110103, "어둠의 활", 2, 1000, 28, false);
+        public static Weapon RareSword4 = new Weapon(21110104, "영원의 대검", 3, 2000, 35, false);
         // 방어구
         public static Armor Armor1 = new Armor(11210101, "낡은 방패", 1, 100, 10, false);
-        public static Armor GoldArmor = new Armor(21210101, "황금 방패", 2, 300, 15, false);
+        public static Armor Armor2 = new Armor(11210102, "녹슨 방패", 1, 100, 11, false);
+        public static Armor Armor3 = new Armor(11210103, "빛바랜 방패", 1, 100, 11, false);
+        public static Armor RareArmor1 = new Armor(21210101, "황금 방패", 2, 300, 15, false);
+        public static Armor RareArmor2 = new Armor(21210102, "신령의 갑옷", 2, 500, 25, false);
+        public static Armor RareArmor3 = new Armor(21210103, "대지의 방패", 2, 700, 30, false);
+        public static Armor RareArmor4 = new Armor(21210104, "영원의 갑옷", 3, 1400, 45, false);
         // 체력 포션
         public static HealingPotion HPPotion1 = new HealingPotion(11412101, "일반 회복 물약", 1, 100, 10, false);
         public static HealingPotion RareHPPotion1 = new HealingPotion(21410101, "고급 회복 물약", 2, 200, 20, false);
@@ -69,6 +77,8 @@ namespace TextRpg
             inventory.AddItem(Sword3, player);
 
             inventory.AddItem(Armor1, player);
+            inventory.AddItem(Armor2, player);
+            inventory.AddItem(Armor3, player);
             inventory.AddItem(HPPotion1, player);
             inventory.AddItem(HPPotion1, player);
             inventory.AddItem(MPPotion1, player);
@@ -90,17 +100,49 @@ namespace TextRpg
             {
                 j = Sword3;
             }
-            else if (GoldSword.Id == i)
+            else if (RareSword1.Id == i)
             {
-                j = GoldSword;
+                j = RareSword1;
+            }
+            else if (RareSword2.Id == i)
+            {
+                j = RareSword2;
+            }
+            else if (RareSword3.Id == i)
+            {
+                j = RareSword3;
+            }
+            else if (RareSword4.Id == i)
+            {
+                j = RareSword4;
             }
             else if (Armor1.Id == i)
             {
                 j = Armor1;
             }
-            else if (GoldArmor.Id == i)
+            else if (Armor2.Id == i)
             {
-                j = GoldArmor;
+                j = Armor2;
+            }
+            else if (Armor3.Id == i)
+            {
+                j = Armor3;
+            }
+            else if (RareArmor1.Id == i)
+            {
+                j = RareArmor1;
+            }
+            else if (RareArmor2.Id == i)
+            {
+                j = RareArmor2;
+            }
+            else if (RareArmor3.Id == i)
+            {
+                j = RareArmor3;
+            }
+            else if (RareArmor4.Id == i)
+            {
+                j = RareArmor4;
             }
             else if (HPPotion1.Id == i)
             {
@@ -139,8 +181,14 @@ namespace TextRpg
 
         private static void GameItemSetting(Shop shop)
         {
-            shop.AddShopItem(GoldSword);
-            shop.AddShopItem(GoldArmor);
+            shop.AddShopItem(RareSword1);
+            shop.AddShopItem(RareSword2);
+            shop.AddShopItem(RareSword3);
+            shop.AddShopItem(RareSword4);
+            shop.AddShopItem(RareArmor1);
+            shop.AddShopItem(RareArmor2);
+            shop.AddShopItem(RareArmor3);
+            shop.AddShopItem(RareArmor4);
             shop.AddShopItem(RareHPPotion1);
             shop.AddShopItem(RareHPPotion2);
 
@@ -189,7 +237,7 @@ namespace TextRpg
             wmp = new WindowsMediaPlayer();
             string executableFilePath = Assembly.GetEntryAssembly().Location;
             string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
-            string audioFilePath = Path.Combine(executableDirectoryPath, "henesys.wav");
+            string audioFilePath = Path.Combine(executableDirectoryPath, "Sounds", "henesys.wav");
             wmp.URL = audioFilePath;
             wmp.controls.play();
             wmp.settings.volume = 5;
@@ -1176,6 +1224,7 @@ namespace TextRpg
             fontColor = new FontColor();
             //Console.SetWindowSize(82, 30);
             PrintStartScene();
+            PlayerInputName();
 
             // 아이디 입력
             

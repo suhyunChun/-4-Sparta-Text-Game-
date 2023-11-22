@@ -66,8 +66,8 @@ namespace TextRpg.Player
             Strength = Str;
             Agility = Agi;
             Intelligence = Int;
-            PlusAtk = itematk;
-            PlusDef = itemdef;
+            PlusAtk = Atk;
+            PlusDef = Def;
             Health = hp;
             Mana = mp;
             Gold = gold;

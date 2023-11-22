@@ -34,7 +34,7 @@ namespace TextRpg
             Program.wmp.controls.stop();
             string executableFilePath = Assembly.GetEntryAssembly().Location;
             string executableDirectoryPath = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(executableFilePath))));
-            string audioFilePath = Path.Combine(executableDirectoryPath, "dungeon.wav");
+            string audioFilePath = Path.Combine(executableDirectoryPath, "Sounds", "dungeon.wav");
             wmp = new WindowsMediaPlayer();
             wmp.URL = audioFilePath;
             wmp.controls.play();
@@ -350,15 +350,15 @@ namespace TextRpg
                 switch (randomMonster)
                 {
                     case 0:
-                        mobs.Add(new Mob($"({i})달팽이", "달팽이", 1, 5, 10, 5, 5, 1, 0, false));
+                        mobs.Add(new Mob($"({i})달팽이", "달팽이", 1, 5, 10, 5, 5, 1, 1500, false));
                         break;
 
                     case 1:
-                        mobs.Add(new Mob($"({i})슬라임", "슬라임", 2, 7, 15, 7, 6, 2, 0, false));
+                        mobs.Add(new Mob($"({i})슬라임", "슬라임", 2, 7, 15, 7, 6, 2, 2000, false));
                         break;
 
                     case 2:
-                        mobs.Add(new Mob($"({i})고블린", "고블린", 3, 9, 20, 10, 8, 4, 0, false));
+                        mobs.Add(new Mob($"({i})고블린", "고블린", 3, 9, 20, 10, 8, 4, 2500, false));
                         break;
 
                     default:
@@ -367,6 +367,8 @@ namespace TextRpg
 
             }
         }
+
+        // 플레이어 정보 및 몬스터 정보 
         private void DisplayStatus(bool isSelect, int cursor)
         {
             string playerLevel = player.Level.ToString("00");
@@ -396,9 +398,11 @@ namespace TextRpg
 
             fontColor.WriteColorFont($"{player.Name} ", FontColor.Color.DarkYellow);
             fontColor.WriteColorFont($"({player.Occupation})", FontColor.Color.DarkGreen);
-            Console.WriteLine("");
+            Console.WriteLine("\n");
             //TODO: 100 -> 직업별 MaxHP로
-            Console.WriteLine($"{player.Health}/ {player.MaxHealth}");
+            fontColor.WriteColorFont("HP: ", FontColor.Color.Red);
+            Console.WriteLine($"{player.Health} / {player.MaxHealth}");
+            fontColor.WriteColorFont("MP: ", FontColor.Color.Blue);
             Console.WriteLine($"{player.Mana} / {player.MaxMana}");
         }
 
@@ -476,32 +480,34 @@ namespace TextRpg
             int Damage = player.Attack(player, mobs[idx]);
             Damage = CirticalAttack(Damage, ref isCritical);
 
-            if(dodge > 11){
-                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical? "- 치명타 공격!!" : "")}");
+            if (dodge > 11)
+            {
+                Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name} 을(를) 맞췄습니다. [데미지 : {Damage}] {(isCritical ? "- 치명타 공격!!" : "")}");
                 Console.WriteLine("");
                 Console.WriteLine($"Lv.{mobs[idx].Level} {mobs[idx].Name}");
+                Console.WriteLine("");
                 mobs[idx].IsDead = mobs[idx].Health - Damage <= 0 ? true : false;
                 Console.WriteLine($"HP {mobs[idx].Health} -> {(mobs[idx].IsDead ? "Dead" : mobs[idx].Health - Damage)}");
-
+           
                 if (mobs[idx].IsDead)
                 {
                     deadCnt++;
-                    //경험치 
-                    Console.WriteLine(mobs[idx].Exp);
-                    player.Exp += mobs[idx].Exp;
-                    Console.WriteLine($"현재 경험치: {player.Exp}");
-                    Console.WriteLine("");
 
                     //골드
                     int goldRandom = new Random().Next(5, 10);
-                    int addGold = (mobs[idx].Gold / goldRandom);
-                    Console.WriteLine(mobs[idx].Gold);
+                    int addGold = mobs[idx].Gold / goldRandom;
                     player.Gold += addGold;
-                    Console.WriteLine($"획득한 골드 : {addGold}");
+                    Console.WriteLine("");
+                    Console.Write($"획득한 골드 : ");
+                    fontColor.WriteColorFont($"{addGold}: ", FontColor.Color.Yellow);
+                    Console.WriteLine("");
                     Console.WriteLine($"소지 골드: {player.Gold}");
+
+                    // 경험치
                     player.Exp += mobs[idx].Exp;
                     LevelController();
                 }
+                Console.WriteLine("");
                 Console.WriteLine($"현재 경험치: {player.Exp} / {player.MaxExp}");
                 Console.WriteLine("");
                 mobs[idx].Health -= Damage;
@@ -557,6 +563,7 @@ namespace TextRpg
                 BattleScene(1);
         }
 
+        // 전투 결과
         private void BattleResult(bool isVictory)
         {
             SceneTitle(true);
@@ -684,7 +691,7 @@ namespace TextRpg
                 if (hpPotion is HealingPotion)
                 {
                     //장착한 포션의 경우만 카운트
-                    if(hpPotion.IsEquiped)
+                    if (hpPotion.IsEquiped)
                         count++;
                 }
             }
@@ -770,7 +777,7 @@ namespace TextRpg
             {
                 if (mpPotion is ManaPotion)
                 {
-                    if(mpPotion.IsEquiped)
+                    if (mpPotion.IsEquiped)
                         count++;
                 }
             }
@@ -838,7 +845,7 @@ namespace TextRpg
             }
         }
 
-
+        // 씬 타이틀 Battle! 출력
         private void SceneTitle(bool isResult)
         {
             Console.Clear();
