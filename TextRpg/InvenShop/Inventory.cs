@@ -209,28 +209,7 @@ namespace TextRpg.InvenShop
                 }
             }
 
-            else if (invenItems[num] is HealingPotion)
-            {
-                for (int i = 0; i < invenItems.Count; i++)
-                {
-                    if (i != num && invenItems[i] is HealingPotion)
-                    {
-                        invenItems[i].IsEquiped = false;
-                    }
-                }
-            }
-
-            else if (invenItems[num] is ManaPotion)
-            {
-                for (int i = 0; i < invenItems.Count; i++)
-                {
-                    if (i != num && invenItems[i] is ManaPotion)
-                    {
-                        invenItems[i].IsEquiped = false;
-                    }
-                }
-            }
-
+            // 포션 여러개 장착 이슈로 삭제
         }
         //아이템 분류
         public void InventoryArraySort()
