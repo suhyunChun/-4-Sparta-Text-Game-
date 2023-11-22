@@ -26,7 +26,7 @@ namespace TextRpg.Item
 
         public void Drop()
         {
-            if(Grade >= 2)
+            if(Grade <= 2)
             {
                 Console.WriteLine($"아이템 {Name}을(를) 버렸습니다!");
             }else
@@ -99,7 +99,7 @@ namespace TextRpg.Item
 
         public void Drop()
         {
-            if(Grade >= 2)
+            if(Grade <= 2)
             {
                 Console.WriteLine($"아이템 {Name}을(를) 버렸습니다!");
             }else
