@@ -734,7 +734,7 @@ namespace TextRpg
                             player.Health = player.MaxHealth;
                         fontColor.WriteColorFont($"물약을 사용하였습니다. HP : {beforeHp} -> {player.Health}", FontColor.Color.Blue);
                         Console.WriteLine("");
-                        player.Item.Remove(inventory.invenItems[indexItem].Id);
+                        player.Item.Remove(inventory.potionItems[indexItem].Id);
                         inventory.invenItems.Remove(inventory.potionItems[indexItem]);
                         inventory.potionItems.RemoveAt(indexItem);
                     }
@@ -755,7 +755,7 @@ namespace TextRpg
                             player.Mana = player.MaxMana;
                         fontColor.WriteColorFont($"물약을 사용하였습니다. MP : {beforeMP} -> {player.Mana}", FontColor.Color.Blue);
                         Console.WriteLine("");
-                        player.Item.Remove(inventory.invenItems[indexItem].Id);
+                        player.Item.Remove(inventory.potionItems[indexItem].Id);
                         inventory.invenItems.Remove(inventory.potionItems[indexItem]);
                         inventory.potionItems.RemoveAt(indexItem);
                     }
