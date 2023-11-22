@@ -69,7 +69,7 @@ namespace TextRpg
             shop.AddShopItem(new Armor(21210104, "영원의 갑옷", 3, 1400, 45, false));
 
             shop.AddShopItem(new HealingPotion(21410101, "고급 회복 물약", 2, 200, 20, false));
-            shop.AddShopItem(new HealingPotion(21410102, "고오급 회복 물약", 2, 1000000, 20, false));
+            shop.AddShopItem(new HealingPotion(21410102, "고오급 회복 물약", 2, 1000000, 2000, false));
 
         }
         // 시작 씬
@@ -352,15 +352,19 @@ namespace TextRpg
             // 무기 합 계산
             foreach (var weapon in weapons)
             {
-                bonusAtk = weapon.BonusStatus(inventory);
-                break;
+                if(weapon != null && weapon.IsEquiped == true)
+                {
+                    bonusAtk = weapon.BonusStatus(inventory);
+                }
             }
 
             // 방어구 합 계산
             foreach (var armor in armors)
             {
-                bonusDef = armor.BonusStatus(inventory);
-                break;
+                if(armor != null && armor.IsEquiped == true)
+                {
+                    bonusDef = armor.BonusStatus(inventory);
+                }
             }
 
             // 총 합을 계산하여 plusAtk, Def설정
@@ -717,8 +721,10 @@ namespace TextRpg
             fontColor.WriteColorFont("[ 아이템 구매 ]", FontColor.Color.Magenta);
             Console.WriteLine("\n");
             Console.WriteLine("구매하고 싶은 아이템을 선택해주세요");
-            Console.WriteLine($"상점의 아이템 개수: {shop.ShopItemCnt}");
-            Console.WriteLine("");
+            Console.WriteLine();
+            Console.Write($"상점의 아이템 개수: ");
+            fontColor.WriteColorFont($"{shop.ShopItemCnt}", FontColor.Color.Blue);
+            Console.WriteLine("\n");
 
             shop.BuyShopItem();
             Console.WriteLine("");

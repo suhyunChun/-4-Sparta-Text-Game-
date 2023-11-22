@@ -317,6 +317,9 @@ namespace TextRpg
             if (mobs[idx].IsDead)
             {
                 deadCnt++;
+                Console.Write("획득한 경험치: ");
+                fontColor.WriteColorFont($"{mobs[idx].Exp}", FontColor.Color.Green);
+                Console.WriteLine("");
                 player.Exp += mobs[idx].Exp;
                 LevelController();
             }
@@ -500,10 +503,12 @@ namespace TextRpg
                     Console.WriteLine("");
                     Console.Write($"획득한 골드 : ");
                     fontColor.WriteColorFont($"{addGold}: ", FontColor.Color.Yellow);
-                    Console.WriteLine("");
                     Console.WriteLine($"소지 골드: {player.Gold}");
+                    Console.WriteLine("\n");
 
                     // 경험치
+                    Console.Write("획득한 경험치: ");
+                    fontColor.WriteColorFont($"{mobs[idx].Exp}", FontColor.Color.Green);
                     player.Exp += mobs[idx].Exp;
                     LevelController();
                 }
