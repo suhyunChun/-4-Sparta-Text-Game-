@@ -445,8 +445,8 @@ namespace TextRpg.InvenShop
                 Items removeItem = invenItems[index];
                 Console.WriteLine($"아이템이 삭제되었습니다: {removeItem.Name}");
                 Console.WriteLine("아무키나 입력하시면 인벤토리로 이동합니다.");
-                invenItems.RemoveAt(index);
                 Player.Item.Remove(invenItems[index].Id);
+                invenItems.RemoveAt(index);
                 Console.ReadLine();
             }
         }
