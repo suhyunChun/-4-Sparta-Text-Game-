@@ -44,8 +44,8 @@ namespace TextRpg
         // 테스팅을 위해 포션추가
         private static void GameItemSetting(Inventory inventory, Shop shop)
         {
-            inventory.AddItem(new Weapon(11110101, "나뭇가지", 11, 1020, 3, false), player);
-            inventory.AddItem(new Weapon(11110102, "낡은 회초리", 21, 1020, 4, false), player);
+            inventory.AddItem(new Weapon(11110101, "나뭇가지", 1, 100, 3, false), player);
+            inventory.AddItem(new Weapon(11110102, "낡은 회초리", 1, 100, 4, false), player);
             inventory.AddItem(new Weapon(11110103, "낡은 검", 1, 100, 12, false), player);
 
 
