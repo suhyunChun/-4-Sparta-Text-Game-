@@ -502,17 +502,18 @@ namespace TextRpg
                     player.Gold += addGold;
                     Console.WriteLine("");
                     Console.Write($"획득한 골드 : ");
-                    fontColor.WriteColorFont($"{addGold}: ", FontColor.Color.Yellow);
+                    fontColor.WriteColorFont($"{addGold} ", FontColor.Color.Yellow);
+                    Console.WriteLine("");
                     Console.WriteLine($"소지 골드: {player.Gold}");
                     Console.WriteLine("\n");
 
                     // 경험치
                     Console.Write("획득한 경험치: ");
                     fontColor.WriteColorFont($"{mobs[idx].Exp}", FontColor.Color.Green);
+                    Console.WriteLine();
                     player.Exp += mobs[idx].Exp;
                     LevelController();
                 }
-                Console.WriteLine("");
                 Console.WriteLine($"현재 경험치: {player.Exp} / {player.MaxExp}");
                 Console.WriteLine("");
                 mobs[idx].Health -= Damage;
@@ -907,7 +908,7 @@ namespace TextRpg
                 player.Level++;
                 player.MaxExp = (int)(player.MaxExp * 1.5f);
 
-                Console.WriteLine();
+                Console.WriteLine("");
                 Console.WriteLine("레벨업을 했습니다!");
                 Console.WriteLine($"Lv {player.Level - 1} -> Lv {player.Level}");
 
