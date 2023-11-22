@@ -424,6 +424,7 @@ namespace TextRpg.InvenShop
                 Console.WriteLine($"현재 소지금액: {player.Gold}");
                 Console.WriteLine("");
                 Console.WriteLine("아무키나 입력하시면 상점으로 이동합니다.");
+                player.Item.Remove(invenItems[index].Id);
                 invenItems.RemoveAt(index);
                 Console.ReadLine();
             }
