@@ -174,8 +174,7 @@ namespace TextRpg
             {
                 // 아이템 추가 목록
                 Items load = ItemFind(i);
-                inventory.AddItem(load, player);
-                
+                inventory.invenItems.Add(load);
             }
         }
 
@@ -1215,7 +1214,6 @@ namespace TextRpg
             // 아이디 확정 후 리턴
             Console.WriteLine($"ID : {memberPath.Id} \n캐릭터 명 : {memberPath.Name} 을(를) 불러 옵니다.");
             Thread.Sleep(2000);
-            player = memberPath;
             StartMenu(player.Occupation, 1);
         }
 
