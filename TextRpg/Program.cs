@@ -1263,7 +1263,6 @@ namespace TextRpg
             // 시작
             Console.WriteLine("저장하기");
             Console.WriteLine("자신의 캐릭터를 저장합니다.");
-            fontColor.WriteColorFont("단, 사용한 물약의 효과는 저장되지 않습니다.", FontColor.Color.Red);
             Console.WriteLine("저장하시겠습니까?");
             Console.WriteLine();
             // 커서 적용 필요
