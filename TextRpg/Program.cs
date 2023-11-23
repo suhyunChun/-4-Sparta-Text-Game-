@@ -1039,7 +1039,7 @@ namespace TextRpg
                     ShopMenu(1);
                     break;
                 default:
-                    if (IsRealSellItem(1))
+                    if (IsRealSellItem(1 ,keyInput - 1))
                     {
                         inventory.SellItem(player, keyInput - 1);
                         ShopMenu(1);
@@ -1054,12 +1054,14 @@ namespace TextRpg
         }
 
         // 정말 판매할지 안할지 선택
-        private static bool IsRealSellItem(int cursor)
+        private static bool IsRealSellItem(int cursor, int idx)
         {
             Console.Clear();
             Console.WriteLine("정말 판매하시겠습니까?");
-            Console.WriteLine($"선택된 아이템: ");
             Console.WriteLine("");
+
+            fontColor.WriteColorFont($"선택된 아이템: {inventory.invenItems[idx].Name}", FontColor.Color.Yellow);
+            Console.WriteLine("\n");
 
             if (cursor == 1)
                 HighlightText("1. 판매한다.");
@@ -1079,13 +1081,13 @@ namespace TextRpg
                         cursor--;
                         if (cursor < 1)
                             cursor = 2;
-                        IsRealSellItem(cursor);
+                        IsRealSellItem(cursor, idx);
                         break;
                     case ConsoleKey.DownArrow:
                         cursor++;
                         if (cursor > 2)
                             cursor = 1;
-                        IsRealSellItem(cursor);
+                        IsRealSellItem(cursor, idx);
                         break;
                 }
             } while (c.Key != ConsoleKey.Enter);
